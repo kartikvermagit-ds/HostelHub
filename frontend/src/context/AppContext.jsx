@@ -1,10 +1,24 @@
 import React, { createContext, useContext, useState } from 'react';
-import { initialResources, upcomingCTs as defaultCTs, subjectDeepDives as defaultDeepDives, currentUser } from '../data/mockData';
+import { initialResources, upcomingCTs as defaultCTs, subjectDeepDives as defaultDeepDives } from '../data/mockData';
+import { useAuth } from './AuthContext';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [user] = useState(currentUser);
+  const { user: authUser } = useAuth();
+
+  const user = authUser || {
+    fullName: 'Kartik Sharma',
+    name: 'Kartik',
+    full_name: 'Kartik Sharma',
+    hostel: 'Hostel 4',
+    room_number: 'B-204',
+    room: 'B-204',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+    role: 'STUDENT',
+  };
+
   const [resources, setResources] = useState(initialResources);
   const [savedResourceIds, setSavedResourceIds] = useState(new Set(["res-1", "res-2"]));
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +42,7 @@ export const AppProvider = ({ children }) => {
   const addResource = (newResource) => {
     const resourceWithMeta = {
       id: `res-${Date.now()}`,
-      author: user.fullName || "Kartik S.",
+      author: user.full_name || user.fullName || "Kartik S.",
       timeAgo: "Just now",
       downloads: 0,
       views: 1,

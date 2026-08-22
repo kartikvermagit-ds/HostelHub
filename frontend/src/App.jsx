@@ -1,6 +1,11 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
+import { ProtectedRoute, PublicRoute } from './components/auth/ProtectedRoute';
+import { LoginPage } from './pages/auth/LoginPage';
+import { RegisterPage } from './pages/auth/RegisterPage';
+import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 import { HomePage } from './pages/HomePage';
 import { CTZonePage } from './pages/CTZonePage';
 import { UploadPage } from './pages/UploadPage';
@@ -12,8 +17,51 @@ import { GenericLibraryPage } from './pages/GenericLibraryPage';
 export const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<AppLayout />}>
+      {/* Public Authentication Routes */}
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <RegisterPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <PublicRoute>
+            <ForgotPasswordPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <PublicRoute>
+            <ResetPasswordPage />
+          </PublicRoute>
+        }
+      />
+
+      {/* Protected Main Application Routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<HomePage />} />
+        <Route path="dashboard" element={<Navigate to="/" replace />} />
         <Route path="ct-zone" element={<CTZonePage />} />
         <Route path="upload" element={<UploadPage />} />
         <Route path="notes" element={<NotesPage />} />

@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import { useAuth } from '../../context/AuthContext';
 
 export const TopHeader = () => {
   const { user, searchQuery, setSearchQuery } = useApp();
-  const [showNotifications, setShowNotifications] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
+
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const isUploadPage = location.pathname === '/upload';
 
@@ -35,6 +40,15 @@ export const TopHeader = () => {
       icon: 'forum',
     },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  const displayName = user?.full_name || user?.name || 'Kartik Sharma';
+  const avatarUrl = user?.avatar_url || user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150';
+  const hostelInfo = user?.hostel ? `${user.hostel}${user.room_number ? ` • ${user.room_number}` : ''}` : 'Hostel 4';
 
   return (
     <header className="bg-surface-container-lowest border-b border-surface-border flex justify-between items-center w-full px-4 md:px-margin-page py-stack-sm sticky top-0 z-30 transition-all duration-200">
@@ -74,7 +88,10 @@ export const TopHeader = () => {
           <button
             aria-label="Notifications"
             className="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-low relative"
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => {
+              setShowNotifications(!showNotifications);
+              setShowUserMenu(false);
+            }}
           >
             <span className="material-symbols-outlined text-[22px]">notifications</span>
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-tertiary"></span>
@@ -123,7 +140,7 @@ export const TopHeader = () => {
           )}
         </div>
 
-        {/* Quick Upload Button (hidden on Upload page and small screens) */}
+        {/* Quick Upload Button */}
         {!isUploadPage && (
           <Link
             to="/upload"
@@ -134,17 +151,80 @@ export const TopHeader = () => {
           </Link>
         )}
 
-        {/* User Profile Avatar */}
-        <Link
-          to="/profile"
-          className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-secondary-container overflow-hidden border border-surface-border cursor-pointer hover:ring-2 hover:ring-primary/40 transition-all shrink-0"
-        >
-          <img
-            src={user.avatarUrl}
-            alt={user.name}
-            className="w-full h-full object-cover"
-          />
-        </Link>
+        {/* User Profile Avatar with Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              setShowUserMenu(!showUserMenu);
+              setShowNotifications(false);
+            }}
+            className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-secondary-container overflow-hidden border border-surface-border cursor-pointer hover:ring-2 hover:ring-primary/40 transition-all shrink-0 block"
+            aria-label="User Profile Menu"
+          >
+            <img
+              src={avatarUrl}
+              alt={displayName}
+              className="w-full h-full object-cover"
+            />
+          </button>
+
+          {/* User Menu Dropdown */}
+          {showUserMenu && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShowUserMenu(false)}
+              ></div>
+              <div className="absolute right-0 mt-2 w-56 bg-surface-container-lowest border border-surface-border rounded-2xl shadow-xl z-50 p-2 animate-fade-in">
+                {/* Header User Info */}
+                <div className="p-3 border-b border-surface-border mb-1">
+                  <p className="text-sm font-bold text-on-surface truncate">{displayName}</p>
+                  <p className="text-[11px] text-on-surface-variant truncate">{hostelInfo}</p>
+                </div>
+
+                <Link
+                  to="/profile"
+                  onClick={() => setShowUserMenu(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>
+                  <span>My Profile</span>
+                </Link>
+
+                <Link
+                  to="/saved"
+                  onClick={() => setShowUserMenu(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant">bookmark</span>
+                  <span>Saved Library</span>
+                </Link>
+
+                <Link
+                  to="/settings"
+                  onClick={() => setShowUserMenu(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant">settings</span>
+                  <span>Settings</span>
+                </Link>
+
+                <div className="my-1 border-t border-surface-border"></div>
+
+                <button
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    handleLogout();
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px]">logout</span>
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );
