@@ -1,0 +1,18 @@
+import { createClient } from '@supabase/supabase-js';
+import { env } from './env.js';
+
+// Public/Anon client for authenticated user context
+export const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false,
+  },
+});
+
+// Admin / Service Role client for administrative operations and server-side verification
+export const supabaseAdmin = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false,
+  },
+});
