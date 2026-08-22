@@ -1,19 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 
 export const TopHeader = () => {
   const { user, searchQuery, setSearchQuery } = useApp();
-  const navigate = useNavigate();
+  const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
 
   const isUploadPage = location.pathname === '/upload';
 
+  const mockNotifications = [
+    {
+      id: 1,
+      title: 'COA CT 1 on Monday',
+      desc: 'Syllabus: Instruction cycle & addressing modes.',
+      time: '1 hour ago',
+      unread: true,
+      icon: 'event_upcoming',
+    },
+    {
+      id: 2,
+      title: 'New Notes Uploaded',
+      desc: 'Priya S. uploaded DSA Unit 3 Solved PYQs.',
+      time: '3 hours ago',
+      unread: false,
+      icon: 'description',
+    },
+    {
+      id: 3,
+      title: 'Hostel Discussion',
+      desc: '3 new replies on DBMS Normalization doubt.',
+      time: '1 day ago',
+      unread: false,
+      icon: 'forum',
+    },
+  ];
+
   return (
-    <header className="bg-surface-container-lowest dark:bg-inverse-surface border-b border-surface-border dark:border-outline-variant flex justify-between items-center w-full px-4 md:px-margin-page py-stack-sm sticky top-0 z-30 transition-all duration-200">
+    <header className="bg-surface-container-lowest border-b border-surface-border flex justify-between items-center w-full px-4 md:px-margin-page py-stack-sm sticky top-0 z-30 transition-all duration-200">
       {/* Mobile Brand / Page Title */}
       <div className="flex items-center gap-2 lg:hidden">
-        <Link to="/" className="font-headline-md text-headline-sm-mobile md:text-headline-md font-bold text-primary dark:text-primary-fixed">
+        <Link to="/" className="font-headline-md text-headline-sm-mobile md:text-headline-md font-bold text-primary">
           HostelHub
         </Link>
       </div>
@@ -41,16 +68,60 @@ export const TopHeader = () => {
       </div>
 
       {/* Trailing Actions */}
-      <div className="flex items-center gap-3 md:gap-4">
+      <div className="flex items-center gap-3 md:gap-4 relative">
         {/* Notifications Icon Button */}
-        <button
-          aria-label="Notifications"
-          className="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-low relative"
-          onClick={() => alert("No new notifications at this time.")}
-        >
-          <span className="material-symbols-outlined text-[22px]">notifications</span>
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-tertiary"></span>
-        </button>
+        <div className="relative">
+          <button
+            aria-label="Notifications"
+            className="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-low relative"
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            <span className="material-symbols-outlined text-[22px]">notifications</span>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-tertiary"></span>
+          </button>
+
+          {/* Notifications Dropdown Panel */}
+          {showNotifications && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShowNotifications(false)}
+              ></div>
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-surface-container-lowest border border-surface-border rounded-2xl shadow-xl z-50 p-4 animate-fade-in">
+                <div className="flex items-center justify-between pb-3 border-b border-surface-border mb-3">
+                  <h3 className="font-headline-sm text-label-md font-bold text-on-surface">
+                    Hostel Notifications
+                  </h3>
+                  <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
+                    1 New
+                  </span>
+                </div>
+
+                <div className="space-y-2.5 max-h-72 overflow-y-auto">
+                  {mockNotifications.map((n) => (
+                    <div
+                      key={n.id}
+                      className={`p-3 rounded-xl flex items-start gap-3 transition-colors ${
+                        n.unread ? 'bg-surface-container-low border border-primary/20' : 'bg-surface hover:bg-surface-container-low'
+                      }`}
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-surface-variant flex items-center justify-center shrink-0 text-primary">
+                        <span className="material-symbols-outlined text-[18px]">{n.icon}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start">
+                          <h4 className="text-xs font-bold text-on-surface truncate">{n.title}</h4>
+                          <span className="text-[10px] text-on-surface-variant shrink-0 ml-2">{n.time}</span>
+                        </div>
+                        <p className="text-[12px] text-on-surface-variant mt-0.5 line-clamp-2">{n.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Quick Upload Button (hidden on Upload page and small screens) */}
         {!isUploadPage && (
