@@ -125,6 +125,30 @@ export const Sidebar = () => {
             )}
           </NavLink>
         ))}
+
+        <div className="my-3 border-t border-surface-border"></div>
+
+        {/* Admin Management Section */}
+        <NavLink
+          to="/admin"
+          className={({ isActive }) =>
+            `flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-200 text-label-md font-label-md ${
+              isActive
+                ? "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 font-bold border-r-4 border-red-600"
+                : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
+            }`
+          }
+        >
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-[20px] text-red-600">
+              admin_panel_settings
+            </span>
+            <span>Admin Panel</span>
+          </div>
+          <span className="px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 text-[10px] font-bold uppercase">
+            Admin
+          </span>
+        </NavLink>
       </div>
 
       {/* Footer User Profile & Actions */}

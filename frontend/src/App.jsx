@@ -13,6 +13,7 @@ import { NotesPage } from './pages/NotesPage';
 import { SavedPage } from './pages/SavedPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { GenericLibraryPage } from './pages/GenericLibraryPage';
+import { AdminPage } from './pages/AdminPage';
 
 export const App = () => {
   return (
@@ -65,6 +66,7 @@ export const App = () => {
         <Route path="ct-zone" element={<CTZonePage />} />
         <Route path="upload" element={<UploadPage />} />
         <Route path="notes" element={<NotesPage />} />
+        <Route path="admin" element={<AdminPage />} />
         <Route
           path="pyqs"
           element={
