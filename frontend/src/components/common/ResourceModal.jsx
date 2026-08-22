@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { downloadResourceFile, openResourcePreview } from '../../utils/fileHelper';
 
 export const ResourceModal = ({ resource, isOpen, onClose }) => {
-  const { savedResourceIds, toggleSaveResource } = useApp();
+  const { savedResourceIds, toggleSaveResource, user } = useApp();
   const [downloaded, setDownloaded] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([
@@ -15,13 +16,16 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
   const isSaved = savedResourceIds.has(resource.id);
   const isVideo = resource.type === 'VID' || resource.type?.toLowerCase().includes('video');
 
+  const uploadTimestamp = resource.uploadedAt || resource.timeAgo || 'Today, Just now';
+
   const handleDownload = () => {
     setDownloaded(true);
+    downloadResourceFile(resource);
     setTimeout(() => setDownloaded(false), 2500);
-    // If file_url exists and is valid, trigger download
-    if (resource.file_url) {
-      window.open(resource.file_url, '_blank');
-    }
+  };
+
+  const handlePreview = () => {
+    openResourcePreview(resource);
   };
 
   const handleAddComment = (e) => {
@@ -31,7 +35,7 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
       ...comments,
       {
         id: Date.now(),
-        author: 'Kartik Sharma',
+        author: user?.full_name || user?.name || 'Kartik Sharma',
         time: 'Just now',
         text: newComment.trim()
       }
@@ -40,7 +44,7 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       {/* Backdrop click to close */}
       <div className="fixed inset-0" onClick={onClose}></div>
 
@@ -71,6 +75,9 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
                 <span className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary font-semibold text-[11px] uppercase tracking-wider">
                   {resource.type || 'PDF'}
                 </span>
+                <span className="px-2.5 py-0.5 rounded-md bg-secondary-container text-on-secondary-container font-semibold text-[11px]">
+                  📅 {uploadTimestamp}
+                </span>
               </div>
               <h2 className="font-headline-sm text-headline-sm text-on-surface font-bold truncate">
                 {resource.title}
@@ -88,7 +95,7 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
 
         {/* Modal Body */}
         <div className="p-5 md:p-6 overflow-y-auto flex-1 space-y-5">
-          {/* Metadata Row */}
+          {/* Metadata Grid with Exact Date & Time */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 bg-surface-container-low rounded-xl border border-surface-border text-center">
             <div>
               <span className="block font-label-sm text-[11px] text-on-surface-variant">Uploaded By</span>
@@ -97,9 +104,9 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
               </span>
             </div>
             <div>
-              <span className="block font-label-sm text-[11px] text-on-surface-variant">Uploaded</span>
-              <span className="font-label-md text-label-md text-on-surface font-semibold block">
-                {resource.timeAgo || 'Recent'}
+              <span className="block font-label-sm text-[11px] text-on-surface-variant">Upload Date & Time</span>
+              <span className="font-label-md text-label-md text-on-surface font-semibold block text-xs">
+                {uploadTimestamp}
               </span>
             </div>
             <div>
@@ -114,6 +121,56 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
                 {resource.downloads || 124}
               </span>
             </div>
+          </div>
+
+          {/* Interactive Document / Media Preview */}
+          <div className="p-4 bg-surface rounded-xl border border-surface-border space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="font-label-md text-xs font-bold text-on-surface flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[18px] text-primary">visibility</span>
+                <span>Document Preview</span>
+              </span>
+
+              <button
+                onClick={handlePreview}
+                className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+              >
+                <span>Open in New Window</span>
+                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+              </button>
+            </div>
+
+            {/* If uploaded file is an image */}
+            {resource.rawFile && resource.rawFile.type && resource.rawFile.type.startsWith('image/') ? (
+              <div className="rounded-xl overflow-hidden max-h-64 flex items-center justify-center bg-black/5 border border-surface-border">
+                <img
+                  src={resource.file_url}
+                  alt={resource.title}
+                  className="max-h-60 object-contain"
+                />
+              </div>
+            ) : (
+              <div className="p-3.5 bg-surface-container-lowest rounded-lg border border-surface-border flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[20px]">
+                      {isVideo ? 'play_circle' : 'picture_as_pdf'}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-on-surface">{resource.fileName || `${resource.title}.pdf`}</p>
+                    <p className="text-[11px] text-on-surface-variant">Ready to view or download directly</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handlePreview}
+                  className="px-3 py-1.5 bg-primary/10 text-primary font-bold text-xs rounded-lg hover:bg-primary/20 transition-colors"
+                >
+                  Preview Document
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Description */}
@@ -155,7 +212,7 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
             </h3>
 
             {/* Comment List */}
-            <div className="space-y-2.5 max-h-40 overflow-y-auto pr-1">
+            <div className="space-y-2.5 max-h-36 overflow-y-auto pr-1">
               {comments.map((comm) => (
                 <div key={comm.id} className="p-3 bg-surface rounded-xl border border-surface-border text-sm">
                   <div className="flex justify-between items-center mb-1">
@@ -206,23 +263,31 @@ export const ResourceModal = ({ resource, isOpen, onClose }) => {
             <span>{isSaved ? 'Saved in Library' : 'Bookmark'}</span>
           </button>
 
-          {/* Download Action Button */}
-          <button
-            onClick={handleDownload}
-            disabled={isVideo}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-label-md text-label-md shadow-sm transition-all ${
-              isVideo
-                ? 'bg-surface-container text-on-surface-variant opacity-60 cursor-not-allowed'
-                : downloaded
-                ? 'bg-primary-container text-on-primary font-bold'
-                : 'bg-primary text-on-primary hover:opacity-90'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[18px]">
-              {downloaded ? 'check' : isVideo ? 'play_circle' : 'download'}
-            </span>
-            <span>{downloaded ? 'Downloading...' : isVideo ? 'Watch Video' : 'Download File'}</span>
-          </button>
+          <div className="flex items-center gap-2.5">
+            {/* View Fullscreen Button */}
+            <button
+              onClick={handlePreview}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-surface-border text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">open_in_new</span>
+              <span>Open View</span>
+            </button>
+
+            {/* Direct Download Button */}
+            <button
+              onClick={handleDownload}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-label-md text-label-md shadow-sm transition-all ${
+                downloaded
+                  ? 'bg-emerald-600 text-white font-bold'
+                  : 'bg-primary text-on-primary hover:opacity-90'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                {downloaded ? 'check' : 'download'}
+              </span>
+              <span>{downloaded ? 'Saved to Device!' : 'Download File'}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

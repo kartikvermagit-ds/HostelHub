@@ -4,14 +4,14 @@ import { useApp } from '../context/AppContext';
 
 export const UploadPage = () => {
   const navigate = useNavigate();
-  const { addResource } = useApp();
+  const { addResource, user } = useApp();
 
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [type, setType] = useState('');
   const [description, setDescription] = useState('');
   const [tagInput, setTagInput] = useState('');
-  const [tags, setTags] = useState(['Exam Prep', 'Module 2']);
+  const [tags, setTags] = useState(['Exam Prep', 'Unit 1']);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadState, setUploadState] = useState('idle'); // 'idle' | 'uploading' | 'success'
   const [errorMsg, setErrorMsg] = useState('');
@@ -31,34 +31,37 @@ export const UploadPage = () => {
     setTags(tags.filter(t => t !== tagToRemove));
   };
 
+  const processFile = (file) => {
+    const sizeInMB = file.size / (1024 * 1024);
+    const formattedSize = sizeInMB >= 1 ? `${sizeInMB.toFixed(1)} MB` : `${Math.round(file.size / 1024)} KB`;
+    
+    // Create Blob Object URL for immediate preview and download
+    const blobUrl = URL.createObjectURL(file);
+
+    setSelectedFile({
+      name: file.name,
+      size: formattedSize,
+      rawFile: file,
+      blobUrl: blobUrl,
+      type: file.type
+    });
+
+    if (!title) {
+      const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ");
+      setTitle(cleanName);
+    }
+  };
+
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedFile({
-        name: file.name,
-        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        rawFile: file
-      });
-      if (!title) {
-        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ");
-        setTitle(cleanName);
-      }
+      processFile(e.target.files[0]);
     }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      setSelectedFile({
-        name: file.name,
-        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        rawFile: file
-      });
-      if (!title) {
-        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ");
-        setTitle(cleanName);
-      }
+      processFile(e.dataTransfer.files[0]);
     }
   };
 
@@ -83,19 +86,36 @@ export const UploadPage = () => {
     setTimeout(() => {
       setUploadState('success');
 
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      const isVid = type === 'video' || (selectedFile?.type && selectedFile.type.startsWith('video/'));
+
       addResource({
         title: title.trim(),
         subject: subject.toUpperCase(),
-        type: type === 'video' ? 'VID' : 'PDF',
+        type: isVid ? 'VID' : (selectedFile?.name?.endsWith('.pdf') ? 'PDF' : 'Note'),
         size: selectedFile ? selectedFile.size : '2.1 MB',
-        description: description.trim(),
-        tags: tags
+        fileName: selectedFile?.name || `${title.trim()}.pdf`,
+        file_url: selectedFile?.blobUrl || null,
+        rawFile: selectedFile?.rawFile || null,
+        description: description.trim() || `Study resource for ${subject.toUpperCase()} uploaded by ${user?.full_name || user?.name || 'Kartik'}.`,
+        tags: tags,
+        author: user?.full_name || user?.name || 'Kartik Sharma',
+        uploadedAt: `${formattedDate}, ${formattedTime}`,
+        uploadDate: formattedDate,
+        uploadTime: formattedTime,
+        timeAgo: 'Just now',
+        icon: isVid ? 'play_circle' : 'picture_as_pdf',
+        iconColor: isVid ? 'text-on-secondary-container' : 'text-primary',
+        bgColor: isVid ? 'bg-secondary-container' : 'bg-surface-variant'
       });
 
       setTimeout(() => {
-        navigate('/');
-      }, 1400);
-    }, 2000);
+        navigate('/notes');
+      }, 1200);
+    }, 1500);
   };
 
   return (
@@ -127,7 +147,7 @@ export const UploadPage = () => {
             <input
               type="file"
               id="fileUpload"
-              accept=".pdf,.jpg,.jpeg,.png,.mp4,.docx,.pptx"
+              accept=".pdf,.jpg,.jpeg,.png,.webp,.mp4,.docx,.pptx,.txt"
               onChange={handleFileChange}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
@@ -146,7 +166,7 @@ export const UploadPage = () => {
                 or click to browse from your computer
               </p>
               <p className="font-label-sm text-[11px] text-on-surface-variant mt-3 opacity-70">
-                Supported formats: PDF, JPG, PNG, MP4 (Max 50MB)
+                Supported formats: PDF, JPG, PNG, MP4, DOCX (Max 50MB)
               </p>
             </div>
 
@@ -154,7 +174,7 @@ export const UploadPage = () => {
               <div className="mt-4 p-4 rounded-lg border border-surface-border bg-surface-container flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-primary text-[24px]">
-                    picture_as_pdf
+                    description
                   </span>
                   <div>
                     <p className="font-label-md text-label-md text-on-surface font-semibold line-clamp-1">
@@ -230,7 +250,7 @@ export const UploadPage = () => {
                   required
                 >
                   <option value="" disabled>Select type</option>
-                  <option value="notes">Class Notes</option>
+                  <option value="notes">Class Notes / PDF</option>
                   <option value="pyq">PYQs (Past Papers)</option>
                   <option value="video">Video Lecture</option>
                   <option value="assignment">Assignment Solution</option>
@@ -250,7 +270,7 @@ export const UploadPage = () => {
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Briefly describe what this resource covers..."
+                placeholder="Briefly describe what this resource covers (e.g. Unit 1 instruction cycles, solved examples)..."
                 className="w-full border border-surface-border rounded-lg bg-surface-container-lowest px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-y"
               ></textarea>
             </div>
