@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { HostelAdminManager } from '../components/admin/HostelAdminManager';
 
 export const AdminPage = () => {
   const {
@@ -14,7 +15,7 @@ export const AdminPage = () => {
     restoreDefaultResources,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState('discussions'); // 'discussions' | 'students' | 'resources'
+  const [activeTab, setActiveTab] = useState('hostels'); // 'hostels' | 'discussions' | 'students' | 'resources'
   const [chatSearch, setChatSearch] = useState('');
   const [studentSearch, setStudentSearch] = useState('');
   const [resourceSearch, setResourceSearch] = useState('');
@@ -24,6 +25,7 @@ export const AdminPage = () => {
     setFeedbackMsg(msg);
     setTimeout(() => setFeedbackMsg(''), 3000);
   };
+
 
   const filteredDiscussions = (discussions || []).filter(
     (d) =>
@@ -130,6 +132,18 @@ export const AdminPage = () => {
       {/* Tabs Navigation */}
       <div className="flex items-center gap-2 border-b border-surface-border pb-1 overflow-x-auto">
         <button
+          onClick={() => setActiveTab('hostels')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-label-md text-xs sm:text-sm transition-all font-semibold ${
+            activeTab === 'hostels'
+              ? 'bg-primary text-on-primary shadow-sm'
+              : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+          }`}
+        >
+          <span className="material-symbols-outlined text-[18px]">apartment</span>
+          <span>3D Hostel & Rooms</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('discussions')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-label-md text-xs sm:text-sm transition-all font-semibold ${
             activeTab === 'discussions'
@@ -138,7 +152,7 @@ export const AdminPage = () => {
           }`}
         >
           <span className="material-symbols-outlined text-[18px]">forum</span>
-          <span>Moderate Chats & Discussions ({discussions.length})</span>
+          <span>Moderate Chats ({discussions.length})</span>
         </button>
 
         <button
@@ -150,7 +164,7 @@ export const AdminPage = () => {
           }`}
         >
           <span className="material-symbols-outlined text-[18px]">group</span>
-          <span>Students & Blocking ({students.length})</span>
+          <span>Students ({students.length})</span>
         </button>
 
         <button
@@ -165,6 +179,12 @@ export const AdminPage = () => {
           <span>Manage Materials ({resources.length})</span>
         </button>
       </div>
+
+      {/* TAB 0: 3D Hostel & Room Management */}
+      {activeTab === 'hostels' && (
+        <HostelAdminManager onToast={showToast} />
+      )}
+
 
       {/* TAB 1: Chat & Discussion Moderation */}
       {activeTab === 'discussions' && (

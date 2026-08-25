@@ -5,7 +5,7 @@ import { useApp } from '../context/AppContext';
 import { CTCard } from '../components/common/CTCard';
 import { QuickActions } from '../components/common/QuickActions';
 import { ResourceItem } from '../components/common/ResourceItem';
-import { HostelHubScene } from '../components/3d/HostelHubScene';
+import { HostelExperience } from '../components/3d/HostelExperience';
 
 export const HomePage = () => {
   const { user, resources, upcomingTests, searchQuery, activeCategoryTab, setActiveCategoryTab } = useApp();
@@ -34,50 +34,16 @@ export const HomePage = () => {
 
   return (
     <main className="flex-1 max-w-container-max mx-auto w-full px-4 md:px-margin-page py-4 md:py-stack-lg flex flex-col gap-6 md:gap-stack-lg">
-      {/* Hero Section with Interactive 3D Book & Emerging Hostel Experience */}
+      {/* Interactive 3D Hostel Explorer */}
       <motion.section
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="bg-surface-container-lowest border border-surface-border rounded-3xl p-5 md:p-8 shadow-card flex flex-col lg:flex-row items-center justify-between gap-6 overflow-hidden relative"
+        className="w-full"
       >
-        {/* Left Side: Welcome Greeting & Context */}
-        <div className="flex-1 flex flex-col gap-3 z-10 w-full lg:max-w-md">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold self-start">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Interactive 3D Study Space</span>
-          </div>
-
-          <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-extrabold tracking-tight">
-            Good morning, {user.full_name ? user.full_name.split(' ')[0] : user.name || 'Kartik'} 👋
-          </h1>
-
-          <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-            Everything your hostel needs to prepare better. Explore shared study resources, review class test checklists, and access previous year papers.
-          </p>
-
-          {/* Feature Highlight Pills */}
-          <div className="flex flex-wrap gap-2 pt-2">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-low border border-surface-border text-xs font-semibold text-on-surface">
-              <span className="material-symbols-outlined text-primary text-[16px]">menu_book</span>
-              <span>Open Study Book</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-low border border-surface-border text-xs font-semibold text-on-surface">
-              <span className="material-symbols-outlined text-primary text-[16px]">door_front</span>
-              <span>Interactive Rooms</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-low border border-surface-border text-xs font-semibold text-on-surface">
-              <span className="material-symbols-outlined text-primary text-[16px]">school</span>
-              <span>Resource Hub</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side: Interactive 3D Book & Hostel Canvas Experience */}
-        <div className="w-full lg:flex-1 h-[360px] sm:h-[400px] md:h-[440px] shrink-0 relative rounded-2xl overflow-hidden shadow-inner">
-          <HostelHubScene className="w-full h-full" />
-        </div>
+        <HostelExperience className="w-full" />
       </motion.section>
+
 
       {/* Mobile-Only: Next CT Compact Card */}
       <section className="md:hidden">

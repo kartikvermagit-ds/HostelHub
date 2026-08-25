@@ -2,58 +2,70 @@ import React from 'react';
 import { Html } from '@react-three/drei';
 
 /**
- * Crisp 3D Room Number Plaque & Interactive Status Tooltip
+ * Crisp 3D Room Number Plaque & Status Indicator
  */
 export const RoomLabel = ({
   roomNumber = '101',
-  status = 'occupied',
-
+  status = 'available',
+  roomType = 'Single',
   hovered = false,
   selected = false,
   branch = '',
   position = [0, 0.28, 0.46]
 }) => {
-  // If the room is selected, hide the large floating label so the 3D interior is fully visible
-  if (selected) return null;
+  const getStatusDotColor = () => {
+    switch (status?.toLowerCase()) {
+      case 'available':
+        return 'bg-emerald-400 shadow-emerald-400/50';
+      case 'maintenance':
+        return 'bg-amber-400 shadow-amber-400/50';
+      case 'reserved':
+        return 'bg-blue-400 shadow-blue-400/50';
+      case 'occupied':
+      default:
+        return 'bg-slate-400 shadow-slate-400/50';
+    }
+  };
 
   return (
     <group position={position}>
       <Html
         center
-        distanceFactor={6}
-        zIndexRange={[50, 0]}
+        distanceFactor={6.2}
+        zIndexRange={[60, 0]}
         className="pointer-events-none select-none transition-all duration-200"
       >
         <div
-          className={`flex flex-col items-center gap-1 ${
-            hovered ? 'scale-110' : 'scale-95'
+          className={`flex flex-col items-center gap-1 transition-transform ${
+            selected
+              ? 'scale-110'
+              : hovered
+              ? 'scale-105'
+              : 'scale-95'
           }`}
         >
-          {/* Room Number Badge */}
+          {/* Room Number Badge matching Visual Reference */}
           <div
-            className={`px-2 py-0.5 rounded-md font-mono text-[10px] font-bold tracking-wider shadow-sm flex items-center gap-1 border transition-all ${
-              hovered
-                ? 'bg-primary text-on-primary border-primary-fixed shadow-md ring-2 ring-primary/40'
-                : 'bg-surface/90 text-on-surface border-surface-border/80 backdrop-blur-xs'
+            className={`px-2.5 py-0.5 rounded-lg font-mono text-[11px] font-bold tracking-wider shadow-md flex items-center gap-1.5 border transition-all ${
+              selected
+                ? 'bg-primary text-on-primary border-primary-fixed shadow-primary/40 ring-2 ring-primary/60'
+                : hovered
+                ? 'bg-surface-container-highest text-on-surface border-primary shadow-sm'
+                : 'bg-surface/95 text-on-surface border-surface-border/90 backdrop-blur-xs'
             }`}
           >
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                status === 'available'
-                  ? 'bg-emerald-500'
-                  : status === 'maintenance'
-                  ? 'bg-amber-500'
-                  : 'bg-primary'
-              }`}
+              className={`w-2 h-2 rounded-full shadow-sm animate-pulse ${getStatusDotColor()}`}
             ></span>
             <span>{roomNumber}</span>
           </div>
 
           {/* Hover Status Tooltip */}
-          {hovered && (
-            <div className="bg-surface-container-lowest/95 text-on-surface text-[9px] font-sans font-semibold px-2 py-0.5 rounded-md border border-surface-border shadow-lg whitespace-nowrap animate-fade-in flex items-center gap-1">
+          {hovered && !selected && (
+            <div className="bg-surface-container-lowest/95 text-on-surface text-[10px] font-sans font-semibold px-2.5 py-1 rounded-md border border-surface-border shadow-xl whitespace-nowrap animate-fade-in flex items-center gap-1.5">
               <span className="capitalize text-primary font-bold">{status}</span>
-              {branch && <span className="text-on-surface-variant font-normal">• {branch.split('•')[0]}</span>}
+              {roomType && <span className="text-on-surface-variant">• {roomType}</span>}
+              {branch && <span className="text-on-surface-variant font-normal">({branch.split('•')[0]})</span>}
             </div>
           )}
         </div>
@@ -61,4 +73,3 @@ export const RoomLabel = ({
     </group>
   );
 };
-

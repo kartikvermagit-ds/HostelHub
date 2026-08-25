@@ -9,6 +9,7 @@ import ctRoutes from './ct.routes.js';
 import announcementRoutes from './announcement.routes.js';
 import subjectRoutes from './subject.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
+import hostelRoutes from './hostel.routes.js';
 
 const router = Router();
 
@@ -25,5 +26,7 @@ router.use('/cts', ctRoutes);
 router.use('/announcements', announcementRoutes);
 router.use('/subjects', subjectRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/hostels', hostelRoutes);
+
 
 export default router;

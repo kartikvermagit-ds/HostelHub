@@ -7,16 +7,15 @@ export { HostelScene, HostelSceneMesh } from './HostelScene';
 export { UploadAnimation, UploadAnimationScene } from './UploadAnimation';
 export { CTScene, CTSceneMesh } from './CTScene';
 export { ProfileCard3D } from './ProfileCard3D';
-export { HostelHubScene } from './HostelHubScene';
+export { HostelExperience } from './HostelExperience';
+export { Building3D } from './Building3D';
+export { Floor3D } from './Floor3D';
+export { Room3D } from './Room3D';
+export { RoomInterior3D, RoomInteriorMesh } from './RoomInterior3D';
+export { RoomLabel } from './RoomLabel';
+export { RoomDetailModal } from './RoomDetailModal';
 export { Book3D } from './Book3D';
 export { BookPages } from './BookPages';
 export { Hostel3D } from './Hostel3D';
-export { Floor3D } from './Floor3D';
-export { Room3D } from './Room3D';
-export { RoomInterior } from './RoomInterior';
-export { RoomLabel } from './RoomLabel';
 export { HostelCamera } from './HostelCamera';
 export { SceneControls } from './SceneControls';
-export { hostelsData } from './data/hostelData';
-
-
