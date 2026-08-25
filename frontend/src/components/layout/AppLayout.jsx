@@ -1,10 +1,13 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from './Sidebar';
 import { TopHeader } from './TopHeader';
 import { BottomNav } from './BottomNav';
 
 export const AppLayout = () => {
+  const location = useLocation();
+
   return (
     <div className="text-on-surface bg-app-bg min-h-screen flex flex-col antialiased">
       {/* Persistent Left Sidebar for Desktop */}
@@ -15,9 +18,20 @@ export const AppLayout = () => {
         {/* Sticky Top Header */}
         <TopHeader />
 
-        {/* Page Content Outlet */}
+        {/* Page Content Outlet with Smooth Transition */}
         <div className="flex-1 flex flex-col pb-20 lg:pb-8">
-          <Outlet />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="flex-1 flex flex-col"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 

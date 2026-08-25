@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import { CTCard } from '../components/common/CTCard';
 import { QuickActions } from '../components/common/QuickActions';
 import { ResourceItem } from '../components/common/ResourceItem';
+import { FloatingBooks } from '../components/3d/FloatingBooks';
 
 export const HomePage = () => {
   const { user, resources, upcomingTests, searchQuery, activeCategoryTab, setActiveCategoryTab } = useApp();
@@ -32,15 +34,31 @@ export const HomePage = () => {
 
   return (
     <main className="flex-1 max-w-container-max mx-auto w-full px-4 md:px-margin-page py-4 md:py-stack-lg flex flex-col gap-6 md:gap-stack-lg">
-      {/* Welcome Section */}
-      <section className="flex flex-col gap-1 md:gap-2">
-        <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-bold">
-          Good morning, {user.full_name ? user.full_name.split(' ')[0] : user.name || 'Kartik'} 👋
-        </h1>
-        <p className="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant">
-          Everything your hostel needs to prepare better.
-        </p>
-      </section>
+      {/* Welcome Section with Subtle 3D Floating Books Element */}
+      <motion.section
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="bg-surface-container-lowest border border-surface-border rounded-2xl p-5 md:p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 overflow-hidden relative"
+      >
+        <div className="flex-1 flex flex-col gap-2 z-10">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold self-start">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Hostel Academic Space</span>
+          </div>
+          <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-bold">
+            Good morning, {user.full_name ? user.full_name.split(' ')[0] : user.name || 'Kartik'} 👋
+          </h1>
+          <p className="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant max-w-xl">
+            Everything your hostel needs to prepare better. Search notes, prepare for CTs, and access past papers.
+          </p>
+        </div>
+
+        {/* 3D Floating Study Element */}
+        <div className="w-full md:w-64 h-36 md:h-44 shrink-0 flex items-center justify-center relative">
+          <FloatingBooks className="w-full h-full" />
+        </div>
+      </motion.section>
 
       {/* Mobile-Only: Next CT Compact Card */}
       <section className="md:hidden">

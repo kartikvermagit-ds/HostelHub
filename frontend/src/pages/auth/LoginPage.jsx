@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { HostelScene } from '../../components/3d/HostelScene';
+import { Logo3D } from '../../components/3d/Logo3D';
 
 export const LoginPage = () => {
   const { login } = useAuth();
@@ -45,13 +48,18 @@ export const LoginPage = () => {
     <div className="min-h-screen bg-surface flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         
-        {/* Left Column: Desktop Branding & Benefits (Hidden on Mobile/Tablet) */}
-        <div className="hidden lg:flex lg:col-span-6 flex-col justify-between pr-6 space-y-8">
+        {/* Left Column: Desktop Branding & 3D Hostel Experience (Hidden on Mobile/Tablet) */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="hidden lg:flex lg:col-span-6 flex-col justify-between pr-6 space-y-6"
+        >
           <div>
-            {/* Brand Logo Header */}
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center text-on-primary font-bold text-2xl shadow-sm">
-                H
+            {/* Brand Logo Header with 3D Logo */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shadow-sm overflow-hidden">
+                <Logo3D className="w-11 h-11" scale={0.9} />
               </div>
               <div>
                 <span className="font-headline-md text-2xl font-bold text-on-surface tracking-tight block">
@@ -63,52 +71,50 @@ export const LoginPage = () => {
               </div>
             </div>
 
-            <h1 className="font-headline-lg text-3xl font-extrabold text-on-surface leading-tight tracking-tight mb-4">
+            <h1 className="font-headline-lg text-3xl font-extrabold text-on-surface leading-tight tracking-tight mb-2">
               Everything your hostel needs to prepare better.
             </h1>
-            <p className="font-body-md text-on-surface-variant text-base leading-relaxed">
+            <p className="font-body-md text-on-surface-variant text-sm leading-relaxed">
               Access verified lecture notes, previous year solved papers, and class test checklists curated by your hostel community.
             </p>
           </div>
 
+          {/* Interactive 3D Hostel Scene */}
+          <div className="w-full h-48 rounded-2xl bg-gradient-to-b from-surface-container-low/50 to-surface-container-highest/30 border border-surface-border overflow-hidden relative shadow-inner">
+            <HostelScene className="w-full h-full" />
+            <div className="absolute bottom-2 right-3 pointer-events-none text-[10px] text-on-surface-variant/60 font-medium bg-surface/80 px-2 py-0.5 rounded-full backdrop-blur-xs">
+              Interactive 3D Study Space
+            </div>
+          </div>
+
           {/* 3 Minimal Benefit Cards */}
-          <div className="space-y-3.5">
-            <div className="flex items-center gap-3.5 p-3.5 bg-surface-container-lowest rounded-xl border border-surface-border academic-shadow">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[22px]">description</span>
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-xl border border-surface-border academic-shadow hover:border-primary/30 transition-colors">
+              <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[20px]">description</span>
               </div>
               <div>
-                <h4 className="text-sm font-bold text-on-surface">Share Notes & PDFs</h4>
-                <p className="text-xs text-on-surface-variant">Class summaries, handwritten formulas, and teacher notes.</p>
+                <h4 className="text-xs font-bold text-on-surface">Share Notes & PDFs</h4>
+                <p className="text-[11px] text-on-surface-variant">Class summaries, handwritten formulas, and teacher notes.</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5 p-3.5 bg-surface-container-lowest rounded-xl border border-surface-border academic-shadow">
-              <div className="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[22px]">assignment</span>
+            <div className="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-xl border border-surface-border academic-shadow hover:border-primary/30 transition-colors">
+              <div className="w-9 h-9 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[20px]">assignment</span>
               </div>
               <div>
-                <h4 className="text-sm font-bold text-on-surface">Prepare for CTs</h4>
-                <p className="text-xs text-on-surface-variant">Exam countdowns, topic checklists, and previous year papers.</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3.5 p-3.5 bg-surface-container-lowest rounded-xl border border-surface-border academic-shadow">
-              <div className="w-10 h-10 rounded-lg bg-surface-variant text-primary flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[22px]">play_circle</span>
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-on-surface">Share Videos & Resources</h4>
-                <p className="text-xs text-on-surface-variant">Curated YouTube playlists, diagrams, and discussion threads.</p>
+                <h4 className="text-xs font-bold text-on-surface">Prepare for CTs</h4>
+                <p className="text-[11px] text-on-surface-variant">Exam countdowns, topic checklists, and previous year papers.</p>
               </div>
             </div>
           </div>
 
-          <div className="text-xs text-on-surface-variant flex items-center gap-2 pt-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <div className="text-xs text-on-surface-variant flex items-center gap-2 pt-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Active academic repository for hostel students</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column: Authentication Card (Mobile & Desktop) */}
         <div className="w-full lg:col-span-6 flex flex-col justify-center">

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
+import { CTScene } from '../components/3d/CTScene';
 
 export const CTZonePage = () => {
   const [searchParams] = useSearchParams();
@@ -21,15 +23,35 @@ export const CTZonePage = () => {
 
   return (
     <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-margin-page py-4 md:py-stack-lg">
-      {/* Page Header */}
-      <div className="mb-6 md:mb-stack-lg">
-        <h1 className="font-headline-lg-mobile md:font-display text-headline-lg-mobile md:text-display text-on-surface mb-1 md:mb-2 tracking-tight">
-          CT Zone
-        </h1>
-        <p className="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant max-w-2xl">
-          Everything you need before your next class test. Track progress, review materials, and conquer your exams.
-        </p>
-      </div>
+      {/* Page Header with 3D CT Calendar & Countdown */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="mb-6 md:mb-stack-lg bg-surface-container-lowest border border-surface-border rounded-2xl p-5 md:p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div className="flex-1">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-2">
+            <span className="material-symbols-outlined text-[14px]">event_note</span>
+            <span>Upcoming Exam Countdown</span>
+          </div>
+          <h1 className="font-headline-lg-mobile md:font-display text-headline-lg-mobile md:text-display text-on-surface mb-1 md:mb-2 tracking-tight">
+            CT Zone
+          </h1>
+          <p className="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant max-w-2xl">
+            Everything you need before your next class test. Track progress, review materials, and conquer your exams.
+          </p>
+        </div>
+
+        {/* 3D CT Calendar Scene */}
+        <div className="w-full md:w-64 h-36 md:h-44 shrink-0 flex items-center justify-center relative">
+          <CTScene
+            subject={currentSubjectKey}
+            daysLeft={currentSubject.daysLeft || 1}
+            className="w-full h-full"
+          />
+        </div>
+      </motion.div>
 
       {/* Section 1: Active Preparations Cards (Desktop & Mobile) */}
       <section className="mb-8 md:mb-stack-lg">

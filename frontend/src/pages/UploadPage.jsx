@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
+import { UploadAnimation } from '../components/3d/UploadAnimation';
 
 export const UploadPage = () => {
   const navigate = useNavigate();
@@ -114,8 +116,8 @@ export const UploadPage = () => {
 
       setTimeout(() => {
         navigate('/notes');
-      }, 1200);
-    }, 1500);
+      }, 1400);
+    }, 1600);
   };
 
   return (
@@ -149,28 +151,59 @@ export const UploadPage = () => {
               id="fileUpload"
               accept=".pdf,.jpg,.jpeg,.png,.webp,.mp4,.docx,.pptx,.txt"
               onChange={handleFileChange}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              disabled={uploadState === 'uploading'}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
             />
+            
+            {/* Dropzone with 3D Preview */}
             <div
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDrop}
-              className="border-2 border-dashed border-outline-variant rounded-xl p-stack-md md:p-stack-lg flex flex-col items-center justify-center text-center bg-surface group-hover:bg-surface-container-low group-hover:border-primary transition-all duration-200 min-h-[180px]"
+              className={`border-2 border-dashed rounded-xl p-4 md:p-6 flex flex-col items-center justify-center text-center transition-all duration-200 min-h-[200px] ${
+                selectedFile
+                  ? 'border-primary/40 bg-surface-container-low/40'
+                  : 'border-outline-variant bg-surface group-hover:bg-surface-container-low group-hover:border-primary'
+              }`}
             >
-              <span className="material-symbols-outlined text-outline text-4xl mb-2 group-hover:text-primary transition-colors">
-                cloud_upload
-              </span>
-              <h3 className="font-label-md text-label-md text-on-surface mb-1 font-semibold">
-                Drag & drop your file here
-              </h3>
-              <p className="font-body-sm text-body-sm text-on-surface-variant">
-                or click to browse from your computer
-              </p>
-              <p className="font-label-sm text-[11px] text-on-surface-variant mt-3 opacity-70">
-                Supported formats: PDF, JPG, PNG, MP4, DOCX (Max 50MB)
-              </p>
+              {selectedFile ? (
+                <div className="w-full flex flex-col items-center">
+                  {/* 3D Upload Animation Scene */}
+                  <UploadAnimation
+                    uploadState={uploadState}
+                    className="w-full h-36"
+                  />
+                  <div className="mt-1 flex items-center gap-2 text-primary font-semibold text-xs">
+                    <span className="material-symbols-outlined text-[16px]">
+                      {uploadState === 'success' ? 'check_circle' : 'attachment'}
+                    </span>
+                    <span>
+                      {uploadState === 'success'
+                        ? 'Resource uploaded successfully!'
+                        : uploadState === 'uploading'
+                        ? 'Syncing resource to hostel cloud...'
+                        : 'Ready to upload'}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-outline text-4xl mb-2 group-hover:text-primary transition-colors">
+                    cloud_upload
+                  </span>
+                  <h3 className="font-label-md text-label-md text-on-surface mb-1 font-semibold">
+                    Drag & drop your file here
+                  </h3>
+                  <p className="font-body-sm text-body-sm text-on-surface-variant">
+                    or click to browse from your computer
+                  </p>
+                  <p className="font-label-sm text-[11px] text-on-surface-variant mt-3 opacity-70">
+                    Supported formats: PDF, JPG, PNG, MP4, DOCX (Max 50MB)
+                  </p>
+                </>
+              )}
             </div>
 
-            {selectedFile && (
+            {selectedFile && uploadState === 'idle' && (
               <div className="mt-4 p-4 rounded-lg border border-surface-border bg-surface-container flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-primary text-[24px]">

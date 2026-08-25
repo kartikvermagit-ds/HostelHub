@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
+import { Logo3D } from '../3d/Logo3D';
 
 export const Sidebar = () => {
   const { user } = useApp();
@@ -38,8 +39,8 @@ export const Sidebar = () => {
     <aside className="bg-surface-container-lowest border-r border-surface-border h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col py-stack-md px-4 z-40 transition-colors duration-200">
       {/* Brand Header */}
       <div className="flex items-center gap-3 px-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center font-display text-[22px] font-bold shrink-0 shadow-sm">
-          H
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+          <Logo3D className="w-10 h-10" scale={0.8} />
         </div>
         <div>
           <h1 className="font-headline-sm text-headline-sm font-bold text-primary leading-tight">
