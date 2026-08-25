@@ -14,6 +14,7 @@ export { Room3D } from './Room3D';
 export { RoomInterior3D, RoomInteriorMesh } from './RoomInterior3D';
 export { RoomLabel } from './RoomLabel';
 export { RoomDetailModal } from './RoomDetailModal';
+export { InteractiveRoomModals } from './InteractiveRoomModals';
 export { Book3D } from './Book3D';
 export { BookPages } from './BookPages';
 export { Hostel3D } from './Hostel3D';

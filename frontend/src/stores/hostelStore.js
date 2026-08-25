@@ -510,6 +510,15 @@ export const useHostelStore = create(
       cameraMode: "overview", // 'overview' | 'room' | 'floor'
       isStoryPlaying: false,
 
+      // New Architectural & Feature Flags
+      isExplodedView: false,
+      lightingMode: "day", // 'day' | 'night' | 'auto'
+      qualityMode: "high", // 'high' | 'balanced' | 'performance'
+      favoriteRoomIds: ["303"],
+      comparedRoomIds: [],
+      activeInteractiveModal: null, // 'laptop-workspace' | 'bookshelf-resources' | 'study-area-stats' | 'share-qr' | 'compare' | null
+      activeBookSubject: "COA", // for bookshelf modal
+
       // Selectors & Navigation
       setSelectedHostelId: (id) => {
         const hostel = get().hostels.find((h) => h.id === id);
@@ -538,11 +547,48 @@ export const useHostelStore = create(
       setCameraMode: (mode) => set({ cameraMode: mode }),
       setIsStoryPlaying: (isPlaying) => set({ isStoryPlaying: isPlaying }),
 
+      // Interactive Features Actions
+      setIsExplodedView: (isExploded) => set({ isExplodedView: isExploded }),
+      toggleExplodedView: () => set((state) => ({ isExplodedView: !state.isExplodedView })),
+      setLightingMode: (mode) => set({ lightingMode: mode }),
+      toggleLightingMode: () =>
+        set((state) => ({ lightingMode: state.lightingMode === "day" ? "night" : "day" })),
+      setQualityMode: (mode) => set({ qualityMode: mode }),
+      setActiveInteractiveModal: (modal, subject = "COA") =>
+        set({ activeInteractiveModal: modal, activeBookSubject: subject }),
+
+      toggleFavoriteRoom: (roomId) => {
+        set((state) => {
+          const exists = state.favoriteRoomIds.includes(roomId);
+          return {
+            favoriteRoomIds: exists
+              ? state.favoriteRoomIds.filter((id) => id !== roomId)
+              : [...state.favoriteRoomIds, roomId]
+          };
+        });
+      },
+
+      toggleCompareRoom: (roomId) => {
+        set((state) => {
+          const exists = state.comparedRoomIds.includes(roomId);
+          if (exists) {
+            return { comparedRoomIds: state.comparedRoomIds.filter((id) => id !== roomId) };
+          }
+          if (state.comparedRoomIds.length >= 3) {
+            return state; // maximum 3 rooms
+          }
+          return { comparedRoomIds: [...state.comparedRoomIds, roomId] };
+        });
+      },
+
+      clearComparedRooms: () => set({ comparedRoomIds: [] }),
+
       resetView: () => {
         set({
           selectedRoomId: null,
           selectedFloorNumber: null,
-          cameraMode: "overview"
+          cameraMode: "overview",
+          isExplodedView: false
         });
       },
 
@@ -674,13 +720,16 @@ export const useHostelStore = create(
           selectedHostelId: "hostel-4",
           selectedRoomId: "303",
           selectedFloorNumber: null,
-          cameraMode: "overview"
+          cameraMode: "overview",
+          isExplodedView: false,
+          lightingMode: "day"
         });
       }
     }),
     {
       name: "hostelhub_dynamic_3d_store",
-      version: 1
+      version: 2
     }
   )
 );
+
