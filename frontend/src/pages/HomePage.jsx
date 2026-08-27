@@ -6,6 +6,7 @@ import { CTCard } from '../components/common/CTCard';
 import { QuickActions } from '../components/common/QuickActions';
 import { ResourceItem } from '../components/common/ResourceItem';
 import { HostelExperience } from '../components/3d/HostelExperience';
+import { GlassCard, GlassBadge, GlassButton } from '../components/ui';
 
 export const HomePage = () => {
   const { user, resources, upcomingTests, searchQuery, activeCategoryTab, setActiveCategoryTab } = useApp();
@@ -31,81 +32,143 @@ export const HomePage = () => {
   });
 
   const nextCT = upcomingTests[0];
+  const firstName = (user?.full_name || user?.name || 'Kartik').split(' ')[0];
 
   return (
-    <main className="flex-1 max-w-container-max mx-auto w-full px-4 md:px-margin-page py-4 md:py-stack-lg flex flex-col gap-6 md:gap-stack-lg">
-      {/* Interactive 3D Hostel Explorer */}
+    <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 md:py-6 flex flex-col gap-6 md:gap-8">
+      {/* 1. Architectural Glass Welcome Hero */}
+      <motion.section
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      >
+        <GlassCard className="w-full relative overflow-hidden p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-white/60 dark:border-primary-fixed/20 shadow-xl">
+          <div className="space-y-2 z-10 max-w-xl">
+            {/* Header Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-[11px] font-bold text-primary border border-primary/20 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+              <span>HOSTEL ACADEMIC SPACE</span>
+            </div>
+
+            {/* Greeting */}
+            <h1 className="font-headline-lg text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">
+              Good morning, {firstName} 👋
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-xs sm:text-sm text-on-surface-variant font-medium leading-relaxed">
+              Everything your hostel needs to prepare better. Explore your 3D digital hostel twin, collaborate with wingmates, and access verified exam papers.
+            </p>
+
+            {/* Quick Metrics */}
+            <div className="flex flex-wrap items-center gap-2 pt-2">
+              <GlassBadge variant="primary" icon="description">
+                {resources.length} Academic Resources
+              </GlassBadge>
+              <GlassBadge variant="warning" icon="quiz">
+                {upcomingTests.length} Upcoming CTs
+              </GlassBadge>
+              <GlassBadge variant="accent" icon="domain">
+                {user?.hostel || 'Aryabhata Hostel'} • 3D Twin
+              </GlassBadge>
+            </div>
+          </div>
+
+          {/* Right Hero Visual Mark */}
+          <div className="relative shrink-0 hidden sm:flex items-center justify-center p-3 rounded-2xl glass-panel shadow-lg border border-white/70 dark:border-primary-fixed/20">
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ repeat: Infinity, duration: 4.5, ease: 'easeInOut' }}
+              className="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden"
+            >
+              <img
+                src="/logo-app.png"
+                alt="HostelHub 3D Logo"
+                className="w-full h-full object-contain drop-shadow-xl"
+              />
+            </motion.div>
+          </div>
+        </GlassCard>
+      </motion.section>
+
+      {/* 2. Interactive 3D Digital Twin Hostel Hero */}
       <motion.section
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
         className="w-full"
       >
         <HostelExperience className="w-full" />
       </motion.section>
 
-
-      {/* Mobile-Only: Next CT Compact Card */}
+      {/* 3. Mobile-Only: Next CT Compact Card */}
       <section className="md:hidden">
         {nextCT && (
           <CTCard ct={nextCT} variant="compact" />
         )}
       </section>
 
-      {/* Desktop Upcoming CTs Section */}
+      {/* 4. Desktop Upcoming CTs Section (Floating Glass Cards) */}
       <section className="hidden md:flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-headline-sm text-headline-sm text-on-surface">
-            Upcoming CTs
-          </h2>
+          <div>
+            <h2 className="font-headline-sm text-lg font-bold text-on-surface">
+              Upcoming Class Tests (CT Zone)
+            </h2>
+            <p className="text-xs text-on-surface-variant font-medium">Exam countdowns, topic checklists, and previous year solutions.</p>
+          </div>
           <Link
             to="/ct-zone"
-            className="font-label-md text-label-md text-primary hover:underline"
+            className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
           >
-            View All
+            <span>View All CTs</span>
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {upcomingTests.slice(0, 3).map((ct) => (
             <CTCard key={ct.id} ct={ct} />
           ))}
         </div>
       </section>
 
-      {/* Quick Actions Bento Grid */}
+      {/* 5. Quick Actions Bento Grid */}
       <QuickActions />
 
-      {/* Latest Resources List */}
+      {/* 6. Latest Resources List */}
       <section className="flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border pb-3 gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border/60 pb-3 gap-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-headline-sm text-headline-sm text-on-surface">
-              Latest Resources
+            <h2 className="font-headline-sm text-lg font-bold text-on-surface">
+              Latest Academic Resources
             </h2>
             <Link
               to="/notes"
-              className="sm:hidden font-label-sm text-label-sm text-primary font-semibold"
+              className="sm:hidden text-xs text-primary font-bold hover:underline"
             >
               View All
             </Link>
           </div>
 
-          {/* Filter Tabs (Horizontal scrollable on mobile) */}
-          <div className="flex gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategoryTab(cat)}
-                className={`px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-all ${
-                  activeCategoryTab === cat
-                    ? "bg-surface-container-highest text-on-surface font-bold shadow-sm"
-                    : "text-on-surface-variant hover:bg-surface-container"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* Filter Tabs Pills */}
+          <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            {categories.map((cat) => {
+              const isActive = activeCategoryTab === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategoryTab(cat)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
+                    isActive
+                      ? "bg-primary text-on-primary font-bold shadow-xs shadow-primary/25"
+                      : "glass-panel text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -116,16 +179,17 @@ export const HomePage = () => {
               <ResourceItem key={res.id} resource={res} />
             ))
           ) : (
-            <div className="bg-surface-container-lowest border border-surface-border rounded-xl p-8 text-center text-on-surface-variant">
+            <GlassCard className="p-8 text-center text-on-surface-variant">
               <span className="material-symbols-outlined text-4xl mb-2 text-outline">search_off</span>
-              <p className="font-label-md text-label-md">No resources found matching your filter.</p>
+              <p className="font-semibold text-xs">No resources found matching your filter.</p>
               <button
+                type="button"
                 onClick={() => { setActiveCategoryTab("All"); }}
-                className="mt-3 text-primary text-label-sm font-semibold hover:underline"
+                className="mt-3 text-primary text-xs font-bold hover:underline"
               >
                 Reset filters
               </button>
-            </div>
+            </GlassCard>
           )}
         </div>
       </section>

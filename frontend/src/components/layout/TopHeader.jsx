@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
+import { GlassInput, GlassButton, GlassPanel } from '../ui';
 
 export const TopHeader = () => {
   const { user, searchQuery, setSearchQuery } = useApp();
@@ -11,8 +12,17 @@ export const TopHeader = () => {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const isUploadPage = location.pathname === '/upload';
+  useEffect(() => {
+    // Check initial dark mode from document
+    setIsDarkMode(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  const toggleDarkMode = () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    setIsDarkMode(isDark);
+  };
 
   const mockNotifications = [
     {
@@ -51,183 +61,157 @@ export const TopHeader = () => {
   const hostelInfo = user?.hostel ? `${user.hostel}${user.room_number ? ` • ${user.room_number}` : ''}` : 'Hostel 4';
 
   return (
-    <header className="bg-surface-container-lowest border-b border-surface-border flex justify-between items-center w-full px-4 md:px-margin-page py-stack-sm sticky top-0 z-30 transition-all duration-200">
-      {/* Mobile Brand / Page Title */}
-      <div className="flex items-center gap-2.5 lg:hidden">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0 overflow-hidden p-0.5 shadow-xs">
-            <img src="/logo-app.png" alt="HostelHub Logo" className="w-full h-full object-contain rounded-md" />
+    <header className="sticky top-0 z-30 w-full px-4 md:px-8 py-3.5 flex items-center justify-between gap-4 transition-all">
+      {/* Mobile Brand Title with Official Logo */}
+      <div className="flex items-center gap-2.5 lg:hidden shrink-0">
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center shrink-0 overflow-hidden p-1 shadow-xs group-hover:scale-105 transition-transform">
+            <img src="/logo-app.png" alt="HostelHub Logo" className="w-full h-full object-contain rounded-lg" />
           </div>
-          <span className="font-headline-md text-headline-sm-mobile md:text-headline-md font-bold text-primary">
+          <span className="font-headline-md text-base font-bold text-primary">
             HostelHub
           </span>
         </Link>
       </div>
 
-      {/* Desktop Breadcrumb / Search Bar */}
-      <div className="hidden md:flex flex-1 max-w-xl relative items-center">
-        <span className="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">
-          search
-        </span>
-        <input
-          type="text"
+      {/* Center / Left: Floating Glass Command Search Bar */}
+      <div className="hidden sm:flex flex-1 max-w-xl">
+        <GlassInput
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search notes, subjects, PYQs, videos..."
-          className="w-full pl-10 pr-4 py-2 bg-surface-bright border border-surface-border rounded-lg text-body-md font-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-on-surface placeholder:text-on-surface-variant"
+          placeholder="Search notes, PYQs, videos, rooms... (⌘K)"
+          icon="search"
+          shortcut="⌘K"
+          className="w-full"
         />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="absolute right-3 text-on-surface-variant hover:text-on-surface"
-          >
-            <span className="material-symbols-outlined text-[16px]">close</span>
-          </button>
-        )}
       </div>
 
-      {/* Trailing Actions */}
-      <div className="flex items-center gap-3 md:gap-4 relative">
-        {/* Notifications Icon Button */}
+      {/* Right Controls: Theme Toggle, Notifications, User Menu */}
+      <div className="flex items-center gap-2.5 shrink-0">
+        {/* Day / Dark Mode Atmosphere Toggle */}
+        <button
+          type="button"
+          onClick={toggleDarkMode}
+          className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary/40 shadow-xs active:scale-95 transition-all"
+          title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          <span className="material-symbols-outlined text-[19px]">
+            {isDarkMode ? 'light_mode' : 'dark_mode'}
+          </span>
+        </button>
+
+        {/* Notifications Button */}
         <div className="relative">
           <button
-            aria-label="Notifications"
-            className="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-low relative"
+            type="button"
             onClick={() => {
               setShowNotifications(!showNotifications);
               setShowUserMenu(false);
             }}
+            className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary/40 shadow-xs relative active:scale-95 transition-all"
+            title="Notifications"
           >
-            <span className="material-symbols-outlined text-[22px]">notifications</span>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-tertiary"></span>
+            <span className="material-symbols-outlined text-[20px]">notifications</span>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-surface shadow-xs"></span>
           </button>
 
-          {/* Notifications Dropdown Panel */}
+          {/* Notifications Glass Dropdown */}
           {showNotifications && (
-            <>
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setShowNotifications(false)}
-              ></div>
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-surface-container-lowest border border-surface-border rounded-2xl shadow-xl z-50 p-4 animate-fade-in">
-                <div className="flex items-center justify-between pb-3 border-b border-surface-border mb-3">
-                  <h3 className="font-headline-sm text-label-md font-bold text-on-surface">
-                    Hostel Notifications
-                  </h3>
-                  <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
-                    1 New
-                  </span>
-                </div>
-
-                <div className="space-y-2.5 max-h-72 overflow-y-auto">
-                  {mockNotifications.map((n) => (
-                    <div
-                      key={n.id}
-                      className={`p-3 rounded-xl flex items-start gap-3 transition-colors ${
-                        n.unread ? 'bg-surface-container-low border border-primary/20' : 'bg-surface hover:bg-surface-container-low'
-                      }`}
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-surface-variant flex items-center justify-center shrink-0 text-primary">
-                        <span className="material-symbols-outlined text-[18px]">{n.icon}</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start">
-                          <h4 className="text-xs font-bold text-on-surface truncate">{n.title}</h4>
-                          <span className="text-[10px] text-on-surface-variant shrink-0 ml-2">{n.time}</span>
-                        </div>
-                        <p className="text-[12px] text-on-surface-variant mt-0.5 line-clamp-2">{n.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            <div className="absolute right-0 mt-2 w-80 sm:w-96 glass-floating rounded-2xl p-4 shadow-2xl z-50 border border-white/60 dark:border-primary-fixed/20 animate-fade-in">
+              <div className="flex items-center justify-between pb-3 border-b border-surface-border/50">
+                <h4 className="font-headline-sm text-xs font-bold text-on-surface">Notifications</h4>
+                <span className="text-[10px] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10">
+                  1 New
+                </span>
               </div>
-            </>
+
+              <div className="divide-y divide-surface-border/40 max-h-72 overflow-y-auto pt-2 scrollbar-none">
+                {mockNotifications.map((notif) => (
+                  <div key={notif.id} className="py-2.5 flex items-start gap-3 hover:bg-surface-container/40 rounded-xl px-2 transition-colors">
+                    <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                      <span className="material-symbols-outlined text-[17px]">{notif.icon}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-on-surface truncate">{notif.title}</p>
+                      <p className="text-[11px] text-on-surface-variant line-clamp-2 mt-0.5">{notif.desc}</p>
+                      <span className="text-[10px] text-on-surface-variant/70 mt-1 block">{notif.time}</span>
+                    </div>
+                    {notif.unread && (
+                      <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5"></span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Quick Upload Button */}
-        {!isUploadPage && (
-          <Link
-            to="/upload"
-            className="hidden md:flex bg-primary text-on-primary font-label-md text-label-md py-2 px-4 rounded-lg items-center gap-2 hover:opacity-90 transition-opacity shadow-sm"
-          >
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            <span>Upload</span>
-          </Link>
-        )}
-
-        {/* User Profile Avatar with Dropdown */}
+        {/* User Profile Trigger */}
         <div className="relative">
           <button
+            type="button"
             onClick={() => {
               setShowUserMenu(!showUserMenu);
               setShowNotifications(false);
             }}
-            className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-secondary-container overflow-hidden border border-surface-border cursor-pointer hover:ring-2 hover:ring-primary/40 transition-all shrink-0 block"
-            aria-label="User Profile Menu"
+            className="flex items-center gap-2 p-1 rounded-xl glass-panel hover:border-primary/40 shadow-xs active:scale-95 transition-all"
           >
             <img
               src={avatarUrl}
               alt={displayName}
-              className="w-full h-full object-cover"
+              className="w-7 h-7 rounded-lg object-cover ring-1 ring-primary/30"
             />
+            <span className="material-symbols-outlined text-[17px] text-on-surface-variant hidden sm:block">
+              expand_more
+            </span>
           </button>
 
-          {/* User Menu Dropdown */}
+          {/* User Profile Glass Popover */}
           {showUserMenu && (
-            <>
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setShowUserMenu(false)}
-              ></div>
-              <div className="absolute right-0 mt-2 w-56 bg-surface-container-lowest border border-surface-border rounded-2xl shadow-xl z-50 p-2 animate-fade-in">
-                {/* Header User Info */}
-                <div className="p-3 border-b border-surface-border mb-1">
-                  <p className="text-sm font-bold text-on-surface truncate">{displayName}</p>
-                  <p className="text-[11px] text-on-surface-variant truncate">{hostelInfo}</p>
-                </div>
+            <div className="absolute right-0 mt-2 w-56 glass-floating rounded-2xl p-3 shadow-2xl z-50 border border-white/60 dark:border-primary-fixed/20 animate-fade-in text-xs">
+              <div className="pb-3 mb-2 border-b border-surface-border/50 px-2">
+                <p className="font-bold text-on-surface truncate">{displayName}</p>
+                <p className="text-[10px] text-primary font-semibold truncate">{hostelInfo}</p>
+              </div>
 
+              <div className="space-y-1">
                 <Link
                   to="/profile"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-on-surface hover:bg-surface-container/60 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>
+                  <span className="material-symbols-outlined text-[17px]">account_circle</span>
                   <span>My Profile</span>
                 </Link>
-
                 <Link
                   to="/saved"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-on-surface hover:bg-surface-container/60 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant">bookmark</span>
-                  <span>Saved Library</span>
+                  <span className="material-symbols-outlined text-[17px]">bookmark</span>
+                  <span>Saved Resources</span>
                 </Link>
-
                 <Link
-                  to="/settings"
+                  to="/admin"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-on-surface hover:bg-surface-container/60 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant">settings</span>
-                  <span>Settings</span>
+                  <span className="material-symbols-outlined text-[17px]">apartment</span>
+                  <span>Hostel Builder</span>
                 </Link>
+              </div>
 
-                <div className="my-1 border-t border-surface-border"></div>
-
+              <div className="pt-2 mt-2 border-t border-surface-border/50">
                 <button
-                  onClick={() => {
-                    setShowUserMenu(false);
-                    handleLogout();
-                  }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-red-600 hover:bg-red-500/10 transition-colors font-semibold"
                 >
-                  <span className="material-symbols-outlined text-[18px]">logout</span>
+                  <span className="material-symbols-outlined text-[17px]">logout</span>
                   <span>Sign Out</span>
                 </button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

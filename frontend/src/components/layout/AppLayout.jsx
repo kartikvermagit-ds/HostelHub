@@ -9,24 +9,24 @@ export const AppLayout = () => {
   const location = useLocation();
 
   return (
-    <div className="text-on-surface bg-app-bg min-h-screen flex flex-col antialiased">
-      {/* Persistent Left Sidebar for Desktop */}
+    <div className="text-on-surface min-h-screen flex flex-col antialiased relative selection:bg-primary/20 selection:text-primary">
+      {/* Floating Left Glass Sidebar for Desktop */}
       <Sidebar />
 
-      {/* Main Container Area */}
-      <div className="flex-1 flex flex-col min-h-screen w-full lg:ml-64 transition-all">
-        {/* Sticky Top Header */}
+      {/* Main Container Area with breathing room */}
+      <div className="flex-1 flex flex-col min-h-screen w-full lg:pl-[17rem] transition-all">
+        {/* Sticky Floating Top Header */}
         <TopHeader />
 
         {/* Page Content Outlet with Smooth Transition */}
-        <div className="flex-1 flex flex-col pb-20 lg:pb-8">
+        <div className="flex-1 flex flex-col pb-24 lg:pb-10 px-2 sm:px-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
               className="flex-1 flex flex-col"
             >
               <Outlet />
@@ -35,7 +35,7 @@ export const AppLayout = () => {
         </div>
       </div>
 
-      {/* Fixed Bottom Nav for Mobile */}
+      {/* Fixed Bottom Glass Nav for Mobile */}
       <BottomNav />
     </div>
   );
