@@ -224,9 +224,11 @@ export const Logo3D = ({ className = 'w-16 h-16', scale = 1.2 }) => {
       camera={{ position: [0, 0, 3.2], fov: 38 }}
       disableOnMobile={false}
       fallback={
-        <div className="w-full h-full rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary font-bold text-xl shadow-sm border border-primary/20">
-          H
-        </div>
+        <img
+          src="/logo-app.png"
+          alt="HostelHub Logo"
+          className="w-full h-full object-contain drop-shadow-md rounded-xl"
+        />
       }
     >
       {/* Soft Cinematic 3-Point Lighting Setup */}
@@ -297,9 +299,11 @@ export const LoadingSpinner3D = ({ message = 'Loading resources...' }) => {
           camera={{ position: [0, 0, 3.4], fov: 40 }}
           disableOnMobile={false}
           fallback={
-            <div className="w-12 h-12 rounded-2xl bg-primary/20 text-primary flex items-center justify-center font-bold text-lg animate-pulse border border-primary/30">
-              H
-            </div>
+            <img
+              src="/logo-app.png"
+              alt="HostelHub Logo"
+              className="w-12 h-12 object-contain animate-pulse drop-shadow-md rounded-xl"
+            />
           }
         >
           <SpinnerScene />

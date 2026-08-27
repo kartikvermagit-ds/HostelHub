@@ -56,16 +56,20 @@ export const LoginPage = () => {
           className="hidden lg:flex lg:col-span-6 flex-col justify-between pr-6 space-y-6"
         >
           <div>
-            {/* Brand Logo Header with 3D Logo */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shadow-sm overflow-hidden">
-                <Logo3D className="w-11 h-11" scale={0.9} />
+            {/* Brand Logo Header with Official 3D Mark */}
+            <div className="flex items-center gap-3.5 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center shadow-sm overflow-hidden p-1">
+                <img
+                  src="/logo-app.png"
+                  alt="HostelHub Logo"
+                  className="w-full h-full object-contain rounded-xl drop-shadow-sm"
+                />
               </div>
               <div>
                 <span className="font-headline-md text-2xl font-bold text-on-surface tracking-tight block">
                   HostelHub
                 </span>
-                <span className="text-xs text-on-surface-variant font-medium">
+                <span className="text-xs text-primary font-bold">
                   Your Hostel's Study Hub
                 </span>
               </div>
@@ -122,14 +126,18 @@ export const LoginPage = () => {
             
             {/* Mobile Header Logo */}
             <div className="flex lg:hidden items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary font-bold text-xl shadow-sm">
-                H
+              <div className="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center shadow-sm overflow-hidden p-1">
+                <img
+                  src="/logo-app.png"
+                  alt="HostelHub Logo"
+                  className="w-full h-full object-contain rounded-lg drop-shadow-sm"
+                />
               </div>
               <div>
                 <span className="font-headline-sm text-xl font-bold text-on-surface tracking-tight block">
                   HostelHub
                 </span>
-                <span className="text-[11px] text-on-surface-variant font-medium">
+                <span className="text-[11px] text-primary font-bold">
                   Your Hostel's Study Hub
                 </span>
               </div>

@@ -38,19 +38,23 @@ export const Sidebar = () => {
   return (
     <aside className="bg-surface-container-lowest border-r border-surface-border h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col py-stack-md px-4 z-40 transition-colors duration-200">
       {/* Brand Header */}
-      <div className="flex items-center gap-3 px-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
-          <Logo3D className="w-10 h-10" scale={0.8} />
+      <Link to="/" className="flex items-center gap-3 px-3 mb-6 group">
+        <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-0.5 group-hover:scale-105 transition-transform duration-200">
+          <img
+            src="/logo-app.png"
+            alt="HostelHub Logo"
+            className="w-full h-full object-contain rounded-lg drop-shadow-sm"
+          />
         </div>
         <div>
-          <h1 className="font-headline-sm text-headline-sm font-bold text-primary leading-tight">
+          <h1 className="font-headline-sm text-headline-sm font-bold text-primary leading-tight group-hover:text-primary-fixed-dim transition-colors">
             HostelHub
           </h1>
-          <p className="font-label-sm text-label-sm text-on-surface-variant">
+          <p className="font-label-sm text-[11px] text-on-surface-variant">
             Your Hostel's Study Hub
           </p>
         </div>
-      </div>
+      </Link>
 
       {/* Upload Material CTA Button */}
       <div className="px-1 mb-4">

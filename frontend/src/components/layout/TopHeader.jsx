@@ -53,9 +53,14 @@ export const TopHeader = () => {
   return (
     <header className="bg-surface-container-lowest border-b border-surface-border flex justify-between items-center w-full px-4 md:px-margin-page py-stack-sm sticky top-0 z-30 transition-all duration-200">
       {/* Mobile Brand / Page Title */}
-      <div className="flex items-center gap-2 lg:hidden">
-        <Link to="/" className="font-headline-md text-headline-sm-mobile md:text-headline-md font-bold text-primary">
-          HostelHub
+      <div className="flex items-center gap-2.5 lg:hidden">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0 overflow-hidden p-0.5 shadow-xs">
+            <img src="/logo-app.png" alt="HostelHub Logo" className="w-full h-full object-contain rounded-md" />
+          </div>
+          <span className="font-headline-md text-headline-sm-mobile md:text-headline-md font-bold text-primary">
+            HostelHub
+          </span>
         </Link>
       </div>
 
