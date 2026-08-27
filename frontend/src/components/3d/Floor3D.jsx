@@ -141,7 +141,7 @@ export const Floor3D = ({
       {/* =================================================== */}
       {/* 3. SIDE STAIRCASE & LIFT CORE TOWER                 */}
       {/* =================================================== */}
-      <group position={[buildingWidth / 2 - 0.3, 0.52, 0.4]}>
+      <group position={[(layoutConfig?.architecture?.staircasePosition === 'left' ? -1 : 1) * (buildingWidth / 2 - 0.3), 0.52, 0.4]}>
         <RoundedBox args={[0.52, floorHeight - 0.08, 1.8]} radius={0.025} position={[0, 0, 0]}>
           <meshStandardMaterial
             color={isNight ? '#161c26' : '#334155'}

@@ -65,8 +65,8 @@ export const HostelCamera = ({
       ref={controlsRef}
       enableDamping
       dampingFactor={0.06}
-      minDistance={3.2}
-      maxDistance={16.0}
+      minDistance={2.8}
+      maxDistance={26.0}
       minPolarAngle={Math.PI / 6}
       maxPolarAngle={Math.PI / 2.05}
       minAzimuthAngle={-Math.PI / 2.1}

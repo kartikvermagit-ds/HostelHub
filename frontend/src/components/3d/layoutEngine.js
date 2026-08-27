@@ -56,7 +56,7 @@ export function calculateBuildingDimensions(hostelData = {}, customLayout = null
     baseDepth = configuredDepth || 4.2;
   } else if (layoutType === LAYOUT_TYPES.H_SHAPE) {
     baseWidth = configuredWidth || Math.max(baseWidth, 8.2);
-    baseDepth = configuredDepth || 5.0;
+    baseDepth = configuredDepth || 5.2;
   }
 
   return {
@@ -98,7 +98,7 @@ export function calculateFloorLayout(floorData = {}, buildingDims = {}, customLa
       { id: 'wing-east', position: [width / 2 - sideWingThickness / 2, 0, 0], size: [sideWingThickness, 0.12, depth - mainWingThickness * 2] }
     );
 
-    // Distribute rooms across front and back wings
+    // Distribute rooms across front (South) and back (North) wings
     const perWing = Math.max(Math.ceil(roomCount / 2), 1);
     const southRooms = rooms.slice(0, perWing);
     const northRooms = rooms.slice(perWing);
@@ -124,6 +124,42 @@ export function calculateFloorLayout(floorData = {}, buildingDims = {}, customLa
         wing: 'north',
         position: [xPos, floorHeight * 0.48, -depth / 2 + mainWingThickness / 2 - 0.05],
         dimensions: [Math.min(step * 0.86, 1.35), floorHeight * 0.78, 1.05]
+      });
+    });
+  } else if (layoutType === LAYOUT_TYPES.H_SHAPE) {
+    // H-Shape: Two parallel East & West wings connected by a central connector
+    wings.push(
+      // Left (West) Wing
+      { id: 'wing-h-left', position: [-width / 2 + sideWingThickness / 2, 0, 0], size: [sideWingThickness, 0.12, depth] },
+      // Right (East) Wing
+      { id: 'wing-h-right', position: [width / 2 - sideWingThickness / 2, 0, 0], size: [sideWingThickness, 0.12, depth] },
+      // Center Connector Bridge
+      { id: 'wing-h-center', position: [0, 0, 0], size: [width - sideWingThickness * 2, 0.12, 1.2] }
+    );
+
+    const perWing = Math.max(Math.ceil(roomCount / 2), 1);
+    const leftRooms = rooms.slice(0, perWing);
+    const rightRooms = rooms.slice(perWing);
+
+    leftRooms.forEach((r, idx) => {
+      const step = (depth - 1.2) / Math.max(leftRooms.length, 1);
+      const zPos = -((depth - 1.2) / 2) + (idx + 0.5) * step;
+      roomDistribution.push({
+        ...r,
+        wing: 'left',
+        position: [-width / 2 + sideWingThickness / 2, floorHeight * 0.48, zPos],
+        dimensions: [1.1, floorHeight * 0.78, Math.min(step * 0.86, 1.25)]
+      });
+    });
+
+    rightRooms.forEach((r, idx) => {
+      const step = (depth - 1.2) / Math.max(rightRooms.length, 1);
+      const zPos = -((depth - 1.2) / 2) + (idx + 0.5) * step;
+      roomDistribution.push({
+        ...r,
+        wing: 'right',
+        position: [width / 2 - sideWingThickness / 2, floorHeight * 0.48, zPos],
+        dimensions: [1.1, floorHeight * 0.78, Math.min(step * 0.86, 1.25)]
       });
     });
   } else if (layoutType === LAYOUT_TYPES.U_SHAPE || layoutType === LAYOUT_TYPES.C_SHAPE) {
@@ -210,7 +246,7 @@ export function calculateCourtyardBounds(buildingDims = {}, customLayout = null)
     layoutType === LAYOUT_TYPES.C_SHAPE;
 
   const enabled = centralSpace.enabled !== undefined ? centralSpace.enabled : isCourtyardOrU;
-  const type = centralSpace.type || CENTRAL_SPACE_TYPES.COURTYARD;
+  const type = centralSpace.type || CENTRAL_SPACE_TYPES.STUDY_AREA;
 
   const courtyardWidth = centralSpace.width ? parseFloat(centralSpace.width) : Math.max(width - 3.2, 3.4);
   const courtyardDepth = centralSpace.depth ? parseFloat(centralSpace.depth) : Math.max(depth - 2.4, 2.4);
@@ -363,7 +399,7 @@ export function calculateCameraTarget({
 
   if (cameraMode === 'courtyard') {
     // Dedicated Courtyard Camera State: Angled focus into the central social/academic hub
-    targetPos.set(0, 2.6, Math.max(depth * 0.85 + 4.5, 6.2));
+    targetPos.set(0, Math.max(totalHeight * 0.45 + 1.8, 2.6), Math.max(depth * 0.9 + 4.8, 6.4));
     targetLookAt.set(0, 0.4, 0);
   } else if (cameraMode === 'room' && selectedRoom && selectedRoom.position) {
     const [rx, ry, rz] = selectedRoom.position;
@@ -372,14 +408,14 @@ export function calculateCameraTarget({
   } else if (cameraMode === 'floor' || selectedFloorNumber !== null) {
     const floorIdx = Math.max((selectedFloorNumber || 1) - 1, 0);
     const floorY = floorIdx * (floorHeight + (isExplodedView ? 0.75 : 0));
-    targetPos.set(0, floorY + 1.25, Math.max(width * 1.1, 8.2));
+    targetPos.set(0, floorY + 1.25, Math.max(width * 1.1, 8.4));
     targetLookAt.set(0, floorY + 0.35, 0.4);
   } else if (isExplodedView) {
-    targetPos.set(0, totalHeight + 1.8, Math.max(width * 1.25, 10.4));
+    targetPos.set(0, totalHeight + 2.0, Math.max(width * 1.25, totalHeight * 1.5, 10.4));
     targetLookAt.set(0, totalHeight * 0.5, 0.4);
   } else {
-    // Overview mode
-    targetPos.set(0, totalHeight * 0.65 + 0.6, Math.max(width * 1.15, 9.4));
+    // Overview mode - dynamic scaling for 1 to 10+ floors and any width
+    targetPos.set(0, Math.max(totalHeight * 0.65 + 1.2, 2.8), Math.max(width * 1.15, totalHeight * 1.45, 9.4));
     targetLookAt.set(0, totalHeight * 0.4, 0.4);
   }
 

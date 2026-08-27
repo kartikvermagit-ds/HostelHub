@@ -27,7 +27,7 @@ export const Building3D = ({
   const prefersReducedMotion = useReducedMotion();
 
   const {
-    name = 'Hostel 4',
+    name = 'Hostel Residence',
     floors = [],
     accentColor = '#00685f',
     layoutConfig = {}
@@ -68,8 +68,10 @@ export const Building3D = ({
     return positions;
   }, [buildingWidth, buildingDims.maxRoomsOnAnyFloor]);
 
-  // Dynamic sign width
-  const signWidth = Math.max(name.length * 0.26 + 1.6, 3.2);
+  // Dynamic sign width and auto-fitting font size for any name length
+  const maxAllowedSignWidth = Math.max(buildingWidth - 0.6, 3.4);
+  const signWidth = Math.min(Math.max(name.length * 0.22 + 1.4, 3.4), maxAllowedSignWidth);
+  const signFontSize = Math.min(0.23, Math.max((signWidth - 0.4) / (Math.max(name.length, 1) * 0.62), 0.12));
 
   return (
     <group ref={buildingRef} position={[0, -0.65, 0]}>
@@ -181,7 +183,17 @@ export const Building3D = ({
       {/* =================================================== */}
       {/* 3. RECOGNIZABLE HOSTEL MAIN ENTRANCE & CANOPY       */}
       {/* =================================================== */}
-      <group position={[0, 0.1, buildingDepth / 2 + 0.4]}>
+      <group
+        position={[
+          activeConfig?.architecture?.entrancePosition === 'left'
+            ? -buildingWidth * 0.22
+            : activeConfig?.architecture?.entrancePosition === 'right'
+            ? buildingWidth * 0.22
+            : 0,
+          0.1,
+          buildingDepth / 2 + 0.4
+        ]}
+      >
         {/* Entrance Steps */}
         <RoundedBox args={[2.5, 0.06, 0.65]} radius={0.015} position={[0, 0, 0.2]}>
           <meshStandardMaterial color={isNight ? '#1d2330' : '#384357'} roughness={0.4} />
@@ -314,11 +326,12 @@ export const Building3D = ({
           {/* Dynamic 3D Text of Selected Hostel Name */}
           <Text
             position={[0, 0, 0.075]}
-            fontSize={0.23}
+            fontSize={signFontSize}
+            maxWidth={signWidth - 0.4}
             color={isNight ? '#aefff6' : '#ffffff'}
             anchorX="center"
             anchorY="middle"
-            letterSpacing={0.07}
+            letterSpacing={0.05}
           >
             {name.toUpperCase()}
           </Text>

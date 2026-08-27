@@ -344,6 +344,7 @@ export const HostelAdminManager = ({ onToast = () => {} }) => {
             { id: 'floors', label: 'Floors', icon: 'layers' },
             { id: 'rooms', label: 'Rooms', icon: 'meeting_room' },
             { id: 'layout', label: 'Layout & Wings', icon: 'domain' },
+            { id: 'central-space', label: 'Central Space', icon: 'park' },
             { id: 'architecture', label: 'Architecture', icon: 'apartment' },
             { id: 'preview', label: 'Live 3D Preview', icon: 'view_in_ar' }
           ].map((tab) => {
@@ -353,13 +354,13 @@ export const HostelAdminManager = ({ onToast = () => {} }) => {
                 key={tab.id}
                 type="button"
                 onClick={() => setAdminTab(tab.id)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all shrink-0 ${
+                className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 ${
                   isActive
                     ? 'bg-primary text-on-primary shadow-xs'
                     : 'text-on-surface hover:bg-surface-container'
                 }`}
               >
-                <span className="material-symbols-outlined text-[18px]">{tab.icon}</span>
+                <span className="material-symbols-outlined text-[17px]">{tab.icon}</span>
                 <span>{tab.label}</span>
               </button>
             );
@@ -382,7 +383,7 @@ export const HostelAdminManager = ({ onToast = () => {} }) => {
                 placeholder="e.g. Aryabhata Hostel, Sarabhai Hostel, Hostel 4"
               />
               <p className="text-[11px] text-on-surface-variant mt-1">
-                This exact name will be illuminated on top of the 3D building.
+                This exact name will be illuminated on top of the 3D building and updated everywhere across the application.
               </p>
             </div>
 
@@ -758,12 +759,56 @@ export const HostelAdminManager = ({ onToast = () => {} }) => {
               </div>
             </div>
 
-            {/* Central Space Configuration */}
-            <div className="p-4 bg-surface-container-low rounded-2xl border border-surface-border space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-bold text-on-surface block mb-1">Floor Height (m)</label>
+                <input
+                  type="number"
+                  step="0.05"
+                  defaultValue={draftHostel.layoutConfig?.floorHeight || 1.05}
+                  onChange={(e) =>
+                    updateDraft((prev) => ({
+                      ...prev,
+                      layoutConfig: {
+                        ...(prev.layoutConfig || {}),
+                        floorHeight: parseFloat(e.target.value)
+                      }
+                    }))
+                  }
+                  className="w-full px-3 py-2 bg-surface border border-surface-border rounded-xl"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-on-surface block mb-1">Corridor Width (m)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  defaultValue={draftHostel.layoutConfig?.corridorWidth || 0.8}
+                  onChange={(e) =>
+                    updateDraft((prev) => ({
+                      ...prev,
+                      layoutConfig: {
+                        ...(prev.layoutConfig || {}),
+                        corridorWidth: parseFloat(e.target.value)
+                      }
+                    }))
+                  }
+                  className="w-full px-3 py-2 bg-surface border border-surface-border rounded-xl"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: CENTRAL SPACE */}
+        {adminTab === 'central-space' && (
+          <div className="space-y-5 text-xs max-w-xl">
+            <div className="p-4 bg-surface-container-low rounded-2xl border border-surface-border space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h5 className="font-bold text-on-surface">Central / Middle Space</h5>
-                  <p className="text-[11px] text-on-surface-variant">Enable open central courtyard, garden, or study area.</p>
+                  <h5 className="font-bold text-sm text-on-surface">Central / Middle Space</h5>
+                  <p className="text-xs text-on-surface-variant">Enable open central courtyard, garden, study area, or atrium.</p>
                 </div>
                 <input
                   type="checkbox"
@@ -785,11 +830,11 @@ export const HostelAdminManager = ({ onToast = () => {} }) => {
               </div>
 
               {draftHostel.layoutConfig?.centralSpace?.enabled !== false && (
-                <div className="space-y-3 pt-2">
+                <div className="space-y-4 pt-2">
                   <div>
-                    <label className="font-bold text-on-surface block mb-1">Central Space Type</label>
+                    <label className="font-bold text-on-surface block mb-1">Central Space Typology</label>
                     <select
-                      value={draftHostel.layoutConfig?.centralSpace?.type || 'Courtyard'}
+                      value={draftHostel.layoutConfig?.centralSpace?.type || 'Study Area'}
                       onChange={(e) =>
                         updateDraft((prev) => ({
                           ...prev,
@@ -802,11 +847,11 @@ export const HostelAdminManager = ({ onToast = () => {} }) => {
                           }
                         }))
                       }
-                      className="w-full px-3 py-2 bg-surface border border-surface-border rounded-xl"
+                      className="w-full px-3 py-2 bg-surface border border-surface-border rounded-xl font-bold"
                     >
+                      <option value="Study Area">Study Area (Outdoor Workstations, Lamps & Notice Board)</option>
                       <option value="Courtyard">Courtyard (Reflection Pool, Benches, Trees, Walkways)</option>
                       <option value="Garden">Garden (Lush Lawn, Botanical Center & Planters)</option>
-                      <option value="Study Area">Study Area (Outdoor Tables, Lamps & Notice Board)</option>
                       <option value="Common Area">Common Area (Conversational Social Lounge)</option>
                       <option value="Atrium">Atrium (Architectural Monument Core)</option>
                     </select>

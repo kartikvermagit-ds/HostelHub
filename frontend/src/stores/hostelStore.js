@@ -18,9 +18,9 @@ const initialHostels = [
       corridorWidth: 0.8,
       centralSpace: {
         enabled: true,
-        type: "Courtyard",
-        width: 4.6,
-        depth: 2.8,
+        type: "Study Area",
+        width: 4.8,
+        depth: 3.2,
         features: ["trees", "benches", "study_table", "lighting", "planter", "notice_board"]
       },
       architecture: {
