@@ -6,37 +6,49 @@ import { useReducedMotion } from './useReducedMotion';
 
 /**
  * Smooth Cinematic Camera Controller with Constrained OrbitControls
+ * Supports 4 States: Full Overview, Floor Focus, Room Focus, and Exploded View
  */
 export const HostelCamera = ({
-  phase = 'hostel', // 'book' | 'hostel' | 'room'
+  cameraMode = 'overview', // 'overview' | 'floor' | 'room'
+  selectedFloorNumber = null,
   selectedRoom = null,
+  isExplodedView = false,
+  floorHeight = 1.05,
   isUserInteracting = false
 }) => {
   const { camera } = useThree();
   const controlsRef = useRef();
   const prefersReducedMotion = useReducedMotion();
 
-  // Target coordinates
-  const targetPos = useRef(new THREE.Vector3(0, 3.8, 5.4));
-  const targetLookAt = useRef(new THREE.Vector3(0, 1.0, 0.4));
+  // Target vectors
+  const targetPos = useRef(new THREE.Vector3(0, 2.2, 9.6));
+  const targetLookAt = useRef(new THREE.Vector3(0, 1.1, 0.4));
 
   useEffect(() => {
-    if (phase === 'book') {
-      targetPos.current.set(0, 4.4, 4.6);
-      targetLookAt.current.set(0, 0, 0);
-    } else if (phase === 'hostel' || !selectedRoom) {
-      targetPos.current.set(0, 2.8, 6.2);
-      targetLookAt.current.set(0, 1.3, 0.4);
-    } else if (phase === 'room' && selectedRoom) {
+    if (cameraMode === 'room' && selectedRoom && selectedRoom.position) {
+      // Room Focus State - Angled approach giving focus while maintaining building context
       const [rx, ry, rz] = selectedRoom.position;
-      targetPos.current.set(rx, ry + 0.35, rz + 2.6);
-      targetLookAt.current.set(rx, ry + 0.05, rz);
+      targetPos.current.set(rx * 0.45, ry + 0.35, 7.8);
+      targetLookAt.current.set(rx * 0.5, ry + 0.1, 0.4);
+    } else if (cameraMode === 'floor' || selectedFloorNumber !== null) {
+      // Floor Focus State
+      const floorIdx = Math.max((selectedFloorNumber || 1) - 1, 0);
+      const floorY = floorIdx * (floorHeight + (isExplodedView ? 0.75 : 0));
+      targetPos.current.set(0, floorY + 1.2, 8.2);
+      targetLookAt.current.set(0, floorY + 0.35, 0.4);
+    } else if (isExplodedView) {
+      // Exploded View State
+      targetPos.current.set(0, 3.8, 10.5);
+      targetLookAt.current.set(0, 1.8, 0.4);
+    } else {
+      // Full Overview State
+      targetPos.current.set(0, 2.2, 9.6);
+      targetLookAt.current.set(0, 1.1, 0.4);
     }
-  }, [phase, selectedRoom]);
-
+  }, [cameraMode, selectedFloorNumber, selectedRoom, isExplodedView, floorHeight]);
 
   useFrame((state, delta) => {
-    // If user is currently dragging/orbiting, don't force camera lerp
+    // If user is currently actively dragging/orbiting, don't override camera lerp
     if (!controlsRef.current || isUserInteracting) return;
 
     if (prefersReducedMotion) {
@@ -46,7 +58,7 @@ export const HostelCamera = ({
         controlsRef.current.update();
       }
     } else {
-      const speed = phase === 'room' ? 3.5 : 2.5;
+      const speed = cameraMode === 'room' ? 3.8 : 2.8;
       camera.position.lerp(targetPos.current, delta * speed);
       if (controlsRef.current) {
         controlsRef.current.target.lerp(targetLookAt.current, delta * speed);
@@ -60,13 +72,18 @@ export const HostelCamera = ({
       ref={controlsRef}
       enableDamping
       dampingFactor={0.06}
-      minDistance={2.4}
-      maxDistance={9.5}
+      minDistance={3.5}
+      maxDistance={14.0}
       minPolarAngle={Math.PI / 6}
-      maxPolarAngle={Math.PI / 2.05}
-      minAzimuthAngle={-Math.PI / 2.5}
-      maxAzimuthAngle={Math.PI / 2.5}
+      maxPolarAngle={Math.PI / 2.02}
+      minAzimuthAngle={-Math.PI / 2.2}
+      maxAzimuthAngle={Math.PI / 2.2}
       enablePan={true}
+      panSpeed={0.8}
+      zoomSpeed={1.0}
+      rotateSpeed={0.85}
     />
   );
 };
+
+

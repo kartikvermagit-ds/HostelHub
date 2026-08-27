@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CanvasWrapper } from './CanvasWrapper';
 import { Building3D } from './Building3D';
 import { RoomInterior3D } from './RoomInterior3D';
-import { OrbitControls } from '@react-three/drei';
+import { HostelCamera } from './HostelCamera';
 import { useHostelStore } from '../../stores/hostelStore';
 import { RoomDetailModal } from './RoomDetailModal';
 import { InteractiveRoomModals } from './InteractiveRoomModals';
@@ -219,21 +219,26 @@ export const HostelExperience = ({ className = 'w-full' }) => {
           <CanvasWrapper
             key={`hostel-canvas-${selectedHostelId}-${emergenceKey}-${lightingMode}`}
             className="w-full h-full"
-            camera={{ position: [0, 2.8, 6.2], fov: 42 }}
+            camera={{ position: [0, 3.2, 7.4], fov: 42 }}
             disableOnMobile={false}
+            fallback={
+              <div className="w-full h-full flex flex-col items-center justify-center text-primary/40 p-4">
+                <span className="material-symbols-outlined text-6xl mb-2">apartment</span>
+                <p className="font-semibold text-xs text-on-surface-variant">3D Building Preview</p>
+              </div>
+            }
           >
-            <ambientLight intensity={lightingMode === 'night' ? 0.4 : 0.9} />
-            <directionalLight position={[6, 8, 6]} intensity={lightingMode === 'night' ? 0.6 : 1.4} />
+            <ambientLight intensity={lightingMode === 'night' ? 0.45 : 0.95} />
+            <directionalLight position={[6, 8, 6]} intensity={lightingMode === 'night' ? 0.65 : 1.4} />
             <directionalLight position={[-5, 3, -4]} intensity={0.5} color="#89f5e7" />
             <pointLight position={[0, 2, 2]} intensity={0.4} color="#ffdbce" />
 
-            <OrbitControls
-              enableDamping
-              dampingFactor={0.06}
-              minDistance={3.2}
-              maxDistance={10.5}
-              minPolarAngle={Math.PI / 6}
-              maxPolarAngle={Math.PI / 2.05}
+            <HostelCamera
+              cameraMode={selectedRoomId ? 'room' : selectedFloorNumber !== null ? 'floor' : 'overview'}
+              selectedFloorNumber={selectedFloorNumber}
+              selectedRoom={currentRoom}
+              isExplodedView={isExplodedView}
+              floorHeight={1.05}
             />
 
             <Building3D
@@ -243,6 +248,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
               onSelectRoom={(room) => setSelectedRoomId(room.id)}
               isExplodedView={isExplodedView}
               lightingMode={lightingMode}
+              qualityMode={qualityMode}
             />
           </CanvasWrapper>
 
@@ -555,3 +561,4 @@ export const HostelExperience = ({ className = 'w-full' }) => {
     </div>
   );
 };
+

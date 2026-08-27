@@ -5,6 +5,7 @@ import { useApp } from '../../context/AppContext';
 
 /**
  * Interactive Modals for Laptop Workspace, Bookshelf Subjects, Study Stats, Room Compare, and Share QR
+ * Directly integrated with HostelHub's AppContext for real academic notes, CT test data, and resource viewer!
  */
 export const InteractiveRoomModals = () => {
   const {
@@ -18,7 +19,14 @@ export const InteractiveRoomModals = () => {
     getAllRoomsForCurrentHostel
   } = useHostelStore();
 
-  const { setSelectedResource, setIsModalOpen, upcomingTests = [] } = useApp() || {};
+  const {
+    resources = [],
+    savedResourceIds = new Set(),
+    upcomingTests = [],
+    setSelectedResource,
+    setIsModalOpen
+  } = useApp() || {};
+
   const [selectedSubject, setSelectedSubject] = useState(activeBookSubject || 'COA');
   const [copySuccess, setCopySuccess] = useState(false);
 
@@ -29,17 +37,28 @@ export const InteractiveRoomModals = () => {
   if (!activeInteractiveModal) return null;
 
   const handleOpenResource = (title, subject = 'CSE', type = 'PDF') => {
+    // Find matching existing resource in AppContext if available
+    const existingRes = resources.find(
+      (r) =>
+        r.title?.toLowerCase().includes(title.toLowerCase()) ||
+        (r.subject?.toLowerCase() === subject.toLowerCase() && r.type === type)
+    );
+
     if (setSelectedResource && setIsModalOpen) {
-      setSelectedResource({
-        id: `res-${Date.now()}`,
-        title,
-        subject,
-        type,
-        size: '2.4 MB',
-        author: currentRoom?.occupants?.[0]?.name || 'Hostel Contributor',
-        timeAgo: 'Shared by Room',
-        uploadedAt: 'Semester 4'
-      });
+      if (existingRes) {
+        setSelectedResource(existingRes);
+      } else {
+        setSelectedResource({
+          id: `res-${Date.now()}`,
+          title,
+          subject,
+          type,
+          size: '2.4 MB',
+          author: currentRoom?.occupants?.[0]?.name || 'Hostel Contributor',
+          timeAgo: 'Shared by Room Scholar',
+          uploadedAt: 'Semester 4'
+        });
+      }
       setIsModalOpen(true);
     }
   };
@@ -51,13 +70,37 @@ export const InteractiveRoomModals = () => {
     setTimeout(() => setCopySuccess(false), 2500);
   };
 
+  // Filter subject-specific resources from AppContext
+  const getSubjectResources = (sub) => {
+    const matched = resources.filter(
+      (r) =>
+        r.subject?.toLowerCase() === sub.toLowerCase() ||
+        r.title?.toLowerCase().includes(sub.toLowerCase())
+    );
+
+    if (matched.length > 0) return matched;
+
+    // High quality academic fallback items matching prompt
+    return [
+      { id: `fb-1-${sub}`, title: `${sub} Unit 1 & 2 Comprehensive Notes`, type: 'PDF', size: '3.4 MB', author: 'Hostel Study Wing' },
+      { id: `fb-2-${sub}`, title: `${sub} High-Yield Formula & Cheatsheet`, type: 'PDF', size: '1.6 MB', author: 'Academic Cell' },
+      { id: `fb-3-${sub}`, title: `${sub} Previous 5-Year CT Solved Papers`, type: 'PYQ', size: '4.8 MB', author: 'Exam Archive' },
+      { id: `fb-4-${sub}`, title: `${sub} Important Lab Viva Questions`, type: 'PDF', size: '2.1 MB', author: 'Senior Scholar' }
+    ];
+  };
+
+  // Saved resources list from AppContext
+  const savedResourcesList = resources.filter((r) => savedResourceIds && savedResourceIds.has(r.id));
+
   // Compared rooms details
   const comparedRooms = allRooms.filter((r) => comparedRoomIds.includes(r.id));
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/55 backdrop-blur-xs">
-        {/* 1. LAPTOP: STUDENT WORKSPACE MODAL */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+        {/* =================================================== */}
+        {/* 1. LAPTOP: STUDENT WORKSPACE MODAL                  */}
+        {/* =================================================== */}
         {activeInteractiveModal === 'laptop-workspace' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -75,7 +118,7 @@ export const InteractiveRoomModals = () => {
                     Student Workspace
                   </h3>
                   <p className="text-xs text-on-surface-variant">
-                    Room {currentRoom?.roomNumber} • {currentRoom?.branch || 'CSE Data Science'}
+                    Room {currentRoom?.roomNumber} • {currentRoom?.branch || 'CSE Scholar Pod'}
                   </p>
                 </div>
               </div>
@@ -93,43 +136,52 @@ export const InteractiveRoomModals = () => {
               {/* Study Stats Bar */}
               <div className="grid grid-cols-3 gap-2.5 p-3 rounded-2xl bg-surface-container-low border border-surface-border">
                 <div className="text-center">
-                  <span className="text-[10px] text-on-surface-variant block font-semibold">Active Streak</span>
+                  <span className="text-[10px] text-on-surface-variant block font-semibold">Study Streak</span>
                   <span className="font-bold text-sm text-primary flex items-center justify-center gap-1">
-                    🔥 5 Days
+                    🔥 7 Days
                   </span>
                 </div>
                 <div className="text-center border-x border-surface-border">
                   <span className="text-[10px] text-on-surface-variant block font-semibold">CT Readiness</span>
-                  <span className="font-bold text-sm text-emerald-600">84%</span>
+                  <span className="font-bold text-sm text-emerald-600">88%</span>
                 </div>
                 <div className="text-center">
-                  <span className="text-[10px] text-on-surface-variant block font-semibold">Shared Notes</span>
-                  <span className="font-bold text-sm text-on-surface">32 Files</span>
+                  <span className="text-[10px] text-on-surface-variant block font-semibold">Saved Files</span>
+                  <span className="font-bold text-sm text-on-surface">
+                    {savedResourcesList.length || 6} Resources
+                  </span>
                 </div>
               </div>
 
-              {/* Recent Saved Notes & Resources */}
+              {/* Recent Active Academic Notes */}
               <div>
                 <h4 className="font-bold text-on-surface mb-2 flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-primary text-[16px]">menu_book</span>
                   <span>Recent Active Notes</span>
                 </h4>
                 <div className="space-y-2">
-                  {[
-                    { title: 'COA Instruction Pipelining & Hazards', sub: 'COA • Unit 2', size: '2.4 MB' },
-                    { title: 'DSA Graph Algorithms (Dijkstra, Bellman-Ford)', sub: 'DSA • Unit 4', size: '3.1 MB' },
-                    { title: 'DBMS SQL Normalization (3NF, BCNF)', sub: 'DBMS • Unit 3', size: '1.8 MB' }
-                  ].map((item, i) => (
+                  {(resources.length > 0 ? resources.slice(0, 3) : [
+                    { title: 'COA Instruction Pipelining & Hazards', subject: 'COA', size: '2.4 MB' },
+                    { title: 'DSA Graph Algorithms (Dijkstra, Bellman-Ford)', subject: 'DSA', size: '3.1 MB' },
+                    { title: 'DBMS SQL Normalization (3NF, BCNF)', subject: 'DBMS', size: '1.8 MB' }
+                  ]).map((item, i) => (
                     <div
                       key={i}
-                      onClick={() => handleOpenResource(item.title, item.sub.split('•')[0].trim())}
+                      onClick={() => handleOpenResource(item.title, item.subject)}
                       className="p-3 rounded-xl border border-surface-border bg-surface hover:bg-surface-container-low hover:border-primary/50 transition-all cursor-pointer flex items-center justify-between group"
                     >
-                      <div>
-                        <h5 className="font-bold text-on-surface group-hover:text-primary transition-colors">
-                          {item.title}
-                        </h5>
-                        <p className="text-[11px] text-on-surface-variant">{item.sub} • {item.size}</p>
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
+                          {item.type || 'PDF'}
+                        </span>
+                        <div>
+                          <h5 className="font-bold text-on-surface group-hover:text-primary transition-colors">
+                            {item.title}
+                          </h5>
+                          <p className="text-[11px] text-on-surface-variant">
+                            {item.subject} • {item.size || '2.4 MB'}
+                          </p>
+                        </div>
                       </div>
                       <span className="material-symbols-outlined text-outline group-hover:text-primary text-[18px]">
                         open_in_new
@@ -139,25 +191,25 @@ export const InteractiveRoomModals = () => {
                 </div>
               </div>
 
-              {/* Upcoming Class Tests */}
+              {/* Upcoming Class Tests & CT Preparation */}
               <div>
                 <h4 className="font-bold text-on-surface mb-2 flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-primary text-[16px]">event_upcoming</span>
-                  <span>Upcoming CT Test Reminders</span>
+                  <span>Upcoming CT Schedule & Prep</span>
                 </h4>
                 <div className="space-y-2">
                   {(upcomingTests.length > 0 ? upcomingTests.slice(0, 2) : [
-                    { subject: 'COA', title: 'Computer Architecture CT 1', date: 'Monday, 10:00 AM' },
-                    { subject: 'DSA', title: 'Linear Algebra & DSA Mid-term', date: 'Wednesday, 2:00 PM' }
+                    { subject: 'COA', title: 'Computer Architecture Mid-Term', date: 'Monday, 10:00 AM' },
+                    { subject: 'DSA', title: 'Trees & Graph Traversal CT 1', date: 'Wednesday, 2:00 PM' }
                   ]).map((ct, idx) => (
                     <div key={idx} className="p-3 rounded-xl bg-surface-container-low border border-surface-border flex items-center justify-between">
                       <div>
                         <span className="font-bold text-primary text-[10px] uppercase tracking-wider">{ct.subject}</span>
                         <h5 className="font-bold text-on-surface">{ct.title}</h5>
-                        <p className="text-[11px] text-on-surface-variant">{ct.date}</p>
+                        <p className="text-[11px] text-on-surface-variant">{ct.date || ct.time || 'Upcoming this week'}</p>
                       </div>
                       <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-bold">
-                        3 Days Left
+                        Prep Active
                       </span>
                     </div>
                   ))}
@@ -171,13 +223,15 @@ export const InteractiveRoomModals = () => {
                 onClick={() => setActiveInteractiveModal(null)}
                 className="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-xs"
               >
-                Done
+                Close
               </button>
             </div>
           </motion.div>
         )}
 
-        {/* 2. BOOKSHELF: SUBJECT STUDY RESOURCES MODAL */}
+        {/* =================================================== */}
+        {/* 2. BOOKSHELF: SUBJECT STUDY RESOURCES MODAL         */}
+        {/* =================================================== */}
         {activeInteractiveModal === 'bookshelf-resources' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -195,7 +249,7 @@ export const InteractiveRoomModals = () => {
                     Bookshelf Study Resources
                   </h3>
                   <p className="text-xs text-on-surface-variant">
-                    Click any subject textbook to inspect notes & solved papers
+                    Click any academic subject book to inspect notes, PYQs, and lecture files
                   </p>
                 </div>
               </div>
@@ -210,14 +264,14 @@ export const InteractiveRoomModals = () => {
             </div>
 
             {/* Subject Selector Tabs */}
-            <div className="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-xl border border-surface-border overflow-x-auto">
-              {['COA', 'DSA', 'DBMS', 'Math', 'OS'].map((sub) => (
+            <div className="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-xl border border-surface-border overflow-x-auto scrollbar-none">
+              {['COA', 'DSA', 'DBMS', 'Math', 'OS', 'Networks', 'Python', 'AI/ML'].map((sub) => (
                 <button
                   key={sub}
                   type="button"
                   onClick={() => setSelectedSubject(sub)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    selectedSubject === sub
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                    selectedSubject.toLowerCase() === sub.toLowerCase()
                       ? 'bg-primary text-on-primary shadow-xs'
                       : 'text-on-surface hover:bg-surface-container'
                   }`}
@@ -229,32 +283,27 @@ export const InteractiveRoomModals = () => {
 
             {/* Subject Material List */}
             <div className="space-y-2 overflow-y-auto max-h-64 text-xs pr-1">
-              {[
-                { title: `${selectedSubject} Unit 1 Comprehensive Notes`, type: 'PDF', size: '3.4 MB' },
-                { title: `${selectedSubject} Unit 2 High-Yield Formula Sheet`, type: 'PDF', size: '1.2 MB' },
-                { title: `${selectedSubject} 2024 Midterm Solved Papers`, type: 'PYQ', size: '4.5 MB' },
-                { title: `${selectedSubject} Previous 5-Year CT Questions`, type: 'PDF', size: '2.8 MB' }
-              ].map((res, i) => (
+              {getSubjectResources(selectedSubject).map((res, i) => (
                 <div
                   key={i}
-                  onClick={() => handleOpenResource(res.title, selectedSubject, res.type)}
+                  onClick={() => handleOpenResource(res.title, selectedSubject, res.type || 'PDF')}
                   className="p-3 rounded-xl border border-surface-border bg-surface hover:bg-surface-container-low hover:border-primary/50 transition-all cursor-pointer flex items-center justify-between group shadow-xs"
                 >
                   <div className="flex items-center gap-3">
                     <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
-                      {res.type}
+                      {res.type || 'PDF'}
                     </span>
                     <div>
                       <h4 className="font-bold text-on-surface group-hover:text-primary transition-colors">
                         {res.title}
                       </h4>
                       <p className="text-[11px] text-on-surface-variant font-medium">
-                        {selectedSubject} • {res.size}
+                        {selectedSubject} • {res.size || '2.8 MB'} {res.author && `• By ${res.author}`}
                       </p>
                     </div>
                   </div>
                   <span className="material-symbols-outlined text-outline group-hover:text-primary text-[18px]">
-                    download
+                    open_in_new
                   </span>
                 </div>
               ))}
@@ -272,7 +321,9 @@ export const InteractiveRoomModals = () => {
           </motion.div>
         )}
 
-        {/* 3. STUDY DESK STATS MODAL */}
+        {/* =================================================== */}
+        {/* 3. STUDY DESK STATS & DASHBOARD MODAL               */}
+        {/* =================================================== */}
         {activeInteractiveModal === 'study-area-stats' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -286,7 +337,7 @@ export const InteractiveRoomModals = () => {
                   Study Desk Dashboard
                 </h3>
                 <p className="text-xs text-on-surface-variant">
-                  Room {currentRoom?.roomNumber} Academic Focus
+                  Room {currentRoom?.roomNumber} Academic Focus & Study Pod
                 </p>
               </div>
               <button
@@ -301,17 +352,28 @@ export const InteractiveRoomModals = () => {
             <div className="space-y-3">
               <div className="p-3 rounded-xl bg-primary/5 border border-primary/20">
                 <span className="text-primary font-bold block mb-0.5">Active Focus Group</span>
-                <span className="font-semibold text-on-surface text-sm">{currentRoom?.activeStudyGroup || 'Class Test Revision'}</span>
+                <span className="font-semibold text-on-surface text-sm">
+                  {currentRoom?.activeStudyGroup || 'DSA & Algorithm Design Group'}
+                </span>
               </div>
 
               <div>
                 <div className="flex justify-between mb-1 font-semibold">
-                  <span>CT Preparation Progress</span>
+                  <span>Semester Exam Readiness</span>
                   <span className="text-primary font-bold">85%</span>
                 </div>
                 <div className="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
                   <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: '85%' }}></div>
                 </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-surface-container-low border border-surface-border">
+                <span className="font-bold text-on-surface block mb-1">Recommended Next Steps:</span>
+                <ul className="list-disc list-inside space-y-1 text-on-surface-variant text-[11px]">
+                  <li>Review COA Instruction Hazards cheatsheet</li>
+                  <li>Solve 2024 DSA Graph Traversal CT questions</li>
+                  <li>Join evening discussion in Room 301 Annex</li>
+                </ul>
               </div>
             </div>
 
@@ -327,7 +389,9 @@ export const InteractiveRoomModals = () => {
           </motion.div>
         )}
 
-        {/* 4. ROOM COMPARISON MODAL */}
+        {/* =================================================== */}
+        {/* 4. ROOM COMPARISON MODAL                            */}
+        {/* =================================================== */}
         {activeInteractiveModal === 'compare' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -341,7 +405,7 @@ export const InteractiveRoomModals = () => {
                   Room Comparison ({comparedRooms.length}/3)
                 </h3>
                 <p className="text-xs text-on-surface-variant">
-                  Comparing floor, type, status, and study amenities
+                  Comparing floor, room type, status, and study amenities
                 </p>
               </div>
 
@@ -412,7 +476,9 @@ export const InteractiveRoomModals = () => {
           </motion.div>
         )}
 
-        {/* 5. SHARE ROOM & PRINTABLE QR CODE MODAL */}
+        {/* =================================================== */}
+        {/* 5. SHARE ROOM & PRINTABLE QR CODE MODAL             */}
+        {/* =================================================== */}
         {activeInteractiveModal === 'share-qr' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -496,3 +562,4 @@ export const InteractiveRoomModals = () => {
     </AnimatePresence>
   );
 };
+
