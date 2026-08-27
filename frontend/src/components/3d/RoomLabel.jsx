@@ -2,8 +2,9 @@ import React from 'react';
 import { Html } from '@react-three/drei';
 
 /**
- * Crisp 3D Room Number Plaque & Status Indicator
- * Always faces camera with subtle drop shadow and status colors
+ * Clean & Uncluttered 3D Room Number Plaque & Status Indicator
+ * Unselected: subtle, compact frosted glass badge
+ * Selected: high-contrast prominent pill with status
  */
 export const RoomLabel = ({
   roomNumber = '101',
@@ -42,33 +43,39 @@ export const RoomLabel = ({
               ? 'scale-110'
               : hovered
               ? 'scale-105'
-              : 'scale-95'
+              : 'scale-90'
           }`}
         >
           {/* Room Number Badge */}
           <div
-            className={`px-2.5 py-0.5 rounded-lg font-mono text-[11px] font-bold tracking-wider shadow-md flex items-center gap-1.5 border transition-all ${
+            className={`rounded-lg font-mono font-bold tracking-wider shadow-sm flex items-center gap-1.5 border transition-all ${
               selected
-                ? 'bg-primary text-on-primary border-primary-fixed shadow-primary/40 ring-2 ring-primary/60'
+                ? 'px-3 py-1 bg-primary text-white border-primary-fixed shadow-md shadow-primary/30 ring-2 ring-primary/50 text-[11px]'
                 : hovered
-                ? 'bg-surface-container-highest text-on-surface border-primary shadow-sm ring-1 ring-primary/30'
-                : 'bg-surface/95 text-on-surface border-surface-border/90 backdrop-blur-xs'
+                ? 'px-2 py-0.5 bg-white dark:bg-[#153a35] text-[#0e2724] dark:text-[#f0faf8] border-primary/40 text-[10px]'
+                : 'px-1.5 py-0.5 bg-white/85 dark:bg-[#12332e]/85 text-[#183631] dark:text-[#d3ede7] border-white/60 dark:border-primary-fixed/20 backdrop-blur-xs text-[9.5px] opacity-85'
             }`}
           >
             <span
-              className={`w-2 h-2 rounded-full shadow-sm ${
-                status === 'available' || selected ? 'animate-pulse' : ''
+              className={`w-1.5 h-1.5 rounded-full shadow-xs ${
+                selected ? 'animate-pulse' : ''
               } ${getStatusDotColor()}`}
             ></span>
             <span>{roomNumber}</span>
           </div>
 
+          {/* Selected Status Capsule */}
+          {selected && (
+            <div className="bg-primary-fixed text-on-primary-fixed text-[9px] font-sans font-extrabold px-2 py-0.5 rounded-md shadow-sm uppercase tracking-wider">
+              {status}
+            </div>
+          )}
+
           {/* Hover Status Tooltip */}
           {hovered && !selected && (
-            <div className="bg-surface-container-lowest/95 text-on-surface text-[10px] font-sans font-semibold px-2.5 py-1 rounded-md border border-surface-border shadow-xl whitespace-nowrap animate-fade-in flex items-center gap-1.5 backdrop-blur-sm">
+            <div className="bg-white/95 dark:bg-[#0f2c28]/95 text-[#0e2724] dark:text-[#f0faf8] text-[9.5px] font-sans font-semibold px-2 py-0.5 rounded-md border border-surface-border shadow-lg whitespace-nowrap animate-fade-in flex items-center gap-1 backdrop-blur-sm">
               <span className="capitalize text-primary font-bold">{status}</span>
               {roomType && <span className="text-on-surface-variant">• {roomType}</span>}
-              {branch && <span className="text-on-surface-variant font-normal">({branch.split('•')[0].trim()})</span>}
             </div>
           )}
         </div>
@@ -76,4 +83,3 @@ export const RoomLabel = ({
     </group>
   );
 };
-

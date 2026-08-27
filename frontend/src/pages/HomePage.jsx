@@ -6,7 +6,7 @@ import { CTCard } from '../components/common/CTCard';
 import { QuickActions } from '../components/common/QuickActions';
 import { ResourceItem } from '../components/common/ResourceItem';
 import { HostelExperience } from '../components/3d/HostelExperience';
-import { GlassCard, GlassBadge, GlassButton } from '../components/ui';
+import { GlassCard, GlassBadge } from '../components/ui';
 
 export const HomePage = () => {
   const { user, resources, upcomingTests, searchQuery, activeCategoryTab, setActiveCategoryTab } = useApp();
@@ -36,27 +36,27 @@ export const HomePage = () => {
 
   return (
     <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 md:py-6 flex flex-col gap-6 md:gap-8">
-      {/* 1. Architectural Glass Welcome Hero */}
+      {/* 1. Architectural Glass Welcome Hero (Crisp & Luminous) */}
       <motion.section
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
-        <GlassCard className="w-full relative overflow-hidden p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-white/60 dark:border-primary-fixed/20 shadow-xl">
+        <GlassCard className="w-full relative overflow-hidden p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-white/70 dark:border-primary-fixed/20 shadow-xl">
           <div className="space-y-2 z-10 max-w-xl">
             {/* Header Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-[11px] font-bold text-primary border border-primary/20 shadow-2xs">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-[11px] font-bold text-primary border border-primary/25 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
               <span>HOSTEL ACADEMIC SPACE</span>
             </div>
 
             {/* Greeting */}
-            <h1 className="font-headline-lg text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">
+            <h1 className="font-headline-lg text-2xl sm:text-3xl font-extrabold text-[#0e2724] dark:text-[#f0faf8] tracking-tight">
               Good morning, {firstName} 👋
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xs sm:text-sm text-on-surface-variant font-medium leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#33534d] dark:text-[#b0d2cc] font-medium leading-relaxed">
               Everything your hostel needs to prepare better. Explore your 3D digital hostel twin, collaborate with wingmates, and access verified exam papers.
             </p>
 
@@ -112,10 +112,10 @@ export const HomePage = () => {
       <section className="hidden md:flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-headline-sm text-lg font-bold text-on-surface">
+            <h2 className="font-headline-sm text-lg font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
               Upcoming Class Tests (CT Zone)
             </h2>
-            <p className="text-xs text-on-surface-variant font-medium">Exam countdowns, topic checklists, and previous year solutions.</p>
+            <p className="text-xs text-[#33534d] dark:text-[#b0d2cc] font-medium">Exam countdowns, topic checklists, and previous year solutions.</p>
           </div>
           <Link
             to="/ct-zone"
@@ -140,7 +140,7 @@ export const HomePage = () => {
       <section className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border/60 pb-3 gap-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-headline-sm text-lg font-bold text-on-surface">
+            <h2 className="font-headline-sm text-lg font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
               Latest Academic Resources
             </h2>
             <Link
@@ -159,10 +159,10 @@ export const HomePage = () => {
                 <button
                   key={cat}
                   onClick={() => setActiveCategoryTab(cat)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
                     isActive
-                      ? "bg-primary text-on-primary font-bold shadow-xs shadow-primary/25"
-                      : "glass-panel text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
+                      ? "bg-primary text-white font-bold shadow-xs shadow-primary/25"
+                      : "glass-panel text-[#2b4742] dark:text-[#c4dfda] hover:text-primary dark:hover:text-[#89f5e7] hover:bg-surface-container"
                   }`}
                 >
                   {cat}
@@ -179,7 +179,7 @@ export const HomePage = () => {
               <ResourceItem key={res.id} resource={res} />
             ))
           ) : (
-            <GlassCard className="p-8 text-center text-on-surface-variant">
+            <GlassCard className="p-8 text-center text-[#425e59] dark:text-[#9fc0ba]">
               <span className="material-symbols-outlined text-4xl mb-2 text-outline">search_off</span>
               <p className="font-semibold text-xs">No resources found matching your filter.</p>
               <button

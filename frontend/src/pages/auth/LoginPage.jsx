@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { HostelScene } from '../../components/3d/HostelScene';
-import { GlassCard, GlassButton } from '../../components/ui';
+import { GlassCard } from '../../components/ui';
 
 export const LoginPage = () => {
   const { login } = useAuth();
@@ -66,7 +66,7 @@ export const LoginPage = () => {
                 />
               </div>
               <div>
-                <span className="font-headline-md text-2xl font-bold text-on-surface tracking-tight block">
+                <span className="font-headline-md text-2xl font-extrabold text-[#0e2724] dark:text-[#f0faf8] tracking-tight block">
                   HostelHub
                 </span>
                 <span className="text-xs text-primary font-bold">
@@ -75,46 +75,46 @@ export const LoginPage = () => {
               </div>
             </div>
 
-            <h1 className="font-headline-lg text-3xl font-extrabold text-on-surface leading-tight tracking-tight mb-2">
+            <h1 className="font-headline-lg text-3xl font-extrabold text-[#0e2724] dark:text-[#f0faf8] leading-tight tracking-tight mb-2">
               Everything your hostel needs to prepare better.
             </h1>
-            <p className="text-sm text-on-surface-variant leading-relaxed font-medium">
+            <p className="text-sm text-[#35544e] dark:text-[#a6cdc7] leading-relaxed font-medium">
               Access verified lecture notes, previous year solved papers, and class test checklists curated by your hostel community.
             </p>
           </div>
 
           {/* Interactive 3D Hostel Spatial Canvas */}
-          <div className="w-full h-48 rounded-3xl glass-panel border border-white/60 dark:border-primary-fixed/20 overflow-hidden relative shadow-inner">
+          <div className="w-full h-48 rounded-3xl glass-panel border border-white/70 dark:border-primary-fixed/20 overflow-hidden relative shadow-inner">
             <HostelScene className="w-full h-full" />
-            <div className="absolute bottom-2 right-3 pointer-events-none text-[10px] text-on-surface-variant font-semibold glass-panel-strong px-2.5 py-0.5 rounded-full border border-white/60 dark:border-primary-fixed/30 shadow-2xs">
+            <div className="absolute bottom-2 right-3 pointer-events-none text-[10px] text-[#2b4742] dark:text-[#c4dfda] font-bold glass-panel-strong px-2.5 py-0.5 rounded-full border border-white/60 dark:border-primary-fixed/30 shadow-2xs">
               Interactive 3D Study Space
             </div>
           </div>
 
           {/* Minimal Feature Cards */}
           <div className="space-y-2.5">
-            <div className="flex items-center gap-3 p-3.5 glass-panel rounded-2xl border border-white/60 dark:border-primary-fixed/15 hover:border-primary/30 transition-colors">
+            <div className="flex items-center gap-3 p-3.5 glass-panel rounded-2xl border border-white/70 dark:border-primary-fixed/15 hover:border-primary/30 transition-colors">
               <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined text-[20px]">description</span>
               </div>
               <div>
-                <h4 className="text-xs font-bold text-on-surface">Share Notes & PDFs</h4>
-                <p className="text-[11px] text-on-surface-variant">Class summaries, handwritten formulas, and teacher notes.</p>
+                <h4 className="text-xs font-bold text-[#0e2724] dark:text-[#f0faf8]">Share Notes & PDFs</h4>
+                <p className="text-[11px] text-[#45635e] dark:text-[#a2c5bf] font-medium">Class summaries, handwritten formulas, and teacher notes.</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3.5 glass-panel rounded-2xl border border-white/60 dark:border-primary-fixed/15 hover:border-primary/30 transition-colors">
+            <div className="flex items-center gap-3 p-3.5 glass-panel rounded-2xl border border-white/70 dark:border-primary-fixed/15 hover:border-primary/30 transition-colors">
               <div className="w-9 h-9 rounded-xl bg-secondary-container/80 text-on-secondary-container flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined text-[20px]">assignment</span>
               </div>
               <div>
-                <h4 className="text-xs font-bold text-on-surface">Prepare for CTs</h4>
-                <p className="text-[11px] text-on-surface-variant">Exam countdowns, topic checklists, and previous year papers.</p>
+                <h4 className="text-xs font-bold text-[#0e2724] dark:text-[#f0faf8]">Prepare for CTs</h4>
+                <p className="text-[11px] text-[#45635e] dark:text-[#a2c5bf] font-medium">Exam countdowns, topic checklists, and previous year papers.</p>
               </div>
             </div>
           </div>
 
-          <div className="text-xs text-on-surface-variant flex items-center gap-2 pt-1 font-medium">
+          <div className="text-xs text-[#45635e] dark:text-[#a2c5bf] flex items-center gap-2 pt-1 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Active academic digital twin repository</span>
           </div>
@@ -122,7 +122,7 @@ export const LoginPage = () => {
 
         {/* Right Column: Floating Glass Authentication Card */}
         <div className="w-full lg:col-span-6 flex flex-col justify-center">
-          <GlassCard className="p-6 sm:p-8 md:p-10 shadow-2xl max-w-md w-full mx-auto border-white/70 dark:border-primary-fixed/25">
+          <GlassCard className="p-6 sm:p-8 md:p-10 shadow-2xl max-w-md w-full mx-auto border-white/80 dark:border-primary-fixed/25">
             
             {/* Mobile Header Logo */}
             <div className="flex lg:hidden items-center gap-3 mb-6">
@@ -134,7 +134,7 @@ export const LoginPage = () => {
                 />
               </div>
               <div>
-                <span className="font-headline-sm text-xl font-bold text-on-surface tracking-tight block">
+                <span className="font-headline-sm text-xl font-extrabold text-[#0e2724] dark:text-[#f0faf8] tracking-tight block">
                   HostelHub
                 </span>
                 <span className="text-[11px] text-primary font-bold">
@@ -145,10 +145,10 @@ export const LoginPage = () => {
 
             {/* Card Titles */}
             <div className="mb-6">
-              <h2 className="font-headline-md text-2xl font-bold text-on-surface">
+              <h2 className="font-headline-md text-2xl font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
                 Welcome back 👋
               </h2>
-              <p className="text-xs text-on-surface-variant mt-1 font-medium">
+              <p className="text-xs text-[#35544e] dark:text-[#a6cdc7] mt-1 font-medium">
                 Sign in to continue to your hostel's academic workspace
               </p>
             </div>
@@ -167,11 +167,11 @@ export const LoginPage = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Input */}
               <div>
-                <label className="block text-xs font-bold text-on-surface mb-1.5" htmlFor="login-email">
+                <label className="block text-xs font-bold text-[#0e2724] dark:text-[#f0faf8] mb-1.5" htmlFor="login-email">
                   College Email
                 </label>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[19px]">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#45635e] dark:text-[#a2c5bf] text-[19px]">
                     mail
                   </span>
                   <input
@@ -183,10 +183,10 @@ export const LoginPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your college email"
-                    className="w-full pl-10 pr-4 py-2.5 glass-panel rounded-xl text-xs sm:text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant/60 font-medium"
+                    className="w-full pl-10 pr-4 py-2.5 glass-panel rounded-xl text-xs sm:text-sm text-[#0e2724] dark:text-[#f0faf8] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-[#6a8b85] dark:placeholder:text-[#7ba19b] font-medium"
                   />
                 </div>
-                <p className="text-[10px] text-on-surface-variant/80 mt-1 font-medium">
+                <p className="text-[10px] text-[#45635e] dark:text-[#a2c5bf] mt-1 font-medium">
                   Use your student college ID to access resources.
                 </p>
               </div>
@@ -194,7 +194,7 @@ export const LoginPage = () => {
               {/* Password Input */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="block text-xs font-bold text-on-surface" htmlFor="login-password">
+                  <label className="block text-xs font-bold text-[#0e2724] dark:text-[#f0faf8]" htmlFor="login-password">
                     Password
                   </label>
                   <Link
@@ -205,7 +205,7 @@ export const LoginPage = () => {
                   </Link>
                 </div>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[19px]">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#45635e] dark:text-[#a2c5bf] text-[19px]">
                     lock
                   </span>
                   <input
@@ -217,12 +217,12 @@ export const LoginPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full pl-10 pr-11 py-2.5 glass-panel rounded-xl text-xs sm:text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant/60 font-medium"
+                    className="w-full pl-10 pr-11 py-2.5 glass-panel rounded-xl text-xs sm:text-sm text-[#0e2724] dark:text-[#f0faf8] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-[#6a8b85] dark:placeholder:text-[#7ba19b] font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface p-1"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#45635e] dark:text-[#a2c5bf] hover:text-primary p-1"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     <span className="material-symbols-outlined text-[18px]">
@@ -241,16 +241,16 @@ export const LoginPage = () => {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded text-primary border-surface-border focus:ring-primary accent-primary cursor-pointer"
                 />
-                <label htmlFor="remember-me" className="text-xs text-on-surface-variant font-medium cursor-pointer select-none">
+                <label htmlFor="remember-me" className="text-xs text-[#35544e] dark:text-[#a6cdc7] font-medium cursor-pointer select-none">
                   Remember me on this device
                 </label>
               </div>
 
-              {/* Primary Glass Button */}
+              {/* Primary Solid Teal Button */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 bg-primary text-on-primary font-bold py-3 px-4 rounded-xl hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-md shadow-primary/25 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs sm:text-sm"
+                className="w-full mt-2 bg-primary text-white font-bold py-3 px-4 rounded-xl hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-md shadow-primary/25 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs sm:text-sm"
               >
                 {isLoading ? (
                   <>
@@ -267,7 +267,7 @@ export const LoginPage = () => {
 
             {/* Bottom Link to Register */}
             <div className="mt-6 pt-5 border-t border-surface-border/50 text-center">
-              <p className="text-xs text-on-surface-variant font-medium">
+              <p className="text-xs text-[#35544e] dark:text-[#a6cdc7] font-medium">
                 Don't have an account?{' '}
                 <Link to="/register" className="text-primary font-bold hover:underline">
                   Create an account

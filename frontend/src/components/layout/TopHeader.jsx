@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
-import { GlassInput, GlassButton, GlassPanel } from '../ui';
+import { GlassInput } from '../ui';
 
 export const TopHeader = () => {
   const { user, searchQuery, setSearchQuery } = useApp();
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check initial dark mode from document
     setIsDarkMode(document.documentElement.classList.contains('dark'));
   }, []);
 
@@ -68,7 +66,7 @@ export const TopHeader = () => {
           <div className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center shrink-0 overflow-hidden p-1 shadow-xs group-hover:scale-105 transition-transform">
             <img src="/logo-app.png" alt="HostelHub Logo" className="w-full h-full object-contain rounded-lg" />
           </div>
-          <span className="font-headline-md text-base font-bold text-primary">
+          <span className="font-headline-md text-base font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
             HostelHub
           </span>
         </Link>
@@ -92,7 +90,7 @@ export const TopHeader = () => {
         <button
           type="button"
           onClick={toggleDarkMode}
-          className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary/40 shadow-xs active:scale-95 transition-all"
+          className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-[#2e4c47] dark:text-[#cbe8e3] hover:text-primary dark:hover:text-[#89f5e7] hover:border-primary/40 shadow-xs active:scale-95 transition-all"
           title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
           <span className="material-symbols-outlined text-[19px]">
@@ -108,7 +106,7 @@ export const TopHeader = () => {
               setShowNotifications(!showNotifications);
               setShowUserMenu(false);
             }}
-            className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary/40 shadow-xs relative active:scale-95 transition-all"
+            className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-[#2e4c47] dark:text-[#cbe8e3] hover:text-primary dark:hover:text-[#89f5e7] hover:border-primary/40 shadow-xs relative active:scale-95 transition-all"
             title="Notifications"
           >
             <span className="material-symbols-outlined text-[20px]">notifications</span>
@@ -117,9 +115,9 @@ export const TopHeader = () => {
 
           {/* Notifications Glass Dropdown */}
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 sm:w-96 glass-floating rounded-2xl p-4 shadow-2xl z-50 border border-white/60 dark:border-primary-fixed/20 animate-fade-in">
+            <div className="absolute right-0 mt-2 w-80 sm:w-96 glass-floating rounded-2xl p-4 shadow-2xl z-50 border border-white/70 dark:border-primary-fixed/20 animate-fade-in">
               <div className="flex items-center justify-between pb-3 border-b border-surface-border/50">
-                <h4 className="font-headline-sm text-xs font-bold text-on-surface">Notifications</h4>
+                <h4 className="font-headline-sm text-xs font-bold text-[#0e2724] dark:text-[#f0faf8]">Notifications</h4>
                 <span className="text-[10px] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10">
                   1 New
                 </span>
@@ -132,9 +130,9 @@ export const TopHeader = () => {
                       <span className="material-symbols-outlined text-[17px]">{notif.icon}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-on-surface truncate">{notif.title}</p>
-                      <p className="text-[11px] text-on-surface-variant line-clamp-2 mt-0.5">{notif.desc}</p>
-                      <span className="text-[10px] text-on-surface-variant/70 mt-1 block">{notif.time}</span>
+                      <p className="text-xs font-bold text-[#0e2724] dark:text-[#f0faf8] truncate">{notif.title}</p>
+                      <p className="text-[11px] text-[#42605b] dark:text-[#a0c5bf] line-clamp-2 mt-0.5 font-medium">{notif.desc}</p>
+                      <span className="text-[10px] text-[#698a84] dark:text-[#7ba29c] mt-1 block font-medium">{notif.time}</span>
                     </div>
                     {notif.unread && (
                       <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5"></span>
@@ -161,16 +159,16 @@ export const TopHeader = () => {
               alt={displayName}
               className="w-7 h-7 rounded-lg object-cover ring-1 ring-primary/30"
             />
-            <span className="material-symbols-outlined text-[17px] text-on-surface-variant hidden sm:block">
+            <span className="material-symbols-outlined text-[17px] text-[#45635e] dark:text-[#a2c5bf] hidden sm:block">
               expand_more
             </span>
           </button>
 
           {/* User Profile Glass Popover */}
           {showUserMenu && (
-            <div className="absolute right-0 mt-2 w-56 glass-floating rounded-2xl p-3 shadow-2xl z-50 border border-white/60 dark:border-primary-fixed/20 animate-fade-in text-xs">
+            <div className="absolute right-0 mt-2 w-56 glass-floating rounded-2xl p-3 shadow-2xl z-50 border border-white/70 dark:border-primary-fixed/20 animate-fade-in text-xs">
               <div className="pb-3 mb-2 border-b border-surface-border/50 px-2">
-                <p className="font-bold text-on-surface truncate">{displayName}</p>
+                <p className="font-bold text-[#0e2724] dark:text-[#f0faf8] truncate">{displayName}</p>
                 <p className="text-[10px] text-primary font-semibold truncate">{hostelInfo}</p>
               </div>
 
@@ -178,7 +176,7 @@ export const TopHeader = () => {
                 <Link
                   to="/profile"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-on-surface hover:bg-surface-container/60 transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-[#1a3833] dark:text-[#e4f5f1] hover:bg-surface-container/60 transition-colors font-medium"
                 >
                   <span className="material-symbols-outlined text-[17px]">account_circle</span>
                   <span>My Profile</span>
@@ -186,7 +184,7 @@ export const TopHeader = () => {
                 <Link
                   to="/saved"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-on-surface hover:bg-surface-container/60 transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-[#1a3833] dark:text-[#e4f5f1] hover:bg-surface-container/60 transition-colors font-medium"
                 >
                   <span className="material-symbols-outlined text-[17px]">bookmark</span>
                   <span>Saved Resources</span>
@@ -194,7 +192,7 @@ export const TopHeader = () => {
                 <Link
                   to="/admin"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-on-surface hover:bg-surface-container/60 transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-[#1a3833] dark:text-[#e4f5f1] hover:bg-surface-container/60 transition-colors font-medium"
                 >
                   <span className="material-symbols-outlined text-[17px]">apartment</span>
                   <span>Hostel Builder</span>
@@ -205,7 +203,7 @@ export const TopHeader = () => {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-red-600 hover:bg-red-500/10 transition-colors font-semibold"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-colors font-bold"
                 >
                   <span className="material-symbols-outlined text-[17px]">logout</span>
                   <span>Sign Out</span>

@@ -37,34 +37,31 @@ export const Sidebar = () => {
 
   return (
     <>
-      <aside className="hidden lg:flex flex-col fixed left-4 top-4 bottom-4 w-60 z-40 glass-panel-strong rounded-3xl border border-white/70 dark:border-primary-fixed/20 shadow-2xl p-4 overflow-hidden transition-all duration-300">
-        {/* Top Specular Inner Highlight Strip */}
-        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-primary-fixed/30 to-transparent pointer-events-none" />
-
+      <aside className="hidden lg:flex flex-col fixed left-4 top-4 bottom-4 w-60 z-40 glass-floating rounded-3xl border border-white/70 dark:border-primary-fixed/20 shadow-xl p-4 overflow-hidden transition-all duration-300">
         {/* Brand Header */}
         <Link to="/" className="flex items-center gap-3 px-2 mb-5 group shrink-0">
-          <div className="w-10 h-10 rounded-xl glass-panel flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-1 group-hover:scale-105 group-hover:border-primary/40 transition-all duration-200">
+          <div className="w-10 h-10 rounded-2xl glass-panel flex items-center justify-center shrink-0 shadow-2xs overflow-hidden p-1 group-hover:scale-105 group-hover:border-primary/40 transition-all duration-200">
             <img
               src="/logo-app.png"
               alt="HostelHub Logo"
-              className="w-full h-full object-contain rounded-lg drop-shadow-sm"
+              className="w-full h-full object-contain rounded-xl"
             />
           </div>
           <div>
-            <h1 className="font-headline-sm text-base font-bold text-primary leading-tight group-hover:text-primary-fixed-dim transition-colors">
+            <h1 className="font-headline-sm text-base font-extrabold text-[#0e2724] dark:text-[#f0faf8] leading-tight group-hover:text-primary transition-colors">
               HostelHub
             </h1>
-            <p className="font-label-sm text-[10px] text-on-surface-variant/80 font-medium">
+            <p className="font-label-sm text-[10px] text-[#425d57] dark:text-[#a0c2bd] font-medium">
               Academic Digital Twin
             </p>
           </div>
         </Link>
 
-        {/* Upload Material Action Button */}
+        {/* Upload Material Action Button (Solid Teal Primary CTA) */}
         <div className="mb-4 shrink-0">
           <Link
             to="/upload"
-            className="w-full bg-primary text-on-primary font-label-md text-xs font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
+            className="w-full bg-primary text-white font-label-md text-xs font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
           >
             <span className="material-symbols-outlined text-[17px]">add</span>
             <span>Upload Material</span>
@@ -79,10 +76,10 @@ export const Sidebar = () => {
               to={link.to}
               end={link.to === "/"}
               className={({ isActive }) =>
-                `flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-200 text-xs font-semibold select-none ${
+                `flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-200 text-xs select-none ${
                   isActive
-                    ? "bg-primary/15 text-primary font-bold shadow-2xs border border-primary/25 dark:bg-primary/25"
-                    : "text-on-surface-variant hover:bg-surface-container/60 hover:text-on-surface"
+                    ? "bg-primary text-white font-bold shadow-xs shadow-primary/30"
+                    : "text-[#2b4742] dark:text-[#c4dfda] hover:bg-white/50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-[#89f5e7] font-semibold"
                 }`
               }
             >
@@ -104,7 +101,7 @@ export const Sidebar = () => {
 
           {/* Library Section Header */}
           <div className="px-3 py-1">
-            <p className="font-label-sm text-[10px] text-on-surface-variant/70 uppercase tracking-wider font-bold">
+            <p className="font-label-sm text-[10px] text-[#557670] dark:text-[#84aca5] uppercase tracking-wider font-bold">
               Library
             </p>
           </div>
@@ -114,10 +111,10 @@ export const Sidebar = () => {
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-200 text-xs font-semibold select-none ${
+                `flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-200 text-xs select-none ${
                   isActive
-                    ? "bg-primary/15 text-primary font-bold shadow-2xs border border-primary/25 dark:bg-primary/25"
-                    : "text-on-surface-variant hover:bg-surface-container/60 hover:text-on-surface"
+                    ? "bg-primary text-white font-bold shadow-xs shadow-primary/30"
+                    : "text-[#2b4742] dark:text-[#c4dfda] hover:bg-white/50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-[#89f5e7] font-semibold"
                 }`
               }
             >
@@ -141,10 +138,10 @@ export const Sidebar = () => {
           <NavLink
             to="/admin"
             className={({ isActive }) =>
-              `flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 text-xs font-semibold select-none ${
+              `flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 text-xs select-none ${
                 isActive
-                  ? "bg-primary/15 text-primary font-bold shadow-2xs border border-primary/25"
-                  : "text-on-surface-variant hover:bg-surface-container/60 hover:text-on-surface"
+                  ? "bg-primary text-white font-bold shadow-xs shadow-primary/30"
+                  : "text-[#2b4742] dark:text-[#c4dfda] hover:bg-white/50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-[#89f5e7] font-semibold"
               }`
             }
           >
@@ -152,7 +149,7 @@ export const Sidebar = () => {
               <span className="material-symbols-outlined text-[18px]">domain_add</span>
               <span>Hostel Builder</span>
             </div>
-            <span className="px-1.5 py-0.5 rounded-md bg-secondary-container/70 text-on-secondary-container text-[9px] font-bold">
+            <span className="px-1.5 py-0.5 rounded-md bg-secondary-container/80 text-on-secondary-container text-[9px] font-bold">
               ADMIN
             </span>
           </NavLink>
@@ -160,7 +157,7 @@ export const Sidebar = () => {
 
         {/* Bottom Profile Glass Card */}
         <div className="pt-3 border-t border-surface-border/50 shrink-0">
-          <div className="p-2 rounded-2xl glass-panel flex items-center justify-between gap-2 border border-white/50 dark:border-primary-fixed/15">
+          <div className="p-2 rounded-2xl glass-panel flex items-center justify-between gap-2 border border-white/60 dark:border-primary-fixed/20 shadow-2xs">
             <Link to="/profile" className="flex items-center gap-2.5 min-w-0 flex-1 group">
               <div className="relative">
                 <img
@@ -171,10 +168,10 @@ export const Sidebar = () => {
                 <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-surface"></span>
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-bold text-on-surface truncate group-hover:text-primary transition-colors">
+                <p className="text-xs font-bold text-[#0e2724] dark:text-[#f0faf8] truncate group-hover:text-primary transition-colors">
                   {displayName}
                 </p>
-                <p className="text-[10px] text-on-surface-variant truncate">
+                <p className="text-[10px] text-[#425d57] dark:text-[#9bbbb5] truncate font-medium">
                   {displayHostel}
                 </p>
               </div>

@@ -2,7 +2,8 @@ import React from 'react';
 
 /**
  * Reusable GlassButton Component
- * Variants: 'primary' | 'secondary' | 'ghost' | 'capsule' | 'active'
+ * Primary = Solid Teal (High Hierarchy)
+ * Secondary / Capsule = Glass UI (Supporting)
  */
 export const GlassButton = ({
   children,
@@ -20,28 +21,28 @@ export const GlassButton = ({
       case 'sm':
         return 'px-3 py-1.5 text-xs gap-1.5';
       case 'lg':
-        return 'px-6 py-3 text-sm gap-2.5';
+        return 'px-5 py-2.5 text-sm gap-2.5 font-bold';
       case 'md':
       default:
-        return 'px-4 py-2 text-xs font-semibold gap-2';
+        return 'px-3.5 py-1.5 text-xs font-bold gap-2';
     }
   };
 
   const getVariantClass = () => {
     if (active) {
-      return 'bg-primary text-on-primary border border-primary-fixed shadow-md shadow-primary/25 ring-1 ring-primary/30';
+      return 'bg-primary text-white font-bold shadow-md shadow-primary/25 border border-primary-fixed/40';
     }
 
     switch (variant) {
       case 'primary':
-        return 'bg-primary/90 hover:bg-primary text-on-primary border border-primary-fixed/40 shadow-sm hover:shadow-md hover:shadow-primary/20 active:scale-[0.98]';
+        return 'bg-primary hover:bg-primary/95 text-white font-bold shadow-sm hover:shadow-md hover:shadow-primary/20 active:scale-[0.98] border border-primary/30';
       case 'secondary':
-        return 'glass-panel text-on-surface hover:bg-surface-container-high border-surface-border hover:border-primary/30 shadow-xs hover:shadow active:scale-[0.98]';
+        return 'glass-panel text-[#1a3833] dark:text-[#e1f3ef] hover:bg-white/70 dark:hover:bg-white/10 hover:border-primary/30 shadow-2xs active:scale-[0.98]';
       case 'ghost':
-        return 'bg-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60';
+        return 'bg-transparent text-[#425d57] dark:text-[#9bbbb5] hover:text-primary dark:hover:text-white hover:bg-surface-container/50';
       case 'capsule':
       default:
-        return 'glass-floating text-on-surface hover:text-primary hover:border-primary/40 shadow-xs hover:shadow-md active:scale-[0.97]';
+        return 'glass-panel text-[#1a3833] dark:text-[#e1f3ef] hover:text-primary dark:hover:text-[#89f5e7] hover:border-primary/40 shadow-2xs active:scale-[0.98]';
     }
   };
 
@@ -53,8 +54,6 @@ export const GlassButton = ({
       className={`rounded-xl font-sans inline-flex items-center justify-center transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none relative overflow-hidden group select-none ${getSizeClass()} ${getVariantClass()} ${className}`}
       {...props}
     >
-      {/* Subtle Specular Glow on Hover */}
-      <span className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none group-hover:via-white/70 transition-opacity" />
       {icon && typeof icon === 'string' ? (
         <span className="material-symbols-outlined text-[17px] shrink-0">{icon}</span>
       ) : (

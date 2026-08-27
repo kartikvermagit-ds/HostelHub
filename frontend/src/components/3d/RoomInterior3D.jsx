@@ -64,31 +64,31 @@ export const RoomInteriorMesh = ({
       {/* =================================================== */}
       {/* 1. ATMOSPHERIC DAY & NIGHT LIGHTING                 */}
       {/* =================================================== */}
-      <ambientLight intensity={isNight ? 0.35 : 0.85} />
-      <directionalLight position={[4, 6, 4]} intensity={isNight ? 0.6 : 1.4} />
+      <ambientLight intensity={isNight ? 0.75 : 1.25} />
+      <directionalLight position={[4, 6, 4]} intensity={isNight ? 0.95 : 1.6} />
 
       {/* Sunlight or Moonlight Through Window */}
       <pointLight
         position={[2.0, 1.2, -0.6]}
-        intensity={isNight ? 0.5 : 1.6}
+        intensity={isNight ? 1.0 : 2.2}
         color={isNight ? '#89f5e7' : '#fff7ed'}
-        distance={4.8}
+        distance={5.2}
       />
 
       {/* Warm Desk Lamp Point Light */}
       <pointLight
         position={[-1.1, 0.48, -0.65]}
-        intensity={isNight ? 2.8 : 1.8}
+        intensity={isNight ? 3.6 : 2.4}
         color="#ffbe98"
-        distance={3.0}
+        distance={3.2}
       />
 
       {/* Ceiling Ambient Downlight */}
       <pointLight
         position={[0, 1.4, 0]}
-        intensity={isNight ? 0.4 : 0.8}
+        intensity={isNight ? 0.6 : 1.0}
         color={isNight ? '#89f5e7' : '#ffffff'}
-        distance={3.5}
+        distance={3.8}
       />
 
       {/* =================================================== */}
