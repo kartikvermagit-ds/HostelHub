@@ -558,6 +558,166 @@ export const InteractiveRoomModals = () => {
             </div>
           </motion.div>
         )}
+
+        {/* =================================================== */}
+        {/* 6. HOSTEL COURTYARD ACADEMIC NOTICE BOARD MODAL     */}
+        {/* =================================================== */}
+        {activeInteractiveModal === 'courtyard-announcements' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+            className="bg-surface-container-lowest border border-surface-border rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl overflow-hidden flex flex-col gap-4 text-xs max-h-[85vh]"
+          >
+            <div className="flex items-start justify-between border-b border-surface-border pb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-primary text-on-primary flex items-center justify-center font-bold shadow-md">
+                  <span className="material-symbols-outlined text-[22px]">campaign</span>
+                </div>
+                <div>
+                  <h3 className="font-headline-md text-base font-bold text-on-surface">
+                    Hostel Academic Notice Board
+                  </h3>
+                  <p className="text-xs text-on-surface-variant">
+                    {currentHostel?.name} • Central Courtyard Hub
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveInteractiveModal(null)}
+                className="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant"
+              >
+                <span className="material-symbols-outlined text-[16px]">close</span>
+              </button>
+            </div>
+
+            <div className="space-y-3 overflow-y-auto pr-1">
+              <div className="p-3.5 rounded-2xl bg-primary/10 border border-primary/20 flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-primary text-[11px] uppercase tracking-wide">Urgent Class Test Alert</span>
+                  <span className="text-[10px] text-on-surface-variant font-medium">Exam Cell</span>
+                </div>
+                <h4 className="font-bold text-sm text-on-surface">COA & DSA Mid-Term Tests Scheduled</h4>
+                <p className="text-[11px] text-on-surface-variant">
+                  CT-1 examinations will commence next Monday. High-yield unit notes and solved PYQs are available on all room bookshelves.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-surface border border-surface-border flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-teal-600 dark:text-teal-400 text-[11px] uppercase tracking-wide">Study Group Notice</span>
+                  <span className="text-[10px] text-on-surface-variant">Room 303 Annex</span>
+                </div>
+                <h4 className="font-bold text-sm text-on-surface">Evening Peer Review: Graph Algorithms</h4>
+                <p className="text-[11px] text-on-surface-variant">
+                  Daily 7:00 PM session in the central courtyard study pod. Bring your notebooks and laptops.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-surface border border-surface-border flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-amber-600 dark:text-amber-400 text-[11px] uppercase tracking-wide">Campus Maintenance</span>
+                  <span className="text-[10px] text-on-surface-variant">Hostel Warden</span>
+                </div>
+                <h4 className="font-bold text-sm text-on-surface">High-Speed Wi-Fi Mesh Upgrade</h4>
+                <p className="text-[11px] text-on-surface-variant">
+                  Corridor and courtyard access points have been upgraded to Gigabit speeds.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end pt-2 border-t border-surface-border">
+              <button
+                type="button"
+                onClick={() => setActiveInteractiveModal(null)}
+                className="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-xs"
+              >
+                Close Notice Board
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* =================================================== */}
+        {/* 7. OUTDOOR COURTYARD STUDY SPACE HUB MODAL          */}
+        {/* =================================================== */}
+        {activeInteractiveModal === 'courtyard-study-space' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+            className="bg-surface-container-lowest border border-surface-border rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl overflow-hidden flex flex-col gap-4 text-xs max-h-[85vh]"
+          >
+            <div className="flex items-start justify-between border-b border-surface-border pb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-md">
+                  <span className="material-symbols-outlined text-[22px]">nature_people</span>
+                </div>
+                <div>
+                  <h3 className="font-headline-md text-base font-bold text-on-surface">
+                    Central Courtyard Study Pod
+                  </h3>
+                  <p className="text-xs text-on-surface-variant">
+                    {currentHostel?.name} • Open Air Collaborative Workstation
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveInteractiveModal(null)}
+                className="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant"
+              >
+                <span className="material-symbols-outlined text-[16px]">close</span>
+              </button>
+            </div>
+
+            <div className="space-y-3 overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-2xl bg-surface-container-low border border-surface-border text-center">
+                  <span className="text-[10px] text-on-surface-variant font-semibold block">Active Peers Studying</span>
+                  <span className="text-base font-bold text-primary">8 Scholars</span>
+                </div>
+                <div className="p-3 rounded-2xl bg-surface-container-low border border-surface-border text-center">
+                  <span className="text-[10px] text-on-surface-variant font-semibold block">Noise Level</span>
+                  <span className="text-base font-bold text-emerald-600">Quiet Zone (32 dB)</span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-surface border border-surface-border space-y-2">
+                <h4 className="font-bold text-on-surface flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-primary text-[16px]">menu_book</span>
+                  <span>Quick-Access Courtyard Subject Notes</span>
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {['COA', 'DSA', 'DBMS', 'Mathematics'].map((sub) => (
+                    <button
+                      key={sub}
+                      type="button"
+                      onClick={() => {
+                        setActiveInteractiveModal('bookshelf-resources');
+                      }}
+                      className="p-2.5 rounded-xl border border-surface-border bg-surface-container-low hover:border-primary/50 text-left transition-all flex items-center justify-between"
+                    >
+                      <span className="font-bold text-on-surface">{sub} Notes & PYQs</span>
+                      <span className="material-symbols-outlined text-primary text-[16px]">arrow_forward</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end pt-2 border-t border-surface-border">
+              <button
+                type="button"
+                onClick={() => setActiveInteractiveModal(null)}
+                className="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-xs"
+              >
+                Done
+              </button>
+            </div>
+          </motion.div>
+        )}
       </div>
     </AnimatePresence>
   );

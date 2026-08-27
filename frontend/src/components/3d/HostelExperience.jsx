@@ -23,6 +23,8 @@ export const HostelExperience = ({ className = 'w-full' }) => {
     setSelectedFloorNumber,
     selectedRoomId,
     setSelectedRoomId,
+    cameraMode,
+    setCameraMode,
     activeInteriorTab,
     setActiveInteriorTab,
     searchQuery,
@@ -60,6 +62,14 @@ export const HostelExperience = ({ className = 'w-full' }) => {
   const buildingDims = useMemo(() => {
     return calculateBuildingDimensions(currentHostel);
   }, [currentHostel]);
+
+  const effectiveCameraMode = selectedRoomId
+    ? 'room'
+    : cameraMode === 'courtyard'
+    ? 'courtyard'
+    : selectedFloorNumber !== null
+    ? 'floor'
+    : 'overview';
 
   // Filter rooms based on selected floor and search query
   const filteredRooms = allRooms.filter((r) => {
@@ -111,7 +121,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
         isFullscreen ? 'fixed inset-4 z-50 overflow-y-auto' : className
       }`}
     >
-      {/* 1. TOP BAR: Hostel Selector Pills, Exploded View, Day/Night, Reset, Exit Room */}
+      {/* 1. TOP BAR: Hostel Selector Pills, Exploded View, Courtyard View, Day/Night, Reset */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-3">
         {/* Dynamic Hostel Selector */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
@@ -139,8 +149,28 @@ export const HostelExperience = ({ className = 'w-full' }) => {
           </div>
         </div>
 
-        {/* Feature Controls (Exploded View, Day/Night, Quality, Reset) */}
+        {/* Feature Controls (Exploded View, Courtyard View, Day/Night, Reset) */}
         <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          {/* Courtyard Focus Toggle */}
+          {currentHostel.layoutConfig?.centralSpace?.enabled !== false && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedRoomId(null);
+                setCameraMode(cameraMode === 'courtyard' ? 'overview' : 'courtyard');
+              }}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all active:scale-95 ${
+                cameraMode === 'courtyard' && !selectedRoomId
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                  : 'border-surface-border bg-surface/90 backdrop-blur-md hover:bg-surface-container-low text-on-surface'
+              }`}
+              title="Focus Central Courtyard / Academic Hub"
+            >
+              <span className="material-symbols-outlined text-[16px]">park</span>
+              <span>Courtyard</span>
+            </button>
+          )}
+
           {/* Exploded View Toggle */}
           <button
             type="button"
@@ -242,7 +272,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
             <pointLight position={[0, 2, 2]} intensity={0.4} color="#ffdbce" />
 
             <HostelCamera
-              cameraMode={selectedRoomId ? 'room' : selectedFloorNumber !== null ? 'floor' : 'overview'}
+              cameraMode={effectiveCameraMode}
               selectedFloorNumber={selectedFloorNumber}
               selectedRoom={currentRoom}
               isExplodedView={isExplodedView}

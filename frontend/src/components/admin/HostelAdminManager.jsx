@@ -785,30 +785,146 @@ export const HostelAdminManager = ({ onToast = () => {} }) => {
               </div>
 
               {draftHostel.layoutConfig?.centralSpace?.enabled !== false && (
-                <div>
-                  <label className="font-bold text-on-surface block mb-1">Central Space Type</label>
-                  <select
-                    value={draftHostel.layoutConfig?.centralSpace?.type || 'Courtyard'}
-                    onChange={(e) =>
-                      updateDraft((prev) => ({
-                        ...prev,
-                        layoutConfig: {
-                          ...(prev.layoutConfig || {}),
-                          centralSpace: {
-                            ...(prev.layoutConfig?.centralSpace || {}),
-                            type: e.target.value
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <label className="font-bold text-on-surface block mb-1">Central Space Type</label>
+                    <select
+                      value={draftHostel.layoutConfig?.centralSpace?.type || 'Courtyard'}
+                      onChange={(e) =>
+                        updateDraft((prev) => ({
+                          ...prev,
+                          layoutConfig: {
+                            ...(prev.layoutConfig || {}),
+                            centralSpace: {
+                              ...(prev.layoutConfig?.centralSpace || {}),
+                              type: e.target.value
+                            }
                           }
+                        }))
+                      }
+                      className="w-full px-3 py-2 bg-surface border border-surface-border rounded-xl"
+                    >
+                      <option value="Courtyard">Courtyard (Reflection Pool, Benches, Trees, Walkways)</option>
+                      <option value="Garden">Garden (Lush Lawn, Botanical Center & Planters)</option>
+                      <option value="Study Area">Study Area (Outdoor Tables, Lamps & Notice Board)</option>
+                      <option value="Common Area">Common Area (Conversational Social Lounge)</option>
+                      <option value="Atrium">Atrium (Architectural Monument Core)</option>
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="font-bold text-on-surface block mb-1">Courtyard Width (m)</label>
+                      <input
+                        type="number"
+                        step="0.2"
+                        defaultValue={draftHostel.layoutConfig?.centralSpace?.width || 4.8}
+                        onChange={(e) =>
+                          updateDraft((prev) => ({
+                            ...prev,
+                            layoutConfig: {
+                              ...(prev.layoutConfig || {}),
+                              centralSpace: {
+                                ...(prev.layoutConfig?.centralSpace || {}),
+                                width: parseFloat(e.target.value)
+                              }
+                            }
+                          }))
                         }
-                      }))
-                    }
-                    className="w-full px-3 py-2 bg-surface border border-surface-border rounded-xl"
-                  >
-                    <option value="Courtyard">Courtyard (Benches, Trees, Walkway)</option>
-                    <option value="Garden">Garden (Lush Lawn & Planters)</option>
-                    <option value="Study Area">Study Courtyard (Study Tables & Notice Board)</option>
-                    <option value="Common Area">Common Gathering Space</option>
-                    <option value="Atrium">Open Atrium</option>
-                  </select>
+                        className="w-full px-3 py-1.5 bg-surface border border-surface-border rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-bold text-on-surface block mb-1">Courtyard Depth (m)</label>
+                      <input
+                        type="number"
+                        step="0.2"
+                        defaultValue={draftHostel.layoutConfig?.centralSpace?.depth || 3.4}
+                        onChange={(e) =>
+                          updateDraft((prev) => ({
+                            ...prev,
+                            layoutConfig: {
+                              ...(prev.layoutConfig || {}),
+                              centralSpace: {
+                                ...(prev.layoutConfig?.centralSpace || {}),
+                                depth: parseFloat(e.target.value)
+                              }
+                            }
+                          }))
+                        }
+                        className="w-full px-3 py-1.5 bg-surface border border-surface-border rounded-xl"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 text-[11px] pt-1">
+                    <div>
+                      <label className="font-semibold text-on-surface-variant block mb-1">Trees Count</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="6"
+                        defaultValue={draftHostel.layoutConfig?.centralSpace?.treeCount || 3}
+                        onChange={(e) =>
+                          updateDraft((prev) => ({
+                            ...prev,
+                            layoutConfig: {
+                              ...(prev.layoutConfig || {}),
+                              centralSpace: {
+                                ...(prev.layoutConfig?.centralSpace || {}),
+                                treeCount: parseInt(e.target.value, 10)
+                              }
+                            }
+                          }))
+                        }
+                        className="w-full px-2 py-1 bg-surface border border-surface-border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-semibold text-on-surface-variant block mb-1">Benches</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="4"
+                        defaultValue={draftHostel.layoutConfig?.centralSpace?.benchCount || 2}
+                        onChange={(e) =>
+                          updateDraft((prev) => ({
+                            ...prev,
+                            layoutConfig: {
+                              ...(prev.layoutConfig || {}),
+                              centralSpace: {
+                                ...(prev.layoutConfig?.centralSpace || {}),
+                                benchCount: parseInt(e.target.value, 10)
+                              }
+                            }
+                          }))
+                        }
+                        className="w-full px-2 py-1 bg-surface border border-surface-border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-semibold text-on-surface-variant block mb-1">Courtyard Lights</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="4"
+                        defaultValue={draftHostel.layoutConfig?.centralSpace?.lightCount || 2}
+                        onChange={(e) =>
+                          updateDraft((prev) => ({
+                            ...prev,
+                            layoutConfig: {
+                              ...(prev.layoutConfig || {}),
+                              centralSpace: {
+                                ...(prev.layoutConfig?.centralSpace || {}),
+                                lightCount: parseInt(e.target.value, 10)
+                              }
+                            }
+                          }))
+                        }
+                        className="w-full px-2 py-1 bg-surface border border-surface-border rounded-lg"
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
