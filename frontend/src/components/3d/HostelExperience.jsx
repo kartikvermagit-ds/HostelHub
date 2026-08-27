@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CanvasWrapper } from './CanvasWrapper';
 import { Building3D } from './Building3D';
@@ -7,10 +7,12 @@ import { HostelCamera } from './HostelCamera';
 import { useHostelStore } from '../../stores/hostelStore';
 import { RoomDetailModal } from './RoomDetailModal';
 import { InteractiveRoomModals } from './InteractiveRoomModals';
+import { calculateBuildingDimensions } from './layoutEngine';
 
 /**
- * Main Interactive 3D Hostel Explorer Container
- * Supports Exploded View, Day/Night Lighting, Interactive Workspace/Bookshelf, Room Comparison, and Sharing!
+ * Main Interactive 3D Digital Twin Hostel Explorer
+ * Glassmorphic UI, Multi-Wing Layouts, Courtyards, Day/Night Atmosphere,
+ * Dynamic Camera, Exploded View, Room Comparison, and Student Study Hub.
  */
 export const HostelExperience = ({ className = 'w-full' }) => {
   const {
@@ -45,6 +47,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [emergenceKey, setEmergenceKey] = useState(1);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   const currentHostel = getCurrentHostel();
   const currentRoom = getCurrentRoom();
@@ -52,6 +55,11 @@ export const HostelExperience = ({ className = 'w-full' }) => {
 
   const isRoomFavorite = currentRoom && favoriteRoomIds.includes(currentRoom.id);
   const isRoomCompared = currentRoom && comparedRoomIds.includes(currentRoom.id);
+
+  // Compute building dimensions for camera calculation
+  const buildingDims = useMemo(() => {
+    return calculateBuildingDimensions(currentHostel);
+  }, [currentHostel]);
 
   // Filter rooms based on selected floor and search query
   const filteredRooms = allRooms.filter((r) => {
@@ -86,14 +94,14 @@ export const HostelExperience = ({ className = 'w-full' }) => {
   const getStatusDotBg = (status) => {
     switch (status?.toLowerCase()) {
       case 'available':
-        return 'bg-emerald-400';
+        return 'bg-emerald-400 shadow-emerald-400/50';
       case 'maintenance':
-        return 'bg-amber-400';
+        return 'bg-amber-400 shadow-amber-400/50';
       case 'reserved':
-        return 'bg-blue-400';
+        return 'bg-blue-400 shadow-blue-400/50';
       case 'occupied':
       default:
-        return 'bg-slate-400';
+        return 'bg-slate-400 shadow-slate-400/50';
     }
   };
 
@@ -110,7 +118,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
           <span className="text-xs font-bold text-on-surface-variant shrink-0">
             Hostel:
           </span>
-          <div className="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-xl border border-surface-border">
+          <div className="flex items-center gap-1.5 p-1 bg-surface-container-low/80 backdrop-blur-md rounded-xl border border-surface-border/80 shadow-xs">
             {hostels.map((h) => {
               const isSelected = selectedHostelId === h.id;
               return (
@@ -140,7 +148,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
             className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all active:scale-95 ${
               isExplodedView
                 ? 'bg-primary text-on-primary border-primary shadow-sm'
-                : 'border-surface-border bg-surface hover:bg-surface-container-low text-on-surface'
+                : 'border-surface-border bg-surface/90 backdrop-blur-md hover:bg-surface-container-low text-on-surface'
             }`}
             title="Toggle Exploded Vertical Floor View"
           >
@@ -157,7 +165,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
             className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all active:scale-95 ${
               lightingMode === 'night'
                 ? 'bg-slate-900 text-amber-300 border-slate-700 shadow-sm'
-                : 'border-surface-border bg-surface hover:bg-surface-container-low text-on-surface'
+                : 'border-surface-border bg-surface/90 backdrop-blur-md hover:bg-surface-container-low text-on-surface'
             }`}
             title="Toggle Day / Night Lighting"
           >
@@ -171,7 +179,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
           <button
             type="button"
             onClick={resetView}
-            className="px-3 py-1.5 rounded-xl border border-surface-border bg-surface hover:bg-surface-container-low text-on-surface text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all active:scale-95"
+            className="px-3 py-1.5 rounded-xl border border-surface-border bg-surface/90 backdrop-blur-md hover:bg-surface-container-low text-on-surface text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all active:scale-95"
             title="Reset Camera to Overview"
           >
             <span className="material-symbols-outlined text-[16px]">center_focus_strong</span>
@@ -182,7 +190,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
           <button
             type="button"
             onClick={handleReplayStory}
-            className="px-3 py-1.5 rounded-xl border border-surface-border bg-surface hover:bg-surface-container-low text-on-surface text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all active:scale-95"
+            className="px-3 py-1.5 rounded-xl border border-surface-border bg-surface/90 backdrop-blur-md hover:bg-surface-container-low text-on-surface text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all active:scale-95"
             title="Replay Emergence Sequence"
           >
             <span className="material-symbols-outlined text-[16px]">replay</span>
@@ -239,36 +247,40 @@ export const HostelExperience = ({ className = 'w-full' }) => {
               selectedRoom={currentRoom}
               isExplodedView={isExplodedView}
               floorHeight={1.05}
+              buildingDims={buildingDims}
             />
 
             <Building3D
               hostelData={currentHostel}
               selectedFloorNumber={selectedFloorNumber}
               selectedRoomId={selectedRoomId}
-              onSelectRoom={(room) => setSelectedRoomId(room.id)}
+              onSelectRoom={(room) => {
+                setSelectedRoomId(room.id);
+                setIsMobileDrawerOpen(true);
+              }}
               isExplodedView={isExplodedView}
               lightingMode={lightingMode}
               qualityMode={qualityMode}
             />
           </CanvasWrapper>
 
-          {/* Status Legend at Bottom */}
+          {/* Floating Glass Status Legend at Bottom */}
           <div className="absolute bottom-3 left-3 right-3 pointer-events-none flex justify-center">
-            <div className="bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-surface-border shadow-sm flex items-center gap-4 text-xs font-semibold text-on-surface pointer-events-auto">
+            <div className="bg-surface-container-lowest/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-surface-border/90 shadow-md flex items-center gap-4 text-xs font-semibold text-on-surface pointer-events-auto">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm"></span>
                 <span>Available</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-400 shadow-sm"></span>
                 <span>Occupied</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm"></span>
                 <span>Maintenance</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-400 shadow-sm"></span>
                 <span>Reserved</span>
               </div>
             </div>
@@ -283,9 +295,9 @@ export const HostelExperience = ({ className = 'w-full' }) => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
-              className="lg:col-span-6 rounded-2xl border border-surface-border bg-surface-container-lowest p-4 sm:p-5 flex flex-col justify-between shadow-md relative overflow-hidden h-[380px] lg:h-[480px]"
+              className="lg:col-span-6 rounded-2xl border border-surface-border bg-surface-container-lowest/95 backdrop-blur-md p-4 sm:p-5 flex flex-col justify-between shadow-md relative overflow-hidden h-[380px] lg:h-[480px]"
             >
-              {/* Room Header Overlay Card */}
+              {/* Room Header Card */}
               <div className="flex items-start justify-between gap-3 border-b border-surface-border pb-3 z-10">
                 <div>
                   <div className="flex items-center gap-2">
@@ -369,7 +381,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
                     type="button"
                     onClick={() => setActiveInteractiveModal('laptop-workspace')}
                     className="w-8 h-8 rounded-xl bg-surface-container-lowest/90 backdrop-blur-md border border-surface-border shadow-xs flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
-                    title="Open Student Laptop Workspace"
+                    title="Open Student Laptop Workspace (Notes, PYQs, Videos)"
                   >
                     <span className="material-symbols-outlined text-[18px]">laptop</span>
                   </button>
@@ -377,7 +389,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
                     type="button"
                     onClick={() => setActiveInteractiveModal('bookshelf-resources')}
                     className="w-8 h-8 rounded-xl bg-surface-container-lowest/90 backdrop-blur-md border border-surface-border shadow-xs flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
-                    title="Open Bookshelf Resources"
+                    title="Open Academic Bookshelf (DSA, COA, DBMS, Maths)"
                   >
                     <span className="material-symbols-outlined text-[18px]">menu_book</span>
                   </button>
@@ -394,7 +406,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
 
               {/* Interior Area Switcher Tabs */}
               <div className="flex items-center justify-between gap-2 z-10">
-                <div className="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-xl border border-surface-border overflow-x-auto scrollbar-none">
+                <div className="flex items-center gap-1.5 p-1 bg-surface-container-low/80 backdrop-blur-md rounded-xl border border-surface-border overflow-x-auto scrollbar-none">
                   {[
                     { id: 'room-view', label: 'Room View' },
                     { id: 'interior', label: 'Interior' },
@@ -448,7 +460,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
               placeholder="Search room number (e.g. 303)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-surface border border-surface-border rounded-xl text-xs text-on-surface focus:outline-none focus:border-primary transition-all placeholder:text-on-surface-variant/60"
+              className="w-full pl-9 pr-3 py-1.5 bg-surface/90 backdrop-blur-md border border-surface-border rounded-xl text-xs text-on-surface focus:outline-none focus:border-primary transition-all placeholder:text-on-surface-variant/60"
             />
           </div>
 
@@ -467,10 +479,10 @@ export const HostelExperience = ({ className = 'w-full' }) => {
                 }
                 className="px-3 py-1 bg-surface border border-surface-border rounded-xl text-xs font-bold text-on-surface focus:outline-none focus:border-primary cursor-pointer"
               >
-                <option value="">All Floors</option>
+                <option value="">All Floors ({currentHostel.floors.length})</option>
                 {currentHostel.floors.map((fl) => (
                   <option key={fl.id} value={fl.floorNumber}>
-                    {fl.name || `Floor ${fl.floorNumber}`}
+                    {fl.name || `Floor ${fl.floorNumber}`} ({fl.rooms?.length || 0} rooms)
                   </option>
                 ))}
               </select>
@@ -510,14 +522,16 @@ export const HostelExperience = ({ className = 'w-full' }) => {
               <button
                 key={room.id}
                 type="button"
-                onClick={() => setSelectedRoomId(room.id)}
+                onClick={() => {
+                  setSelectedRoomId(room.id);
+                  setIsMobileDrawerOpen(true);
+                }}
                 className={`flex items-center gap-2.5 p-2.5 rounded-2xl border transition-all text-left shrink-0 min-w-[135px] relative group ${
                   isSelected
                     ? 'bg-primary/10 border-primary ring-2 ring-primary/40 shadow-sm'
                     : 'bg-surface-container-lowest border-surface-border hover:border-primary/40'
                 }`}
               >
-                {/* Room Thumbnail Avatar / Bed Icon */}
                 <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary shrink-0 border border-surface-border">
                   <span className="material-symbols-outlined text-[20px]">
                     {room.status === 'occupied' ? 'meeting_room' : 'door_front'}
@@ -545,7 +559,7 @@ export const HostelExperience = ({ className = 'w-full' }) => {
         {/* Bottom Helper Tip */}
         <div className="flex items-center justify-center gap-1.5 text-xs text-on-surface-variant pt-1 font-medium">
           <span className="material-symbols-outlined text-primary text-[15px]">tips_and_updates</span>
-          <span>Tip: Click any room door in 3D to inspect interior • Click the laptop or books for study resources</span>
+          <span>Click any room door in 3D to explore interior • Click laptop or bookshelf for academic resources</span>
         </div>
       </div>
 
@@ -561,4 +575,3 @@ export const HostelExperience = ({ className = 'w-full' }) => {
     </div>
   );
 };
-

@@ -4,12 +4,31 @@ import { persist } from 'zustand/middleware';
 const initialHostels = [
   {
     id: "hostel-4",
-    name: "Hostel 4",
+    name: "Aryabhata Hostel",
     displayName: "Boys Hostel 4 (Aryabhata Block)",
     tagline: "Engineering Scholars & Tech Innovation",
-    description: "Home to 2nd, 3rd, and 4th year Computer Science & Engineering students.",
+    description: "Home to 2nd, 3rd, and 4th year Computer Science & Engineering students with open central courtyard.",
     hostelType: "boys",
     accentColor: "#00685f",
+    layoutConfig: {
+      layoutType: "Courtyard",
+      buildingWidth: 8.0,
+      buildingDepth: 5.0,
+      floorHeight: 1.05,
+      corridorWidth: 0.8,
+      centralSpace: {
+        enabled: true,
+        type: "Courtyard",
+        width: 4.6,
+        depth: 2.8,
+        features: ["trees", "benches", "study_table", "lighting", "planter", "notice_board"]
+      },
+      architecture: {
+        entrancePosition: "center",
+        staircasePosition: "right",
+        liftPosition: "right"
+      }
+    },
     floors: [
       {
         id: "h4-f1",
@@ -79,6 +98,60 @@ const initialHostels = [
             resources: [
               { id: "res-4", title: "Digital Electronics Unit 2 Notes", type: "PDF", size: "4.2 MB" }
             ]
+          },
+          {
+            id: "104",
+            hostelId: "hostel-4",
+            floorId: "h4-f1",
+            floorNumber: 1,
+            roomNumber: "104",
+            status: "available",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "CSE • 4th Sem",
+            year: "2nd Year",
+            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi"],
+            description: "Ground floor garden view room.",
+            sharedNotesCount: 12,
+            activeStudyGroup: "Core Java & OOPs",
+            resources: []
+          },
+          {
+            id: "105",
+            hostelId: "hostel-4",
+            floorId: "h4-f1",
+            floorNumber: 1,
+            roomNumber: "105",
+            status: "reserved",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "Robotics Society",
+            year: "3rd Sem",
+            facilities: ["Workstation", "Bed", "Wi-Fi"],
+            description: "Reserved for visiting research scholar.",
+            sharedNotesCount: 8,
+            activeStudyGroup: "Robotics Club",
+            resources: []
+          },
+          {
+            id: "106",
+            hostelId: "hostel-4",
+            floorId: "h4-f1",
+            floorNumber: 1,
+            roomNumber: "106",
+            status: "available",
+            roomType: "Double",
+            capacity: 2,
+            occupants: [],
+            branch: "General Wing",
+            year: "2nd Year",
+            facilities: ["2 Study Tables", "2 Beds", "Wi-Fi"],
+            description: "Spacious corner room on ground floor.",
+            sharedNotesCount: 20,
+            activeStudyGroup: "Discrete Mathematics",
+            resources: []
           }
         ]
       },
@@ -150,6 +223,62 @@ const initialHostels = [
             description: "Undergoing routine electrical wiring inspection and high-speed LAN port setup.",
             sharedNotesCount: 5,
             activeStudyGroup: "Network Upgrades Scheduled",
+            resources: []
+          },
+          {
+            id: "204",
+            hostelId: "hostel-4",
+            floorId: "h4-f2",
+            floorNumber: 2,
+            roomNumber: "204",
+            status: "available",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "CSE AI/ML",
+            year: "2nd Year",
+            facilities: ["Study Table", "Chair", "Bed", "Bookshelf", "Wi-Fi"],
+            description: "Overlooks the courtyard fountain area.",
+            sharedNotesCount: 22,
+            activeStudyGroup: "Deep Learning Study Group",
+            resources: []
+          },
+          {
+            id: "205",
+            hostelId: "hostel-4",
+            floorId: "h4-f2",
+            floorNumber: 2,
+            roomNumber: "205",
+            status: "available",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "Information Technology",
+            year: "2nd Year",
+            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi"],
+            description: "Quiet first-floor wing room.",
+            sharedNotesCount: 14,
+            activeStudyGroup: "Web Engineering",
+            resources: []
+          },
+          {
+            id: "206",
+            hostelId: "hostel-4",
+            floorId: "h4-f2",
+            floorNumber: 2,
+            roomNumber: "206",
+            status: "occupied",
+            roomType: "Double",
+            capacity: 2,
+            occupants: [
+              { name: "Ankit Singh", roll: "22BCSE206", branch: "CSE" }
+            ],
+            branch: "CSE • 4th Sem",
+            year: "2nd Year",
+            facilities: ["2 Study Tables", "2 Beds", "Wi-Fi"],
+            description: "Spacious double occupancy room.",
+            sharedNotesCount: 30,
+            activeStudyGroup: "Computer Graphics",
             resources: []
           }
         ]
@@ -248,18 +377,16 @@ const initialHostels = [
             floorId: "h4-f3",
             floorNumber: 3,
             roomNumber: "305",
-            status: "occupied",
+            status: "available",
             roomType: "Single",
             capacity: 1,
-            occupants: [
-              { name: "Kartik Verma", roll: "22BCSE305", branch: "CSE Data Science", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" }
-            ],
-            branch: "CSE Data Science",
-            year: "2nd Year",
-            facilities: ["Study Table", "Chair", "Bed", "Bookshelf", "Wi-Fi", "Lamp"],
-            description: "Admin & Lead Contributor room for HostelHub community materials.",
-            sharedNotesCount: 64,
-            activeStudyGroup: "HostelHub Core Development",
+            occupants: [],
+            branch: "Data Engineering",
+            year: "3rd Year",
+            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi"],
+            description: "Spacious study room with mountain view.",
+            sharedNotesCount: 24,
+            activeStudyGroup: "Big Data Processing",
             resources: []
           },
           {
@@ -268,31 +395,167 @@ const initialHostels = [
             floorId: "h4-f3",
             floorNumber: 3,
             roomNumber: "306",
+            status: "reserved",
+            roomType: "Double",
+            capacity: 2,
+            occupants: [],
+            branch: "Honor Scholars",
+            year: "4th Year",
+            facilities: ["2 Study Tables", "2 Beds", "Balcony"],
+            description: "Top floor honors wing suite.",
+            sharedNotesCount: 40,
+            activeStudyGroup: "Senior Capstone Projects",
+            resources: []
+          }
+        ]
+      },
+      {
+        id: "h4-f4",
+        hostelId: "hostel-4",
+        floorNumber: 4,
+        name: "Third Floor (Sky Wing)",
+        rooms: [
+          {
+            id: "401",
+            hostelId: "hostel-4",
+            floorId: "h4-f4",
+            floorNumber: 4,
+            roomNumber: "401",
+            status: "available",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "AI Research Pod",
+            year: "4th Year",
+            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi", "Balcony"],
+            description: "Sky-wing single room with top ventilation and high-speed network.",
+            sharedNotesCount: 35,
+            activeStudyGroup: "LLMs & Agentic Systems",
+            resources: []
+          },
+          {
+            id: "402",
+            hostelId: "hostel-4",
+            floorId: "h4-f4",
+            floorNumber: 4,
+            roomNumber: "402",
+            status: "available",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "Cloud Computing Lab",
+            year: "4th Year",
+            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi"],
+            description: "Dedicated to cloud computing and distributed systems.",
+            sharedNotesCount: 29,
+            activeStudyGroup: "Kubernetes & Microservices",
+            resources: []
+          },
+          {
+            id: "403",
+            hostelId: "hostel-4",
+            floorId: "h4-f4",
+            floorNumber: 4,
+            roomNumber: "403",
+            status: "occupied",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [
+              { name: "Tanmay Deshmukh", roll: "21BCSE403", branch: "CSE Cloud" }
+            ],
+            branch: "CSE Cloud Systems",
+            year: "4th Year",
+            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi"],
+            description: "Occupied by final year cloud researcher.",
+            sharedNotesCount: 45,
+            activeStudyGroup: "Final Year Capstone",
+            resources: []
+          },
+          {
+            id: "404",
+            hostelId: "hostel-4",
+            floorId: "h4-f4",
+            floorNumber: 4,
+            roomNumber: "404",
+            status: "available",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "Cybersecurity Wing",
+            year: "4th Year",
+            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi"],
+            description: "Top floor room facing the open courtyard.",
+            sharedNotesCount: 33,
+            activeStudyGroup: "Network Security & Cryptography",
+            resources: []
+          },
+          {
+            id: "405",
+            hostelId: "hostel-4",
+            floorId: "h4-f4",
+            floorNumber: 4,
+            roomNumber: "405",
             status: "maintenance",
             roomType: "Single",
             capacity: 1,
             occupants: [],
-            branch: "Maintenance",
-            year: "N/A",
-            facilities: ["Study Table", "Bed"],
-            description: "Scheduled for wall painting and smart LED installation.",
-            sharedNotesCount: 2,
+            branch: "Sky Pod 5",
+            year: "4th Year",
+            facilities: ["Study Table", "Bed", "Wi-Fi"],
+            description: "Routine AC servicing and ventilation filter replacement.",
+            sharedNotesCount: 6,
             activeStudyGroup: "Scheduled Maintenance",
+            resources: []
+          },
+          {
+            id: "406",
+            hostelId: "hostel-4",
+            floorId: "h4-f4",
+            floorNumber: 4,
+            roomNumber: "406",
+            status: "available",
+            roomType: "Double",
+            capacity: 2,
+            occupants: [],
+            branch: "Senior Capstone Suite",
+            year: "4th Year",
+            facilities: ["2 Study Tables", "2 Beds", "Double Balcony"],
+            description: "Spacious corner double room on the Sky Wing.",
+            sharedNotesCount: 50,
+            activeStudyGroup: "Startup & Innovation Incubation",
             resources: []
           }
         ]
       }
     ]
   },
-
   {
     id: "hostel-2",
-    name: "Hostel 2",
-    displayName: "Bhaskara Block (Hostel 2)",
-    tagline: "Applied Sciences & Mechanics",
-    description: "Home to Mechanical, Civil, and Electrical Engineering cohorts.",
+    name: "Sarabhai Hostel",
+    displayName: "Boys Hostel 2 (Sarabhai Block)",
+    tagline: "Robotics & Space Systems Research Hub",
+    description: "Dedicated to aerospace, electronics, and mechanical engineering scholars.",
     hostelType: "boys",
-    accentColor: "#008378",
+    accentColor: "#0284c7",
+    layoutConfig: {
+      layoutType: "U",
+      buildingWidth: 7.4,
+      buildingDepth: 4.6,
+      floorHeight: 1.05,
+      corridorWidth: 0.8,
+      centralSpace: {
+        enabled: true,
+        type: "Garden",
+        width: 4.2,
+        depth: 2.6,
+        features: ["trees", "benches", "lighting", "planter"]
+      },
+      architecture: {
+        entrancePosition: "center",
+        staircasePosition: "left",
+        liftPosition: "left"
+      }
+    },
     floors: [
       {
         id: "h2-f1",
@@ -306,16 +569,14 @@ const initialHostels = [
             floorId: "h2-f1",
             floorNumber: 1,
             roomNumber: "101",
-            status: "occupied",
-            roomType: "Double",
-            capacity: 2,
-            occupants: [{ name: "Karan Singh", roll: "22BME101", branch: "Mechanical", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150" }],
-            branch: "Mechanical • 4th Sem",
-            year: "2nd Year",
-            facilities: ["2 Study Tables", "2 Beds", "Wi-Fi"],
-            description: "Thermodynamics and CAD modeling focus room.",
-            sharedNotesCount: 24,
-            activeStudyGroup: "Thermodynamics Solved Questions",
+            status: "available",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [],
+            branch: "Aerospace Lab",
+            facilities: ["Study Table", "Bed", "Wi-Fi"],
+            description: "Ground floor quiet room.",
+            sharedNotesCount: 20,
             resources: []
           },
           {
@@ -324,16 +585,30 @@ const initialHostels = [
             floorId: "h2-f1",
             floorNumber: 1,
             roomNumber: "102",
-            status: "available",
+            status: "occupied",
             roomType: "Single",
             capacity: 1,
+            occupants: [{ name: "Rajesh Kumar", roll: "22BAERO102", branch: "Aerospace" }],
+            branch: "Aerospace",
+            facilities: ["Study Table", "Bed", "Wi-Fi"],
+            description: "Occupied room.",
+            sharedNotesCount: 15,
+            resources: []
+          },
+          {
+            id: "h2-103",
+            hostelId: "hostel-2",
+            floorId: "h2-f1",
+            floorNumber: 1,
+            roomNumber: "103",
+            status: "available",
+            roomType: "Double",
+            capacity: 2,
             occupants: [],
-            branch: "Common Study Room",
-            year: "All",
-            facilities: ["Study Table", "Chair", "Bed", "Bookshelf", "Wi-Fi"],
-            description: "Physics mechanics and calculus discussion room.",
-            sharedNotesCount: 19,
-            activeStudyGroup: "Fluid Mechanics Review",
+            branch: "Robotics Pod",
+            facilities: ["2 Study Tables", "2 Beds", "Wi-Fi"],
+            description: "Spacious double room.",
+            sharedNotesCount: 25,
             resources: []
           }
         ]
@@ -350,16 +625,14 @@ const initialHostels = [
             floorId: "h2-f2",
             floorNumber: 2,
             roomNumber: "201",
-            status: "occupied",
+            status: "available",
             roomType: "Single",
             capacity: 1,
-            occupants: [{ name: "Aniket Sen", roll: "22BEE201", branch: "Electrical", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=150" }],
-            branch: "Electrical Engineering",
-            year: "2nd Year",
-            facilities: ["Study Table", "Chair", "Bed", "Wi-Fi"],
-            description: "Circuit analysis and electromagnetics study cell.",
-            sharedNotesCount: 31,
-            activeStudyGroup: "Network Theorems Lab Prep",
+            occupants: [],
+            branch: "Avionics Pod",
+            facilities: ["Study Table", "Bed", "Wi-Fi"],
+            description: "First floor view room.",
+            sharedNotesCount: 18,
             resources: []
           },
           {
@@ -368,31 +641,47 @@ const initialHostels = [
             floorId: "h2-f2",
             floorNumber: 2,
             roomNumber: "202",
-            status: "available",
+            status: "occupied",
             roomType: "Single",
             capacity: 1,
-            occupants: [],
-            branch: "Civil Engineering",
-            year: "2nd Year",
-            facilities: ["Study Table", "Chair", "Bed", "Bookshelf", "Wi-Fi"],
-            description: "Strength of materials and surveying library.",
+            occupants: [{ name: "Suresh Raina", roll: "22BECE202", branch: "ECE" }],
+            branch: "ECE",
+            facilities: ["Study Table", "Bed", "Wi-Fi"],
+            description: "Occupied by senior ECE scholar.",
             sharedNotesCount: 22,
-            activeStudyGroup: "Structural Analysis Discussions",
             resources: []
           }
         ]
       }
     ]
   },
-
   {
     id: "hostel-1",
-    name: "Hostel 1",
-    displayName: "Ramanujan Block (Hostel 1)",
-    tagline: "Senior Academics & Placement Cell",
-    description: "Final year students, research scholars, and placement preparation groups.",
-    hostelType: "boys",
-    accentColor: "#384357",
+    name: "Gargi Hostel",
+    displayName: "Girls Hostel 1 (Gargi Block)",
+    tagline: "Women in Technology & AI Leadership",
+    description: "Modern campus residence with dedicated high-speed study areas and innovation lounge.",
+    hostelType: "girls",
+    accentColor: "#9333ea",
+    layoutConfig: {
+      layoutType: "Straight",
+      buildingWidth: 6.2,
+      buildingDepth: 2.6,
+      floorHeight: 1.05,
+      corridorWidth: 0.8,
+      centralSpace: {
+        enabled: false,
+        type: "Study Area",
+        width: 3.5,
+        depth: 2.0,
+        features: ["trees", "benches", "lighting"]
+      },
+      architecture: {
+        entrancePosition: "center",
+        staircasePosition: "right",
+        liftPosition: "right"
+      }
+    },
     floors: [
       {
         id: "h1-f1",
@@ -406,16 +695,14 @@ const initialHostels = [
             floorId: "h1-f1",
             floorNumber: 1,
             roomNumber: "101",
-            status: "occupied",
+            status: "available",
             roomType: "Single",
             capacity: 1,
-            occupants: [{ name: "Samarth P.", roll: "21BCSE101", branch: "CSE Final Year", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" }],
-            branch: "CSE • Final Year",
-            year: "4th Year",
-            facilities: ["Study Table", "Ergonomic Chair", "Bed", "Bookshelf", "Wi-Fi"],
-            description: "Placement prep archive with over 50 mock interview questions.",
-            sharedNotesCount: 52,
-            activeStudyGroup: "System Design & LLD Masterclass",
+            occupants: [],
+            branch: "AI/ML Track",
+            facilities: ["Study Desk", "Bed", "Wi-Fi"],
+            description: "Ground floor quiet study pod.",
+            sharedNotesCount: 30,
             resources: []
           },
           {
@@ -424,72 +711,70 @@ const initialHostels = [
             floorId: "h1-f1",
             floorNumber: 1,
             roomNumber: "102",
+            status: "occupied",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [{ name: "Pooja Sharma", roll: "22BCSE102", branch: "CSE" }],
+            branch: "CSE",
+            facilities: ["Study Desk", "Bed", "Wi-Fi"],
+            description: "Occupied room.",
+            sharedNotesCount: 28,
+            resources: []
+          },
+          {
+            id: "h1-103",
+            hostelId: "hostel-1",
+            floorId: "h1-f1",
+            floorNumber: 1,
+            roomNumber: "103",
+            status: "available",
+            roomType: "Double",
+            capacity: 2,
+            occupants: [],
+            branch: "Data Analytics",
+            facilities: ["2 Study Desks", "2 Beds", "Wi-Fi"],
+            description: "Double occupancy room.",
+            sharedNotesCount: 19,
+            resources: []
+          }
+        ]
+      },
+      {
+        id: "h1-f2",
+        hostelId: "hostel-1",
+        floorNumber: 2,
+        name: "First Floor",
+        rooms: [
+          {
+            id: "h1-201",
+            hostelId: "hostel-1",
+            floorId: "h1-f2",
+            floorNumber: 2,
+            roomNumber: "201",
             status: "available",
             roomType: "Single",
             capacity: 1,
             occupants: [],
-            branch: "Research Pod",
-            year: "Final Year",
-            facilities: ["Study Table", "Chair", "Bed", "Bookshelf", "Wi-Fi"],
-            description: "Senior project room for distributed systems and cloud research.",
-            sharedNotesCount: 40,
-            activeStudyGroup: "Distributed Systems Project",
-            resources: []
-          }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "hostel-3",
-    name: "Hostel 3",
-    displayName: "Kalam Block (Hostel 3)",
-    tagline: "Junior Cohort & Freshers Hub",
-    description: "First & second year foundational science and engineering student block.",
-    hostelType: "boys",
-    accentColor: "#00685f",
-    floors: [
-      {
-        id: "h3-f1",
-        hostelId: "hostel-3",
-        floorNumber: 1,
-        name: "Ground Floor",
-        rooms: [
-          {
-            id: "h3-101",
-            hostelId: "hostel-3",
-            floorId: "h3-f1",
-            floorNumber: 1,
-            roomNumber: "101",
-            status: "occupied",
-            roomType: "Double",
-            capacity: 2,
-            occupants: [{ name: "Nikhil Sharma", roll: "23BCSE101", branch: "CSE 1st Year", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" }],
-            branch: "CSE • 2nd Sem",
-            year: "1st Year",
-            facilities: ["2 Study Tables", "2 Beds", "Wi-Fi"],
-            description: "C programming and basic electrical engineering study room.",
-            sharedNotesCount: 18,
-            activeStudyGroup: "Engineering Physics & Math 1",
+            branch: "Cloud Track",
+            facilities: ["Study Desk", "Bed", "Wi-Fi"],
+            description: "First floor balcony room.",
+            sharedNotesCount: 24,
             resources: []
           },
           {
-            id: "h3-102",
-            hostelId: "hostel-3",
-            floorId: "h3-f1",
-            floorNumber: 1,
-            roomNumber: "102",
-            status: "available",
-            roomType: "Double",
-            capacity: 2,
-            occupants: [],
-            branch: "Freshers Collaboration Pod",
-            year: "1st Year",
-            facilities: ["2 Study Tables", "2 Beds", "Wi-Fi"],
-            description: "Open discussion space with all 1st year semester notes.",
-            sharedNotesCount: 25,
-            activeStudyGroup: "1st Year PYQ Question Bank",
+            id: "h1-202",
+            hostelId: "hostel-1",
+            floorId: "h1-f2",
+            floorNumber: 2,
+            roomNumber: "202",
+            status: "occupied",
+            roomType: "Single",
+            capacity: 1,
+            occupants: [{ name: "Neha Verma", roll: "22BIT202", branch: "IT" }],
+            branch: "IT",
+            facilities: ["Study Desk", "Bed", "Wi-Fi"],
+            description: "Occupied room.",
+            sharedNotesCount: 35,
             resources: []
           }
         ]
@@ -501,51 +786,51 @@ const initialHostels = [
 export const useHostelStore = create(
   persist(
     (set, get) => ({
+      // Active View State
       hostels: initialHostels,
       selectedHostelId: "hostel-4",
-      selectedFloorNumber: null, // null for All Floors, or number (1, 2, 3)
-      selectedRoomId: "303", // default focus room
-      activeInteriorTab: "interior", // 'room-view' | 'interior' | 'study-area' | 'bed-area' | 'resources' | 'details'
+      selectedFloorNumber: null,
+      selectedRoomId: "303",
+      cameraMode: "overview", // 'overview' | 'floor' | 'room'
+      activeInteriorTab: "interior", // 'room-view' | 'interior' | 'study-area' | 'bed-area'
       searchQuery: "",
-      cameraMode: "overview", // 'overview' | 'room' | 'floor'
-      isStoryPlaying: false,
-
-      // New Architectural & Feature Flags
       isExplodedView: false,
-      lightingMode: "day", // 'day' | 'night' | 'auto'
+      lightingMode: "day", // 'day' | 'night'
       qualityMode: "high", // 'high' | 'balanced' | 'performance'
-      favoriteRoomIds: ["303"],
+      favoriteRoomIds: ["303", "101"],
       comparedRoomIds: [],
-      activeInteractiveModal: null, // 'laptop-workspace' | 'bookshelf-resources' | 'study-area-stats' | 'share-qr' | 'compare' | null
-      activeBookSubject: "COA", // for bookshelf modal
+      activeInteractiveModal: null, // null | 'laptop-workspace' | 'bookshelf-resources' | 'stats' | 'share-qr' | 'compare'
+      activeBookSubject: "COA",
 
-      // Selectors & Navigation
-      setSelectedHostelId: (id) => {
-        const hostel = get().hostels.find((h) => h.id === id);
-        if (hostel) {
-          const firstRoom = hostel.floors[0]?.rooms[0]?.id || null;
-          set({
+      // Setters
+      setSelectedHostelId: (id) =>
+        set((state) => {
+          const hostel = state.hostels.find((h) => h.id === id) || state.hostels[0];
+          const firstRoom = hostel?.floors?.[0]?.rooms?.[0]?.id || null;
+          return {
             selectedHostelId: id,
             selectedFloorNumber: null,
             selectedRoomId: firstRoom,
-            cameraMode: "overview"
-          });
-        }
-      },
+            cameraMode: "overview",
+            isExplodedView: false
+          };
+        }),
 
-      setSelectedFloorNumber: (floorNum) => set({ selectedFloorNumber: floorNum }),
+      setSelectedFloorNumber: (floorNum) =>
+        set((state) => ({
+          selectedFloorNumber: floorNum,
+          cameraMode: floorNum !== null ? "floor" : "overview"
+        })),
 
-      setSelectedRoomId: (roomId) => {
+      setSelectedRoomId: (roomId) =>
         set({
           selectedRoomId: roomId,
           cameraMode: roomId ? "room" : "overview"
-        });
-      },
+        }),
 
+      setCameraMode: (mode) => set({ cameraMode: mode }),
       setActiveInteriorTab: (tab) => set({ activeInteriorTab: tab }),
       setSearchQuery: (query) => set({ searchQuery: query }),
-      setCameraMode: (mode) => set({ cameraMode: mode }),
-      setIsStoryPlaying: (isPlaying) => set({ isStoryPlaying: isPlaying }),
 
       // Interactive Features Actions
       setIsExplodedView: (isExploded) => set({ isExplodedView: isExploded }),
@@ -575,7 +860,7 @@ export const useHostelStore = create(
             return { comparedRoomIds: state.comparedRoomIds.filter((id) => id !== roomId) };
           }
           if (state.comparedRoomIds.length >= 3) {
-            return state; // maximum 3 rooms
+            return state;
           }
           return { comparedRoomIds: [...state.comparedRoomIds, roomId] };
         });
@@ -619,7 +904,10 @@ export const useHostelStore = create(
         return rooms;
       },
 
-      // Admin CRUD Operations
+      // ===================================================
+      // Admin CRUD & Architectural Layout Operations
+      // ===================================================
+
       addHostel: (newHostel) => {
         set((state) => ({
           hostels: [...state.hostels, newHostel]
@@ -631,6 +919,22 @@ export const useHostelStore = create(
           hostels: state.hostels.map((h) =>
             h.id === hostelId ? { ...h, ...updates, updated_at: new Date().toISOString() } : h
           )
+        }));
+      },
+
+      updateHostelLayout: (hostelId, layoutUpdates) => {
+        set((state) => ({
+          hostels: state.hostels.map((h) => {
+            if (h.id !== hostelId) return h;
+            return {
+              ...h,
+              layoutConfig: {
+                ...(h.layoutConfig || {}),
+                ...layoutUpdates
+              },
+              updated_at: new Date().toISOString()
+            };
+          })
         }));
       },
 
@@ -657,6 +961,18 @@ export const useHostelStore = create(
         }));
       },
 
+      updateFloor: (hostelId, floorId, updates) => {
+        set((state) => ({
+          hostels: state.hostels.map((h) => {
+            if (h.id !== hostelId) return h;
+            return {
+              ...h,
+              floors: h.floors.map((f) => (f.id === floorId ? { ...f, ...updates } : f))
+            };
+          })
+        }));
+      },
+
       deleteFloor: (hostelId, floorId) => {
         set((state) => ({
           hostels: state.hostels.map((h) => {
@@ -667,6 +983,50 @@ export const useHostelStore = create(
             };
           })
         }));
+      },
+
+      duplicateFloor: (hostelId, floorId) => {
+        set((state) => {
+          const hostel = state.hostels.find((h) => h.id === hostelId);
+          if (!hostel) return state;
+
+          const sourceFloor = hostel.floors.find((f) => f.id === floorId);
+          if (!sourceFloor) return state;
+
+          const nextFloorNumber = hostel.floors.length + 1;
+          const newFloorId = `${hostelId}-f${nextFloorNumber}-${Date.now().toString().slice(-4)}`;
+
+          const clonedRooms = (sourceFloor.rooms || []).map((r, idx) => {
+            const newRoomNumber = `${nextFloorNumber}0${idx + 1}`;
+            return {
+              ...r,
+              id: `${hostelId}-${newRoomNumber}-${Date.now().toString().slice(-4)}`,
+              floorId: newFloorId,
+              floorNumber: nextFloorNumber,
+              roomNumber: newRoomNumber,
+              status: "available",
+              occupants: []
+            };
+          });
+
+          const newFloor = {
+            id: newFloorId,
+            hostelId,
+            floorNumber: nextFloorNumber,
+            name: `Floor ${nextFloorNumber}`,
+            rooms: clonedRooms
+          };
+
+          return {
+            hostels: state.hostels.map((h) => {
+              if (h.id !== hostelId) return h;
+              return {
+                ...h,
+                floors: [...h.floors, newFloor]
+              };
+            })
+          };
+        });
       },
 
       addRoom: (hostelId, floorId, roomData) => {
@@ -701,6 +1061,91 @@ export const useHostelStore = create(
         }));
       },
 
+      duplicateRoom: (hostelId, floorId, roomId) => {
+        set((state) => {
+          const hostel = state.hostels.find((h) => h.id === hostelId);
+          if (!hostel) return state;
+          const floor = hostel.floors.find((f) => f.id === floorId);
+          if (!floor) return state;
+          const sourceRoom = floor.rooms.find((r) => r.id === roomId);
+          if (!sourceRoom) return state;
+
+          const roomCount = floor.rooms.length + 1;
+          const newRoomNum = `${floor.floorNumber}0${roomCount}`;
+          const newRoom = {
+            ...sourceRoom,
+            id: `${hostelId}-${newRoomNum}-${Date.now().toString().slice(-4)}`,
+            roomNumber: newRoomNum,
+            status: "available",
+            occupants: []
+          };
+
+          return {
+            hostels: state.hostels.map((h) => {
+              if (h.id !== hostelId) return h;
+              return {
+                ...h,
+                floors: h.floors.map((f) => {
+                  if (f.id !== floorId) return f;
+                  return {
+                    ...f,
+                    rooms: [...f.rooms, newRoom]
+                  };
+                })
+              };
+            })
+          };
+        });
+      },
+
+      smartGenerateRoomsForFloor: (hostelId, floorId, count = 6, startNum = 1, roomType = "Single") => {
+        set((state) => {
+          const hostel = state.hostels.find((h) => h.id === hostelId);
+          if (!hostel) return state;
+          const floor = hostel.floors.find((f) => f.id === floorId);
+          if (!floor) return state;
+
+          const floorNum = floor.floorNumber;
+          const generatedRooms = Array.from({ length: count }, (_, idx) => {
+            const roomSeq = startNum + idx;
+            const roomNumber = `${floorNum}${roomSeq < 10 ? '0' : ''}${roomSeq}`;
+            return {
+              id: `${hostelId}-${roomNumber}`,
+              hostelId,
+              floorId,
+              floorNumber: floorNum,
+              roomNumber,
+              status: idx % 2 === 0 ? "available" : "occupied",
+              roomType,
+              capacity: roomType === "Double" ? 2 : 1,
+              occupants: idx % 2 !== 0 ? [{ name: `Student ${roomNumber}`, branch: "Engineering" }] : [],
+              branch: "Academic Pod",
+              facilities: ["Study Table", "Chair", "Bed", "Bookshelf", "Wi-Fi"],
+              description: `Room ${roomNumber} on Floor ${floorNum}`,
+              sharedNotesCount: 15,
+              activeStudyGroup: "Hostel Study Group",
+              resources: []
+            };
+          });
+
+          return {
+            hostels: state.hostels.map((h) => {
+              if (h.id !== hostelId) return h;
+              return {
+                ...h,
+                floors: h.floors.map((f) => {
+                  if (f.id !== floorId) return f;
+                  return {
+                    ...f,
+                    rooms: generatedRooms
+                  };
+                })
+              };
+            })
+          };
+        });
+      },
+
       deleteRoom: (roomId) => {
         set((state) => ({
           hostels: state.hostels.map((h) => ({
@@ -728,8 +1173,7 @@ export const useHostelStore = create(
     }),
     {
       name: "hostelhub_dynamic_3d_store",
-      version: 2
+      version: 3
     }
   )
 );
-

@@ -6,7 +6,8 @@ import { RoomLabel } from './RoomLabel';
 import { useReducedMotion } from './useReducedMotion';
 
 /**
- * Modular 3D Hostel Room with Recessed Door, Framed Windows, Animated Door Opening, and Status Lighting
+ * Architectural 3D Hostel Room with Modular Walls, Recessed Doorway, Framed Windows,
+ * Dynamic Door Opening Hinge, and Day/Night Status Lighting.
  */
 export const Room3D = ({
   roomData,
@@ -18,6 +19,7 @@ export const Room3D = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const doorHingeRef = useRef();
+  const roomGroupRef = useRef();
   const prefersReducedMotion = useReducedMotion();
 
   const {
@@ -31,15 +33,29 @@ export const Room3D = ({
   } = roomData;
 
   const isNight = lightingMode === 'night';
+  const isOccupied = status?.toLowerCase() === 'occupied';
+  const isAvailable = status?.toLowerCase() === 'available';
 
-  // Smooth door pivot opening when room is selected
+  // Smooth door pivot opening when room is selected & smooth hover elevation
   useFrame((state, delta) => {
+    // Door opening animation
     if (doorHingeRef.current) {
-      const targetAngle = selected && !prefersReducedMotion ? -Math.PI / 2.3 : 0;
+      const targetAngle = selected && !prefersReducedMotion ? -Math.PI / 2.2 : 0;
       doorHingeRef.current.rotation.y = THREE.MathUtils.damp(
         doorHingeRef.current.rotation.y,
         targetAngle,
         6,
+        delta
+      );
+    }
+
+    // Subtle hover elevation
+    if (roomGroupRef.current && !prefersReducedMotion) {
+      const targetElevation = (hovered || selected) ? 0.025 : 0;
+      roomGroupRef.current.position.y = THREE.MathUtils.damp(
+        roomGroupRef.current.position.y,
+        targetElevation,
+        8,
         delta
       );
     }
@@ -62,188 +78,211 @@ export const Room3D = ({
     onSelectRoom(roomData);
   };
 
-  const getStatusLightColor = () => {
+  // Subtle Status Accent Colors
+  const getStatusLedColor = () => {
     switch (status?.toLowerCase()) {
       case 'available':
-        return '#008378';
+        return '#00a396'; // Subtle teal
       case 'maintenance':
-        return '#f59e0b';
+        return '#f59e0b'; // Amber
       case 'reserved':
-        return '#3b82f6';
+        return '#3b82f6'; // Blue
       case 'occupied':
       default:
-        return '#64748b';
+        return '#64748b'; // Neutral slate
     }
   };
 
-  const isAvailable = status?.toLowerCase() === 'available';
+  // Scaled dimensions for sub-elements
+  const [width, height, depth] = dimensions;
+  const doorWidth = Math.min(width * 0.38, 0.44);
+  const doorHeight = Math.min(height * 0.82, 0.68);
+  const doorX = -width * 0.24;
+
+  const windowWidth = Math.min(width * 0.42, 0.5);
+  const windowHeight = Math.min(height * 0.54, 0.44);
+  const windowX = width * 0.24;
 
   return (
     <group position={position}>
-      {/* Interactive Mesh Container */}
-      <group
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
-        onClick={handleClick}
-      >
-        {/* Main Room Outer Shell Cube */}
-        <RoundedBox args={dimensions} radius={0.03} smoothness={3} position={[0, 0, 0]}>
-          <meshStandardMaterial
-            color={
-              selected
-                ? isNight ? '#1e2d3d' : '#f0fdfa'
-                : hovered
-                ? isNight ? '#253347' : '#f1f5f9'
-                : isNight ? '#1b2330' : '#ffffff'
-            }
-            roughness={0.35}
-            metalness={0.05}
-            transparent={dimmed}
-            opacity={dimmed ? 0.35 : 1}
-          />
-        </RoundedBox>
-
-        {/* Selected / Hover Highlighting Outline */}
-        {(hovered || selected) && (
-          <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[dimensions[0] + 0.04, dimensions[1] + 0.04, dimensions[2] + 0.04]} />
+      <group ref={roomGroupRef}>
+        {/* Interactive Mesh Container */}
+        <group
+          onPointerOver={handlePointerOver}
+          onPointerOut={handlePointerOut}
+          onClick={handleClick}
+        >
+          {/* =================================================== */}
+          {/* 1. MAIN ARCHITECTURAL ROOM BODY (Matte Plaster)     */}
+          {/* =================================================== */}
+          <RoundedBox args={dimensions} radius={0.025} smoothness={3} position={[0, 0, 0]}>
             <meshStandardMaterial
-              color={selected ? '#89f5e7' : '#008378'}
-              emissive={selected ? '#00685f' : '#004d46'}
-              emissiveIntensity={selected ? 0.8 : 0.3}
-              wireframe
-            />
-          </mesh>
-        )}
-
-        {/* =================================================== */}
-        {/* FRONT ROOM FACADE (Recessed Door + Framed Window)   */}
-        {/* =================================================== */}
-        <group position={[0, 0, dimensions[2] / 2 + 0.01]}>
-          {/* Front Wall Panel */}
-          <mesh position={[0, 0, 0]}>
-            <planeGeometry args={[dimensions[0] - 0.04, dimensions[1] - 0.04]} />
-            <meshStandardMaterial
-              color={isNight ? '#1f2838' : '#f8fafc'}
-              roughness={0.4}
+              color={
+                selected
+                  ? isNight ? '#1e2d3d' : '#f0fdfa'
+                  : hovered
+                  ? isNight ? '#253347' : '#f1f5f9'
+                  : isNight ? '#18212e' : '#f8fafc'
+              }
+              roughness={0.65}
+              metalness={0.05}
               transparent={dimmed}
               opacity={dimmed ? 0.35 : 1}
             />
-          </mesh>
+          </RoundedBox>
 
-          {/* Recessed Door Frame & Door (Left Side) */}
-          <group position={[-0.32, -0.05, 0]}>
-            {/* Outer Dark Wooden/Metallic Door Frame */}
-            <RoundedBox args={[0.44, 0.68, 0.03]} radius={0.01} position={[0, 0, 0.005]}>
+          {/* Selected / Hover Highlighting Outline */}
+          {(hovered || selected) && (
+            <mesh position={[0, 0, 0]}>
+              <boxGeometry args={[width + 0.03, height + 0.03, depth + 0.03]} />
               <meshStandardMaterial
-                color={isNight ? '#131924' : '#1e293b'}
-                roughness={0.5}
+                color={selected ? '#89f5e7' : '#00a396'}
+                emissive={selected ? '#00685f' : '#004d46'}
+                emissiveIntensity={selected ? 0.75 : 0.25}
+                wireframe
+              />
+            </mesh>
+          )}
+
+          {/* =================================================== */}
+          {/* 2. FRONT CORRIDOR FACADE (Door + Window System)     */}
+          {/* =================================================== */}
+          <group position={[0, 0, depth / 2 + 0.005]}>
+            {/* Front Wall Surface Finish */}
+            <mesh position={[0, 0, 0]}>
+              <planeGeometry args={[width - 0.02, height - 0.02]} />
+              <meshStandardMaterial
+                color={isNight ? '#1c2534' : '#f1f5f9'}
+                roughness={0.6}
                 transparent={dimmed}
                 opacity={dimmed ? 0.35 : 1}
               />
-            </RoundedBox>
+            </mesh>
 
-            {/* Recessed Door Hinge Pivot (Rotates open when selected!) */}
-            <group ref={doorHingeRef} position={[-0.18, 0, 0.015]}>
-              {/* Door Leaf */}
-              <RoundedBox args={[0.38, 0.62, 0.02]} radius={0.01} position={[0.19, 0, 0]}>
+            {/* =================================================== */}
+            {/* 3. RECESSED ENTRANCE DOORWAY (Corridor-facing)      */}
+            {/* =================================================== */}
+            <group position={[doorX, -height * 0.08, 0]}>
+              {/* Outer Architectural Dark Frame */}
+              <RoundedBox args={[doorWidth + 0.04, doorHeight + 0.04, 0.035]} radius={0.008} position={[0, 0, 0.005]}>
                 <meshStandardMaterial
-                  color={
-                    selected
-                      ? accentColor
-                      : hovered
-                      ? '#00685f'
-                      : isNight
-                      ? '#0f2924'
-                      : '#005b53'
-                  }
-                  emissive={isAvailable ? '#00685f' : '#000000'}
-                  emissiveIntensity={isAvailable ? (isNight ? 0.4 : 0.15) : 0}
-                  roughness={0.3}
+                  color={isNight ? '#0f141d' : '#1e293b'}
+                  roughness={0.5}
+                  metalness={0.2}
                   transparent={dimmed}
                   opacity={dimmed ? 0.35 : 1}
                 />
               </RoundedBox>
 
-              {/* Door Handle */}
-              <mesh position={[0.32, 0, 0.018]}>
-                <sphereGeometry args={[0.018, 12, 12]} />
-                <meshStandardMaterial color="#89f5e7" metalness={0.9} roughness={0.1} />
-              </mesh>
+              {/* Recessed Door Hinge Pivot */}
+              <group ref={doorHingeRef} position={[-doorWidth / 2 + 0.02, 0, 0.015]}>
+                {/* Door Leaf */}
+                <RoundedBox args={[doorWidth - 0.03, doorHeight - 0.03, 0.02]} radius={0.008} position={[(doorWidth - 0.03) / 2, 0, 0]}>
+                  <meshStandardMaterial
+                    color={
+                      selected
+                        ? accentColor
+                        : hovered
+                        ? '#00685f'
+                        : isNight
+                        ? '#142028'
+                        : '#005850'
+                    }
+                    emissive={isAvailable ? '#00685f' : '#000000'}
+                    emissiveIntensity={isAvailable ? (isNight ? 0.35 : 0.1) : 0}
+                    roughness={0.4}
+                    metalness={0.15}
+                    transparent={dimmed}
+                    opacity={dimmed ? 0.35 : 1}
+                  />
+                </RoundedBox>
 
-              {/* Bottom Kickplate */}
-              <mesh position={[0.19, -0.26, 0.015]}>
-                <planeGeometry args={[0.34, 0.06]} />
-                <meshStandardMaterial color="#89f5e7" metalness={0.7} roughness={0.3} />
+                {/* Brushed Metal Door Handle */}
+                <mesh position={[doorWidth - 0.09, 0, 0.018]}>
+                  <cylinderGeometry args={[0.012, 0.012, 0.08, 8]} />
+                  <meshStandardMaterial color="#89f5e7" metalness={0.85} roughness={0.15} />
+                </mesh>
+
+                {/* Bottom Architectural Kickplate */}
+                <mesh position={[(doorWidth - 0.03) / 2, -doorHeight / 2 + 0.06, 0.015]}>
+                  <planeGeometry args={[doorWidth - 0.05, 0.06]} />
+                  <meshStandardMaterial color="#89f5e7" metalness={0.7} roughness={0.3} />
+                </mesh>
+              </group>
+
+              {/* Top Lintel LED Status Strip */}
+              <mesh position={[0, doorHeight / 2 + 0.028, 0.02]}>
+                <planeGeometry args={[doorWidth - 0.04, 0.02]} />
+                <meshBasicMaterial color={getStatusLedColor()} />
               </mesh>
             </group>
 
-            {/* Top Lintel LED Status Strip */}
-            <mesh position={[0, 0.32, 0.02]}>
-              <planeGeometry args={[0.36, 0.025]} />
-              <meshBasicMaterial color={getStatusLightColor()} />
-            </mesh>
-          </group>
+            {/* =================================================== */}
+            {/* 4. FRAMED ARCHITECTURAL WINDOW WITH MULLIONS & SILL */}
+            {/* =================================================== */}
+            <group position={[windowX, height * 0.08, 0.01]}>
+              {/* Outer Window Frame */}
+              <RoundedBox args={[windowWidth, windowHeight, 0.028]} radius={0.008} position={[0, 0, 0]}>
+                <meshStandardMaterial
+                  color={isNight ? '#111722' : '#334155'}
+                  roughness={0.4}
+                  metalness={0.2}
+                  transparent={dimmed}
+                  opacity={dimmed ? 0.35 : 1}
+                />
+              </RoundedBox>
 
-          {/* Framed Window with Cross Panes & Glass (Right Side) */}
-          <group position={[0.32, 0.06, 0.01]}>
-            {/* Outer Window Frame */}
-            <RoundedBox args={[0.48, 0.44, 0.025]} radius={0.01} position={[0, 0, 0]}>
-              <meshStandardMaterial
-                color={isNight ? '#131924' : '#334155'}
-                roughness={0.4}
-                transparent={dimmed}
-                opacity={dimmed ? 0.35 : 1}
-              />
-            </RoundedBox>
+              {/* Glass Pane with Day Sunlight / Night Warm Window Lighting */}
+              <mesh position={[0, 0, 0.012]}>
+                <planeGeometry args={[windowWidth - 0.05, windowHeight - 0.05]} />
+                <meshStandardMaterial
+                  color={isNight ? (isOccupied ? '#ffd8a8' : '#0b1d28') : '#e0f2fe'}
+                  emissive={
+                    isOccupied
+                      ? isNight ? '#ffbe98' : '#89f5e7'
+                      : isNight ? '#001815' : '#89f5e7'
+                  }
+                  emissiveIntensity={isNight ? (isOccupied ? 0.65 : 0.15) : 0.15}
+                  roughness={0.12}
+                  metalness={0.15}
+                  transparent={dimmed}
+                  opacity={dimmed ? 0.35 : 1}
+                />
+              </mesh>
 
-            {/* Glass Pane with Interior Glow */}
-            <mesh position={[0, 0, 0.015]}>
-              <planeGeometry args={[0.42, 0.38]} />
-              <meshStandardMaterial
-                color={isNight ? '#0b1d28' : '#e0f2fe'}
-                emissive={
-                  status === 'occupied'
-                    ? isNight ? '#ffbe98' : '#89f5e7'
-                    : isNight ? '#003830' : '#89f5e7'
-                }
-                emissiveIntensity={isNight ? (status === 'occupied' ? 0.7 : 0.3) : 0.2}
-                roughness={0.1}
-                metalness={0.2}
-                transparent={dimmed}
-                opacity={dimmed ? 0.35 : 1}
-              />
-            </mesh>
+              {/* Window Vertical Divider (Mullion) */}
+              <mesh position={[0, 0, 0.02]}>
+                <planeGeometry args={[0.016, windowHeight - 0.05]} />
+                <meshBasicMaterial color="#1e293b" />
+              </mesh>
 
-            {/* Window Mullions / Cross Frame */}
-            <mesh position={[0, 0, 0.02]}>
-              <planeGeometry args={[0.42, 0.018]} />
-              <meshBasicMaterial color="#1e293b" />
-            </mesh>
-            <mesh position={[0, 0, 0.02]}>
-              <planeGeometry args={[0.018, 0.38]} />
-              <meshBasicMaterial color="#1e293b" />
-            </mesh>
+              {/* Window Horizontal Divider (Transom Bar) */}
+              <mesh position={[0, 0, 0.02]}>
+                <planeGeometry args={[windowWidth - 0.05, 0.016]} />
+                <meshBasicMaterial color="#1e293b" />
+              </mesh>
 
-            {/* Exterior Window Sill */}
-            <RoundedBox args={[0.52, 0.02, 0.05]} radius={0.005} position={[0, -0.22, 0.02]}>
-              <meshStandardMaterial color={isNight ? '#222d3d' : '#cbd5e1'} roughness={0.5} />
-            </RoundedBox>
+              {/* Chamfered Window Sill Underneath */}
+              <RoundedBox args={[windowWidth + 0.06, 0.022, 0.045]} radius={0.004} position={[0, -windowHeight / 2 - 0.015, 0.02]}>
+                <meshStandardMaterial color={isNight ? '#222d3d' : '#cbd5e1'} roughness={0.5} />
+              </RoundedBox>
+            </group>
           </group>
         </group>
-      </group>
 
-      {/* 3D Room Number Plaque (Positioned precisely over the room door) */}
-      <RoomLabel
-        roomNumber={roomNumber}
-        status={status}
-        roomType={roomType}
-        branch={branch}
-        hovered={hovered}
-        selected={selected}
-        position={[-0.32, dimensions[1] / 2 + 0.12, dimensions[2] / 2 + 0.06]}
-      />
+        {/* =================================================== */}
+        {/* 5. ROOM NUMBER PLAQUE (Strictly Above the Door!)    */}
+        {/* =================================================== */}
+        <RoomLabel
+          roomNumber={roomNumber}
+          status={status}
+          roomType={roomType}
+          branch={branch}
+          hovered={hovered}
+          selected={selected}
+          position={[doorX, height / 2 + 0.11, depth / 2 + 0.06]}
+        />
+      </group>
     </group>
   );
 };
-
