@@ -32,27 +32,27 @@
 
   .dark, [data-theme="dark"] {
     /* ---------------------------------------------------- */
-    /* Dark Mode Glass Tokens (Deep Green-Black Spatial Glass) */
+    /* Dark Mode Glass Tokens (Cinematic Teal-Dark Spatial Glass) */
     /* ---------------------------------------------------- */
-    --glass-bg: rgba(8, 30, 27, 0.60);
-    --glass-bg-strong: rgba(10, 38, 34, 0.85);
-    --glass-bg-subtle: rgba(6, 22, 20, 0.45);
-    --glass-bg-floating: rgba(8, 32, 29, 0.72);
-    --glass-border: rgba(137, 245, 231, 0.16);
-    --glass-border-subtle: rgba(137, 245, 231, 0.09);
-    --glass-border-accent: rgba(137, 245, 231, 0.45);
-    --glass-highlight: inset 0 1px 0 0 rgba(137, 245, 231, 0.25);
-    --glass-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.45), 0 4px 14px -2px rgba(0, 0, 0, 0.25);
-    --glass-shadow-floating: 0 24px 56px -6px rgba(0, 0, 0, 0.6), 0 8px 20px -3px rgba(0, 40, 36, 0.35);
-    --glass-blur: blur(20px) saturate(170%);
+    --glass-bg: rgba(14, 40, 36, 0.55);
+    --glass-bg-strong: rgba(18, 52, 46, 0.80);
+    --glass-bg-subtle: rgba(10, 30, 27, 0.40);
+    --glass-bg-floating: rgba(16, 46, 41, 0.68);
+    --glass-border: rgba(137, 245, 231, 0.18);
+    --glass-border-subtle: rgba(137, 245, 231, 0.10);
+    --glass-border-accent: rgba(137, 245, 231, 0.50);
+    --glass-highlight: inset 0 1px 0 0 rgba(137, 245, 231, 0.28);
+    --glass-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.38), 0 4px 12px -2px rgba(0, 0, 0, 0.20);
+    --glass-shadow-floating: 0 20px 50px -6px rgba(0, 0, 0, 0.55), 0 8px 18px -3px rgba(0, 40, 36, 0.30);
+    --glass-blur: blur(20px) saturate(160%);
     --glass-blur-subtle: blur(14px) saturate(140%);
 
-    /* Layer 1 Soft Atmospheric Canvas for Dark Mode (Deep Green-Black + Subtle Teal Glow) */
-    --app-bg-gradient: radial-gradient(circle at 50% -5%, rgba(137, 245, 231, 0.12) 0%, transparent 55%),
-                       radial-gradient(circle at 85% 25%, rgba(0, 104, 95, 0.14) 0%, transparent 45%),
-                       radial-gradient(circle at 15% 65%, rgba(0, 104, 95, 0.10) 0%, transparent 50%),
-                       linear-gradient(180deg, #041210 0%, #061A17 40%, #08221E 80%, #071D1A 100%);
-    --grid-color: rgba(137, 245, 231, 0.035);
+    /* Layer 1: Cinematic Deep Teal-Dark Atmosphere — NOT pure black */
+    --app-bg-gradient: radial-gradient(circle at 50% -5%, rgba(137, 245, 231, 0.10) 0%, transparent 55%),
+                       radial-gradient(circle at 85% 25%, rgba(0, 104, 95, 0.12) 0%, transparent 45%),
+                       radial-gradient(circle at 15% 65%, rgba(0, 104, 95, 0.08) 0%, transparent 50%),
+                       linear-gradient(180deg, #08201C 0%, #0A2822 40%, #0D2E28 80%, #0B2823 100%);
+    --grid-color: rgba(137, 245, 231, 0.04);
   }
 
   body {
@@ -65,7 +65,12 @@
     position: relative;
   }
 
-  /* Architectural subtle grid overlay */
+  /* Dark mode body text — must be high contrast readable */
+  .dark body, body.dark {
+    color: #e8f7f4;
+  }
+
+  /* Architectural subtle grid overlay — behind all content */
   body::before {
     content: '';
     position: fixed;
@@ -75,13 +80,9 @@
       linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
       linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
     mask-image: radial-gradient(circle at 50% 40%, black 40%, transparent 85%);
     -webkit-mask-image: radial-gradient(circle at 50% 40%, black 40%, transparent 85%);
-  }
-
-  .dark body {
-    color: #f0faf8;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -92,6 +93,80 @@
 /* Material Symbols fill helper */
 .material-symbols-fill {
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* =================================================== */
+/* GLOBAL DARK MODE COLOR OVERRIDES                    */
+/* These ensure semantic Tailwind tokens read well in  */
+/* dark mode WITHOUT touching every component file.    */
+/* =================================================== */
+
+/* Any element using Tailwind's semantic text colors will
+   auto-adapt. We scope these under .dark (applied to <html>) */
+.dark {
+  /* Surface & backgrounds become deep teal-dark */
+  --tw-bg-opacity: 1;
+}
+
+/* All generic dark text shades become readable light colors */
+.dark .text-on-surface,
+.dark .text-on-surface-variant,
+.dark .text-on-background {
+  color: #e8f7f4;
+}
+
+.dark .text-on-secondary,
+.dark .text-on-secondary-container {
+  color: #d0e8e4;
+}
+
+/* surface container backgrounds become deeper teal panels */
+.dark .bg-surface,
+.dark .bg-surface-bright,
+.dark .bg-surface-container-lowest,
+.dark .bg-background {
+  background-color: #0d2e28;
+}
+
+.dark .bg-surface-container-low {
+  background-color: #10352f;
+}
+
+.dark .bg-surface-container {
+  background-color: #133830;
+}
+
+.dark .bg-surface-container-high {
+  background-color: #163c34;
+}
+
+.dark .bg-surface-container-highest {
+  background-color: #1a4038;
+}
+
+.dark .bg-surface-variant {
+  background-color: #1a4038;
+}
+
+/* Border colors become subtle teal */
+.dark .border-surface-border,
+.dark .divide-surface-border {
+  border-color: rgba(137, 245, 231, 0.12);
+}
+
+.dark .border-outline-variant {
+  border-color: rgba(137, 245, 231, 0.15);
+}
+
+/* App Background color */
+.dark .bg-app-bg {
+  background-color: #0d2e28;
+}
+
+/* Card/module text: secondary body text in dark mode */
+.dark .text-outline,
+.dark .text-on-surface-variant {
+  color: #8cc5be;
 }
 
 /* =================================================== */

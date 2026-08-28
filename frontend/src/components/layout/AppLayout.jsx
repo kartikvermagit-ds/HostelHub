@@ -11,7 +11,7 @@ export const AppLayout = () => {
   const isHomePage = location.pathname === '/';
 
   return (
-    <div className="text-on-surface min-h-screen flex flex-col antialiased relative selection:bg-primary/20 selection:text-primary">
+    <div className="text-on-surface dark:text-[#e8f7f4] min-h-screen flex flex-col antialiased relative selection:bg-primary/20 selection:text-primary">
       {isHomePage ? (
         <>
           {/* Floating Glass Navbar for Spatial Landing Hero */}
