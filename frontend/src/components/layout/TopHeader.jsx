@@ -64,7 +64,7 @@ export const TopHeader = () => {
       <div className="flex items-center gap-2.5 lg:hidden shrink-0">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center shrink-0 overflow-hidden p-1 shadow-xs group-hover:scale-105 transition-transform">
-            <img src="/logo-app.png" alt="HostelHub Logo" className="w-full h-full object-contain rounded-lg" />
+            <img src="/logo-icon.png" alt="HostelHub Logo" className="w-full h-full object-contain rounded-lg" />
           </div>
           <span className="font-headline-md text-base font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
             HostelHub

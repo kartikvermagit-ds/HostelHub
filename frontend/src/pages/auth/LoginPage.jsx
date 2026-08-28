@@ -60,7 +60,7 @@ export const LoginPage = () => {
             <div className="flex items-center gap-3.5 mb-4">
               <div className="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center shadow-sm overflow-hidden p-1 border border-white/70 dark:border-primary-fixed/20">
                 <img
-                  src="/logo-app.png"
+                  src="/logo-icon.png"
                   alt="HostelHub Logo"
                   className="w-full h-full object-contain rounded-xl drop-shadow-sm"
                 />
@@ -70,7 +70,7 @@ export const LoginPage = () => {
                   HostelHub
                 </span>
                 <span className="text-xs text-primary font-bold">
-                  Your Hostel's Study Hub
+                  Academic Digital Twin • Live • Learn • Grow
                 </span>
               </div>
             </div>
@@ -128,7 +128,7 @@ export const LoginPage = () => {
             <div className="flex lg:hidden items-center gap-3 mb-6">
               <div className="w-11 h-11 rounded-2xl glass-panel flex items-center justify-center shadow-sm overflow-hidden p-1 border border-white/60 dark:border-primary-fixed/20">
                 <img
-                  src="/logo-app.png"
+                  src="/logo-icon.png"
                   alt="HostelHub Logo"
                   className="w-full h-full object-contain rounded-lg drop-shadow-sm"
                 />
@@ -138,7 +138,7 @@ export const LoginPage = () => {
                   HostelHub
                 </span>
                 <span className="text-[11px] text-primary font-bold">
-                  Your Hostel's Study Hub
+                  Academic Digital Twin
                 </span>
               </div>
             </div>

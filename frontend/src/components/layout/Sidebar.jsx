@@ -42,7 +42,7 @@ export const Sidebar = () => {
         <Link to="/" className="flex items-center gap-3 px-2 mb-5 group shrink-0">
           <div className="w-10 h-10 rounded-2xl glass-panel flex items-center justify-center shrink-0 shadow-2xs overflow-hidden p-1 group-hover:scale-105 group-hover:border-primary/40 transition-all duration-200">
             <img
-              src="/logo-app.png"
+              src="/logo-icon.png"
               alt="HostelHub Logo"
               className="w-full h-full object-contain rounded-xl"
             />

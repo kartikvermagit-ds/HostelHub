@@ -225,7 +225,7 @@ export const Logo3D = ({ className = 'w-16 h-16', scale = 1.2 }) => {
       disableOnMobile={false}
       fallback={
         <img
-          src="/logo-app.png"
+          src="/logo-icon.png"
           alt="HostelHub Logo"
           className="w-full h-full object-contain drop-shadow-md rounded-xl"
         />
@@ -300,7 +300,7 @@ export const LoadingSpinner3D = ({ message = 'Loading resources...' }) => {
           disableOnMobile={false}
           fallback={
             <img
-              src="/logo-app.png"
+              src="/logo-icon.png"
               alt="HostelHub Logo"
               className="w-12 h-12 object-contain animate-pulse drop-shadow-md rounded-xl"
             />
