@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
+import { HeroSection } from '../components/home/HeroSection';
 import { CTCard } from '../components/common/CTCard';
 import { QuickActions } from '../components/common/QuickActions';
 import { ResourceItem } from '../components/common/ResourceItem';
-import { HostelExperience } from '../components/3d/HostelExperience';
-import { GlassCard, GlassBadge } from '../components/ui';
+import { GlassCard } from '../components/ui';
 
 export const HomePage = () => {
-  const { user, resources, upcomingTests, searchQuery, activeCategoryTab, setActiveCategoryTab } = useApp();
+  const { resources, upcomingTests, searchQuery, activeCategoryTab, setActiveCategoryTab } = useApp();
 
   const categories = ["All", "Notes", "PDFs", "PYQs", "Videos"];
 
@@ -31,118 +31,78 @@ export const HomePage = () => {
     return true;
   });
 
-  const nextCT = upcomingTests[0];
-  const firstName = (user?.full_name || user?.name || 'Kartik').split(' ')[0];
-
   return (
-    <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 md:py-6 flex flex-col gap-6 md:gap-8">
-      {/* 1. Architectural Glass Welcome Hero (Crisp & Luminous) */}
+    <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-2 flex flex-col gap-8 md:gap-12">
+      {/* 1. Spatial 3D Digital Twin Hero (The Star) */}
+      <HeroSection />
+
+      {/* 2. Upcoming Class Tests (CT Zone) */}
       <motion.section
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-      >
-        <GlassCard className="w-full relative overflow-hidden p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-white/70 dark:border-primary-fixed/20 shadow-xl">
-          <div className="space-y-2 z-10 max-w-xl">
-            {/* Header Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-[11px] font-bold text-primary border border-primary/25 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-              <span>HOSTEL ACADEMIC SPACE</span>
-            </div>
-
-            {/* Greeting */}
-            <h1 className="font-headline-lg text-2xl sm:text-3xl font-extrabold text-[#0e2724] dark:text-[#f0faf8] tracking-tight">
-              Good morning, {firstName} 👋
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-xs sm:text-sm text-[#33534d] dark:text-[#b0d2cc] font-medium leading-relaxed">
-              Everything your hostel needs to prepare better. Explore your 3D digital hostel twin, collaborate with wingmates, and access verified exam papers.
-            </p>
-
-            {/* Quick Metrics */}
-            <div className="flex flex-wrap items-center gap-2 pt-2">
-              <GlassBadge variant="primary" icon="description">
-                {resources.length} Academic Resources
-              </GlassBadge>
-              <GlassBadge variant="warning" icon="quiz">
-                {upcomingTests.length} Upcoming CTs
-              </GlassBadge>
-              <GlassBadge variant="accent" icon="domain">
-                {user?.hostel || 'Aryabhata Hostel'} • 3D Twin
-              </GlassBadge>
-            </div>
-          </div>
-
-          {/* Right Hero Visual Mark */}
-          <div className="relative shrink-0 hidden sm:flex items-center justify-center p-3 rounded-2xl glass-panel shadow-lg border border-white/70 dark:border-primary-fixed/20">
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ repeat: Infinity, duration: 4.5, ease: 'easeInOut' }}
-              className="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden"
-            >
-              <img
-                src="/logo-app.png"
-                alt="HostelHub 3D Logo"
-                className="w-full h-full object-contain drop-shadow-xl"
-              />
-            </motion.div>
-          </div>
-        </GlassCard>
-      </motion.section>
-
-      {/* 2. Interactive 3D Digital Twin Hostel Hero */}
-      <motion.section
+        id="upcoming-cts-section"
         initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
-        className="w-full"
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="flex flex-col gap-4 pt-4 border-t border-surface-border/50 scroll-mt-20"
       >
-        <HostelExperience className="w-full" />
-      </motion.section>
-
-      {/* 3. Mobile-Only: Next CT Compact Card */}
-      <section className="md:hidden">
-        {nextCT && (
-          <CTCard ct={nextCT} variant="compact" />
-        )}
-      </section>
-
-      {/* 4. Desktop Upcoming CTs Section (Floating Glass Cards) */}
-      <section className="hidden md:flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-headline-sm text-lg font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full glass-panel text-[10px] font-bold text-amber-600 dark:text-amber-400 border border-amber-500/20 mb-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>TEST COUNTDOWNS & PREP</span>
+            </div>
+            <h2 className="font-headline-sm text-lg sm:text-xl font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
               Upcoming Class Tests (CT Zone)
             </h2>
-            <p className="text-xs text-[#33534d] dark:text-[#b0d2cc] font-medium">Exam countdowns, topic checklists, and previous year solutions.</p>
+            <p className="text-xs text-[#33534d] dark:text-[#b0d2cc] font-medium">
+              Exam countdowns, topic checklists, and previous year solutions.
+            </p>
           </div>
           <Link
             to="/ct-zone"
-            className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+            className="text-xs font-bold text-primary hover:underline flex items-center gap-1 shrink-0"
           >
             <span>View All CTs</span>
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
           {upcomingTests.slice(0, 3).map((ct) => (
             <CTCard key={ct.id} ct={ct} />
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      {/* 5. Quick Actions Bento Grid */}
-      <QuickActions />
+      {/* 3. Quick Actions Bento Grid */}
+      <motion.section
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+      >
+        <QuickActions />
+      </motion.section>
 
-      {/* 6. Latest Resources List */}
-      <section className="flex flex-col gap-4">
+      {/* 4. Latest Academic Resources List */}
+      <motion.section
+        id="academic-resources-section"
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="flex flex-col gap-4 scroll-mt-20"
+      >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border/60 pb-3 gap-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-headline-sm text-lg font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
-              Latest Academic Resources
-            </h2>
+            <div>
+              <h2 className="font-headline-sm text-lg sm:text-xl font-extrabold text-[#0e2724] dark:text-[#f0faf8]">
+                Latest Academic Resources
+              </h2>
+              <p className="text-xs text-[#33534d] dark:text-[#b0d2cc] font-medium">
+                Verified lecture notes, past exam papers, and recorded tutorials.
+              </p>
+            </div>
             <Link
               to="/notes"
               className="sm:hidden text-xs text-primary font-bold hover:underline"
@@ -151,7 +111,7 @@ export const HomePage = () => {
             </Link>
           </div>
 
-          {/* Filter Tabs Pills */}
+          {/* Category Filter Tabs */}
           <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             {categories.map((cat) => {
               const isActive = activeCategoryTab === cat;
@@ -159,10 +119,10 @@ export const HomePage = () => {
                 <button
                   key={cat}
                   onClick={() => setActiveCategoryTab(cat)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                     isActive
                       ? "bg-primary text-white font-bold shadow-xs shadow-primary/25"
-                      : "glass-panel text-[#2b4742] dark:text-[#c4dfda] hover:text-primary dark:hover:text-[#89f5e7] hover:bg-surface-container"
+                      : "glass-panel text-[#2b4742] dark:text-[#c4dfda] hover:text-primary dark:hover:text-[#89f5e7] hover:bg-white/50 dark:hover:bg-white/5"
                   }`}
                 >
                   {cat}
@@ -172,7 +132,7 @@ export const HomePage = () => {
           </div>
         </div>
 
-        {/* Resources list container */}
+        {/* Resources list */}
         <div className="flex flex-col gap-3">
           {filteredResources.length > 0 ? (
             filteredResources.map((res) => (
@@ -185,14 +145,15 @@ export const HomePage = () => {
               <button
                 type="button"
                 onClick={() => { setActiveCategoryTab("All"); }}
-                className="mt-3 text-primary text-xs font-bold hover:underline"
+                className="mt-3 text-primary text-xs font-bold hover:underline cursor-pointer"
               >
                 Reset filters
               </button>
             </GlassCard>
           )}
         </div>
-      </section>
+      </motion.section>
     </main>
   );
 };
+
