@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -16,12 +16,15 @@ export const HostelCamera = ({
   selectedRoom = null,
   isExplodedView = false,
   floorHeight = 1.05,
-  isUserInteracting = false,
   buildingDims = null
 }) => {
   const { camera } = useThree();
   const controlsRef = useRef();
   const prefersReducedMotion = useReducedMotion();
+
+  // Track whether user is actively dragging/orbiting
+  const userInteracting = useRef(false);
+  const returnTimer = useRef(null);
 
   // Target camera position and look-at target vectors
   const targetPos = useRef(new THREE.Vector3(0, 2.2, 9.4));
@@ -40,23 +43,43 @@ export const HostelCamera = ({
     targetLookAt.current.copy(calculatedLookAt);
   }, [cameraMode, selectedFloorNumber, selectedRoom, isExplodedView, floorHeight, buildingDims]);
 
+  // Handlers for user interaction detection
+  const handleInteractionStart = useCallback(() => {
+    userInteracting.current = true;
+    // Cancel any pending return-to-target timer
+    if (returnTimer.current) {
+      clearTimeout(returnTimer.current);
+      returnTimer.current = null;
+    }
+  }, []);
+
+  const handleInteractionEnd = useCallback(() => {
+    // After user stops, wait 2.5s then smoothly resume camera target tracking
+    returnTimer.current = setTimeout(() => {
+      userInteracting.current = false;
+    }, 2500);
+  }, []);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (returnTimer.current) clearTimeout(returnTimer.current);
+    };
+  }, []);
+
   useFrame((state, delta) => {
-    // If user is actively dragging/orbiting, don't override manual camera placement
-    if (!controlsRef.current || isUserInteracting) return;
+    // Don't override camera while user is actively orbiting/panning
+    if (!controlsRef.current || userInteracting.current) return;
 
     if (prefersReducedMotion) {
       camera.position.copy(targetPos.current);
-      if (controlsRef.current) {
-        controlsRef.current.target.copy(targetLookAt.current);
-        controlsRef.current.update();
-      }
+      controlsRef.current.target.copy(targetLookAt.current);
+      controlsRef.current.update();
     } else {
       const speed = cameraMode === 'room' ? 3.8 : 2.8;
       camera.position.lerp(targetPos.current, delta * speed);
-      if (controlsRef.current) {
-        controlsRef.current.target.lerp(targetLookAt.current, delta * speed);
-        controlsRef.current.update();
-      }
+      controlsRef.current.target.lerp(targetLookAt.current, delta * speed);
+      controlsRef.current.update();
     }
   });
 
@@ -75,6 +98,8 @@ export const HostelCamera = ({
       panSpeed={0.8}
       zoomSpeed={1.0}
       rotateSpeed={0.85}
+      onStart={handleInteractionStart}
+      onEnd={handleInteractionEnd}
     />
   );
 };
