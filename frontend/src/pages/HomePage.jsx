@@ -32,7 +32,7 @@ export const HomePage = () => {
   });
 
   return (
-    <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-2 flex flex-col gap-8 md:gap-12">
+    <main className="flex-1 max-w-[1680px] mx-auto w-full px-4 sm:px-8 lg:px-12 py-2 flex flex-col gap-8 md:gap-12">
       {/* 1. Spatial 3D Digital Twin Hero (The Star) */}
       <HeroSection />
 

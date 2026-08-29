@@ -22,15 +22,16 @@ export const AppLayout = () => {
           trackingArea="window"
           smoothing={0.16}
           objectFit="cover"
+          objectPosition="52% center"
           autoPlay={true}
           loop={true}
           scrubOnMove={true}
           className="w-full h-full opacity-95 dark:opacity-85"
         />
 
-        {/* Directional scrim: subtle fade on left for text legibility, open on right for video clarity */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/70 via-white/25 to-transparent dark:from-[#08201C]/80 dark:via-[#08201C]/35 dark:to-transparent pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-white/40 dark:from-[#08201C]/50 dark:via-transparent dark:to-[#071d19]/60 pointer-events-none" />
+        {/* Directional scrim: soft fade on far left for text contrast, open in center/right for video character visibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/10 to-transparent dark:from-[#08201C]/70 dark:via-transparent dark:to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/30 dark:from-[#08201C]/40 dark:via-transparent dark:to-[#071d19]/50 pointer-events-none" />
       </div>
 
       {isHomePage ? (

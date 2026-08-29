@@ -101,7 +101,7 @@ export const FloatingNavbar = () => {
 
   return (
     <>
-      <header className="sticky top-3 z-40 w-full max-w-7xl mx-auto px-3 sm:px-6 pointer-events-none">
+      <header className="sticky top-3 z-40 w-full max-w-[1680px] mx-auto px-4 sm:px-8 lg:px-12 pointer-events-none">
         <nav className="w-full pointer-events-auto rounded-full glass-floating border border-white/60 dark:border-primary-fixed/20 shadow-xl px-3 sm:px-4 py-2 flex items-center justify-between gap-2 backdrop-blur-xl transition-all duration-300">
           {/* =================================================== */}
           {/* LEFT: HostelHub Logo + Brand Subtitle               */}

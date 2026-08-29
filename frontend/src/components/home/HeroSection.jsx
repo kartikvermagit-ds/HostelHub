@@ -133,7 +133,7 @@ export const HeroSection = () => {
       {/* =================================================== */}
       {/* 1. MAIN HERO GRID: Typography + 3D Spatial Stage    */}
       {/* =================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-14 items-center flex-1 w-full">
         {/* LEFT COLUMN: Premium Typography, Message, and CTAs */}
         <motion.div
           style={{
@@ -144,7 +144,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="lg:col-span-5 flex flex-col gap-4 sm:gap-5 z-10"
+          className="lg:col-span-5 xl:col-span-5 max-w-xl flex flex-col gap-4 sm:gap-5 z-10"
         >
           {/* Small Glass Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-primary/30 w-fit shadow-xs backdrop-blur-md">
@@ -309,7 +309,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
-          className="lg:col-span-7 flex flex-col gap-3"
+          className="lg:col-span-7 xl:col-span-7 flex flex-col gap-3 lg:ml-auto w-full max-w-3xl"
         >
           <HeroSpatialStage
             onSelectRoom={(room) => {
