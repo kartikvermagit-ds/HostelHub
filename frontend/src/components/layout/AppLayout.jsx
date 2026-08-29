@@ -13,15 +13,15 @@ export const AppLayout = () => {
 
   return (
     <div className="text-on-surface dark:text-[#e8f7f4] min-h-screen flex flex-col antialiased relative selection:bg-primary/20 selection:text-primary">
-      {/* Website-wide Interactive Background Video (tt.mp4) */}
+      {/* Website-wide Interactive Background Video (Desktop: dtt.mp4, Phone: ptt.mp4) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <CursorScrubVideo
-          videoFile="/tt.mp4"
+          desktopVideo="/dtt.mp4"
+          mobileVideo="/ptt.mp4"
           axis="horizontal"
           trackingArea="window"
           smoothing={0.16}
           objectFit="cover"
-          objectPosition="80% center"
           autoPlay={true}
           loop={true}
           scrubOnMove={true}

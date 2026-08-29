@@ -6,27 +6,31 @@ import React, {
   useState,
 } from 'react';
 import { useInView } from 'framer-motion';
+import { useIsMobile } from '../3d/useReducedMotion';
 
 /**
- * CursorScrubVideo Component (Performance-Optimized)
+ * CursorScrubVideo Component (Responsive Desktop & Mobile Video)
  * 
- * Hardware-efficient background video with intelligent throttling and
- * 3D stage interaction pausing to maintain silky smooth 60fps WebGL rendering.
+ * Automatically switches between desktopVideo (/dtt.mp4) and mobileVideo (/ptt.mp4)
+ * with continuous autoplay, hardware-efficient throttling, and buttery cursor scrubbing.
  */
 export const CursorScrubVideo = ({
-  videoFile = '/tt.mp4',
+  desktopVideo = '/dtt.mp4',
+  mobileVideo = '/ptt.mp4',
+  videoFile = null,
   axis = 'horizontal',
   reverse = false,
   trackingArea = 'window',
   smoothing = 0.15,
   objectFit = 'cover',
-  objectPosition = 'center',
+  objectPosition = null,
   autoPlay = true,
   loop = true,
   scrubOnMove = true,
   className = '',
   style = {},
 }) => {
+  const isMobile = useIsMobile(768);
   const rootRef = useRef(null);
   const videoRef = useRef(null);
   const rafRef = useRef(null);
@@ -42,24 +46,30 @@ export const CursorScrubVideo = ({
   const [isReady, setIsReady] = useState(false);
   const isInView = useInView(rootRef, { amount: 0.05 });
 
-  // Resolve video source
+  // Determine active video source based on device breakpoint
+  const activeSourceInput = useMemo(() => {
+    if (videoFile) return videoFile;
+    return isMobile ? (mobileVideo || desktopVideo) : (desktopVideo || mobileVideo);
+  }, [isMobile, videoFile, desktopVideo, mobileVideo]);
+
+  // Resolve video source (string, File, or asset object)
   const resolvedVideoSource = useMemo(() => {
-    if (!videoFile) return null;
-    if (typeof videoFile === 'string') {
-      return { src: videoFile, revoke: false };
+    if (!activeSourceInput) return null;
+    if (typeof activeSourceInput === 'string') {
+      return { src: activeSourceInput, revoke: false };
     }
-    if (typeof File !== 'undefined' && videoFile instanceof File) {
-      const url = URL.createObjectURL(videoFile);
+    if (typeof File !== 'undefined' && activeSourceInput instanceof File) {
+      const url = URL.createObjectURL(activeSourceInput);
       return { src: url, revoke: true };
     }
-    if (typeof videoFile === 'object') {
-      const src = videoFile.src || videoFile.url || null;
+    if (typeof activeSourceInput === 'object') {
+      const src = activeSourceInput.src || activeSourceInput.url || null;
       if (typeof src === 'string' && src.length > 0) {
         return { src, revoke: false };
       }
     }
     return null;
-  }, [videoFile]);
+  }, [activeSourceInput]);
 
   // Clean up object URLs
   useEffect(() => {
@@ -77,6 +87,12 @@ export const CursorScrubVideo = ({
       }
     };
   }, [resolvedVideoSource]);
+
+  // Responsive object position: center on mobile, right-aligned on desktop
+  const effectiveObjectPosition = useMemo(() => {
+    if (objectPosition) return objectPosition;
+    return isMobile ? 'center center' : '80% center';
+  }, [isMobile, objectPosition]);
 
   // Update target time with throttling
   const updateTargetFromRatio = useCallback(
@@ -104,7 +120,7 @@ export const CursorScrubVideo = ({
     [autoPlay, reverse, scrubOnMove]
   );
 
-  // Check if target is inside 3D stage or interactive modal to avoid stealing GPU
+  // Check if target is inside 3D stage
   const checkIsOver3D = (target) => {
     if (!target) return false;
     return Boolean(
@@ -116,13 +132,12 @@ export const CursorScrubVideo = ({
     );
   };
 
-  // Window pointer tracking with performance throttle
+  // Window pointer tracking
   const onWindowPointerMove = useCallback(
     (event) => {
       if (trackingArea !== 'window') return;
       if (typeof window === 'undefined') return;
 
-      // If hovering directly over the 3D Canvas, pause video seek to give 100% GPU to 3D view
       isOver3DStageRef.current = checkIsOver3D(event.target);
       if (isOver3DStageRef.current) {
         isUserMovingRef.current = false;
@@ -210,7 +225,7 @@ export const CursorScrubVideo = ({
     };
   }, [autoPlay, resolvedVideoSource]);
 
-  // Throttled RAF loop for video scrubbing (max 15 seeks/sec to leave GPU bandwidth for 3D)
+  // Throttled RAF loop for video scrubbing
   useEffect(() => {
     const tick = (now) => {
       const video = videoRef.current;
@@ -221,7 +236,6 @@ export const CursorScrubVideo = ({
         isUserMovingRef.current &&
         !isOver3DStageRef.current
       ) {
-        // Limit seek frequency to max 15-20 times per second
         if (now - lastSeekTimeRef.current >= 50) {
           const duration = durationRef.current;
           const current = currentTimeRef.current;
@@ -274,6 +288,7 @@ export const CursorScrubVideo = ({
     >
       <video
         ref={videoRef}
+        key={resolvedVideoSource?.src}
         src={resolvedVideoSource?.src ?? undefined}
         autoPlay={autoPlay}
         loop={loop}
@@ -285,7 +300,7 @@ export const CursorScrubVideo = ({
           width: '100%',
           height: '100%',
           objectFit,
-          objectPosition,
+          objectPosition: effectiveObjectPosition,
           display: 'block',
           pointerEvents: 'none',
         }}

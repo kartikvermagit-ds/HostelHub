@@ -134,15 +134,15 @@ export const NotFoundPage = () => {
         />
       </div>
 
-      {/* Cursor Scrub Video Background (tt.mp4) */}
+      {/* Cursor Scrub Video Background (Desktop: dtt.mp4, Mobile: ptt.mp4) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-50 filter saturate-125">
         <CursorScrubVideo
-          videoFile="/tt.mp4"
+          desktopVideo="/dtt.mp4"
+          mobileVideo="/ptt.mp4"
           axis="horizontal"
           trackingArea="window"
           smoothing={0.18}
           objectFit="cover"
-          objectPosition="80% center"
           className="w-full h-full"
         />
       </div>
