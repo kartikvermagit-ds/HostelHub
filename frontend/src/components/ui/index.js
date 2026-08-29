@@ -7,3 +7,4 @@ export * from './GlassToolbar';
 export * from './GlassInput';
 export * from './GlassBottomSheet';
 export * from './GlassTooltip';
+export * from './CursorScrubVideo';

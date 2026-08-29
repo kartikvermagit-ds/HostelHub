@@ -14,6 +14,7 @@ import { SavedPage } from './pages/SavedPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { GenericLibraryPage } from './pages/GenericLibraryPage';
 import { AdminPage } from './pages/AdminPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 export const App = () => {
   return (
@@ -146,8 +147,10 @@ export const App = () => {
           }
         />
         <Route path="profile" element={<ProfilePage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
+
+      {/* 404 / Lost In Digital Twin Page for all unmapped paths */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
