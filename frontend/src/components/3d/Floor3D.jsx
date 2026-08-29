@@ -54,7 +54,7 @@ export const Floor3D = ({
           <RoundedBox
             args={wing.size}
             radius={0.02}
-            smoothness={3}
+            smoothness={1}
             position={[0, 0.06, 0]}
           >
             <meshStandardMaterial

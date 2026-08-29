@@ -138,6 +138,8 @@ export const HeroSpatialStage = ({
             intensity={lightingMode === 'night' ? 0.95 : 1.6}
             color={lightingMode === 'night' ? '#c4eee8' : '#ffffff'}
             castShadow
+            shadow-mapSize={[512, 512]}
+            shadow-bias={-0.0005}
           />
           <directionalLight
             position={[-7, 5, -6]}

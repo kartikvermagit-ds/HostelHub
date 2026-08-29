@@ -115,7 +115,7 @@ export const Room3D = ({
           {/* =================================================== */}
           {/* 1. MAIN ARCHITECTURAL ROOM BODY (Matte Plaster)     */}
           {/* =================================================== */}
-          <RoundedBox args={dimensions} radius={0.025} smoothness={3} position={[0, 0, 0]}>
+          <RoundedBox args={dimensions} radius={0.025} smoothness={1} position={[0, 0, 0]}>
             <meshStandardMaterial
               color={
                 selected
@@ -280,6 +280,7 @@ export const Room3D = ({
           branch={branch}
           hovered={hovered}
           selected={selected}
+          dimmed={dimmed}
           position={[doorX, height / 2 + 0.11, depth / 2 + 0.06]}
         />
       </group>

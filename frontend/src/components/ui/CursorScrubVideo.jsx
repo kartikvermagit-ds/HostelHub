@@ -8,10 +8,10 @@ import React, {
 import { useInView } from 'framer-motion';
 
 /**
- * CursorScrubVideo Component
+ * CursorScrubVideo Component (Performance-Optimized)
  * 
- * Enables buttery cursor-scrubbed video playback controlled by pointer position,
- * with exponential smoothing, buffering-safe seeking, and touch/window tracking.
+ * Hardware-efficient background video with intelligent throttling and
+ * 3D stage interaction pausing to maintain silky smooth 60fps WebGL rendering.
  */
 export const CursorScrubVideo = ({
   videoFile = '/tt.mp4',
@@ -20,11 +20,12 @@ export const CursorScrubVideo = ({
   trackingArea = 'window',
   smoothing = 0.15,
   objectFit = 'cover',
-  showPoster = false,
-  borderRadius = 0,
+  objectPosition = 'center',
+  autoPlay = true,
+  loop = true,
+  scrubOnMove = true,
   className = '',
   style = {},
-  opacity = 1,
 }) => {
   const rootRef = useRef(null);
   const videoRef = useRef(null);
@@ -32,12 +33,16 @@ export const CursorScrubVideo = ({
   const durationRef = useRef(0);
   const targetTimeRef = useRef(0);
   const currentTimeRef = useRef(0);
+  const isUserMovingRef = useRef(false);
+  const isOver3DStageRef = useRef(false);
+  const idleTimeoutRef = useRef(null);
+  const lastSeekTimeRef = useRef(0);
   const objectUrlRef = useRef(null);
 
   const [isReady, setIsReady] = useState(false);
   const isInView = useInView(rootRef, { amount: 0.05 });
 
-  // Resolve video source (string, File, or asset object)
+  // Resolve video source
   const resolvedVideoSource = useMemo(() => {
     if (!videoFile) return null;
     if (typeof videoFile === 'string') {
@@ -73,41 +78,57 @@ export const CursorScrubVideo = ({
     };
   }, [resolvedVideoSource]);
 
-  // Update target time from normalized 0..1 ratio
+  // Update target time with throttling
   const updateTargetFromRatio = useCallback(
     (ratio) => {
+      if (!scrubOnMove || isOver3DStageRef.current) return;
       const clamped = Math.max(0, Math.min(1, ratio));
       const mapped = reverse ? 1 - clamped : clamped;
       const duration = durationRef.current;
       if (!Number.isFinite(duration) || duration <= 0) return;
+
+      isUserMovingRef.current = true;
       targetTimeRef.current = mapped * duration;
+
+      if (idleTimeoutRef.current) {
+        clearTimeout(idleTimeoutRef.current);
+      }
+      idleTimeoutRef.current = setTimeout(() => {
+        isUserMovingRef.current = false;
+        const video = videoRef.current;
+        if (video && autoPlay && video.paused) {
+          video.play().catch(() => {});
+        }
+      }, 800);
     },
-    [reverse]
+    [autoPlay, reverse, scrubOnMove]
   );
 
-  // Component pointer tracking
-  const onComponentPointerMove = useCallback(
-    (event) => {
-      const root = rootRef.current;
-      if (!root || trackingArea !== 'component') return;
-      const rect = root.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
+  // Check if target is inside 3D stage or interactive modal to avoid stealing GPU
+  const checkIsOver3D = (target) => {
+    if (!target) return false;
+    return Boolean(
+      target.closest && (
+        target.closest('#hostel-3d-stage') ||
+        target.closest('.canvas-wrapper') ||
+        target.closest('canvas')
+      )
+    );
+  };
 
-      const ratio =
-        axis === 'horizontal'
-          ? (event.clientX - rect.left) / rect.width
-          : (event.clientY - rect.top) / rect.height;
-
-      updateTargetFromRatio(ratio);
-    },
-    [axis, trackingArea, updateTargetFromRatio]
-  );
-
-  // Window pointer tracking
+  // Window pointer tracking with performance throttle
   const onWindowPointerMove = useCallback(
     (event) => {
       if (trackingArea !== 'window') return;
       if (typeof window === 'undefined') return;
+
+      // If hovering directly over the 3D Canvas, pause video seek to give 100% GPU to 3D view
+      isOver3DStageRef.current = checkIsOver3D(event.target);
+      if (isOver3DStageRef.current) {
+        isUserMovingRef.current = false;
+        return;
+      }
+
       const width = window.innerWidth;
       const height = window.innerHeight;
       if (width <= 0 || height <= 0) return;
@@ -127,17 +148,16 @@ export const CursorScrubVideo = ({
     (event) => {
       if (event.touches && event.touches.length > 0) {
         const touch = event.touches[0];
+        if (checkIsOver3D(event.target)) {
+          isOver3DStageRef.current = true;
+          return;
+        }
+        isOver3DStageRef.current = false;
+
         if (trackingArea === 'window') {
           const width = window.innerWidth;
           const height = window.innerHeight;
           const ratio = axis === 'horizontal' ? touch.clientX / width : touch.clientY / height;
-          updateTargetFromRatio(ratio);
-        } else if (rootRef.current) {
-          const rect = rootRef.current.getBoundingClientRect();
-          const ratio =
-            axis === 'horizontal'
-              ? (touch.clientX - rect.left) / rect.width
-              : (touch.clientY - rect.top) / rect.height;
           updateTargetFromRatio(ratio);
         }
       }
@@ -147,15 +167,7 @@ export const CursorScrubVideo = ({
 
   // Attach pointer & touch event listeners
   useEffect(() => {
-    const root = rootRef.current;
-    if (trackingArea === 'component' && root) {
-      root.addEventListener('pointermove', onComponentPointerMove, { passive: true });
-      root.addEventListener('touchmove', onTouchMove, { passive: true });
-      return () => {
-        root.removeEventListener('pointermove', onComponentPointerMove);
-        root.removeEventListener('touchmove', onTouchMove);
-      };
-    } else if (trackingArea === 'window' && typeof window !== 'undefined') {
+    if (trackingArea === 'window' && typeof window !== 'undefined') {
       window.addEventListener('pointermove', onWindowPointerMove, { passive: true });
       window.addEventListener('touchmove', onTouchMove, { passive: true });
       return () => {
@@ -163,71 +175,69 @@ export const CursorScrubVideo = ({
         window.removeEventListener('touchmove', onTouchMove);
       };
     }
-  }, [onComponentPointerMove, onWindowPointerMove, onTouchMove, trackingArea]);
+  }, [onWindowPointerMove, onTouchMove, trackingArea]);
 
-  // Video metadata & ready state listeners
+  // Video ready & metadata
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !resolvedVideoSource?.src) return;
-
-    setIsReady(false);
-    targetTimeRef.current = 0;
-    currentTimeRef.current = 0;
-    durationRef.current = 0;
 
     const handleMetadata = () => {
       if (Number.isFinite(video.duration) && video.duration > 0) {
         durationRef.current = video.duration;
       }
-      if (video.readyState >= 2) {
-        setIsReady(true);
-      }
-    };
-
-    const handleCanPlay = () => {
-      if (Number.isFinite(video.duration) && video.duration > 0) {
-        durationRef.current = video.duration;
-      }
       setIsReady(true);
+      if (autoPlay) {
+        video.play().catch(() => {});
+      }
     };
 
     video.addEventListener('loadedmetadata', handleMetadata);
-    video.addEventListener('loadeddata', handleCanPlay);
-    video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('canplaythrough', handleCanPlay);
+    video.addEventListener('loadeddata', handleMetadata);
+    video.addEventListener('canplay', handleMetadata);
 
     if (video.readyState >= 2) {
-      handleCanPlay();
+      handleMetadata();
     }
 
     return () => {
       video.removeEventListener('loadedmetadata', handleMetadata);
-      video.removeEventListener('loadeddata', handleCanPlay);
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('canplaythrough', handleCanPlay);
+      video.removeEventListener('loadeddata', handleMetadata);
+      video.removeEventListener('canplay', handleMetadata);
+      if (idleTimeoutRef.current) {
+        clearTimeout(idleTimeoutRef.current);
+      }
     };
-  }, [resolvedVideoSource]);
+  }, [autoPlay, resolvedVideoSource]);
 
-  // Smooth RAF Scrubbing Engine with lerp
+  // Throttled RAF loop for video scrubbing (max 15 seeks/sec to leave GPU bandwidth for 3D)
   useEffect(() => {
-    const tick = () => {
+    const tick = (now) => {
       const video = videoRef.current;
-      if (video && isInView && durationRef.current > 0) {
-        const duration = durationRef.current;
-        const current = currentTimeRef.current;
-        const target = targetTimeRef.current;
+      if (
+        video &&
+        isInView &&
+        durationRef.current > 0 &&
+        isUserMovingRef.current &&
+        !isOver3DStageRef.current
+      ) {
+        // Limit seek frequency to max 15-20 times per second
+        if (now - lastSeekTimeRef.current >= 50) {
+          const duration = durationRef.current;
+          const current = currentTimeRef.current;
+          const target = targetTimeRef.current;
 
-        // Exponential smoothing interpolation
-        const next = current + (target - current) * Math.min(1, Math.max(0.02, smoothing));
-        currentTimeRef.current = next;
+          const next = current + (target - current) * Math.min(1, Math.max(0.04, smoothing));
+          currentTimeRef.current = next;
 
-        // Seek threshold to prevent frame thrashing
-        if (Math.abs(video.currentTime - next) > 0.01) {
-          const clampedNext = Math.max(0, Math.min(duration, next));
-          if ('fastSeek' in video && typeof video.fastSeek === 'function') {
-            video.fastSeek(clampedNext);
-          } else {
-            video.currentTime = clampedNext;
+          if (Math.abs(video.currentTime - next) > 0.02) {
+            const clampedNext = Math.max(0, Math.min(duration, next));
+            if ('fastSeek' in video && typeof video.fastSeek === 'function') {
+              video.fastSeek(clampedNext);
+            } else {
+              video.currentTime = clampedNext;
+            }
+            lastSeekTimeRef.current = now;
           }
         }
       }
@@ -259,14 +269,14 @@ export const CursorScrubVideo = ({
       style={{
         width: '100%',
         height: '100%',
-        borderRadius,
-        opacity,
         ...style,
       }}
     >
       <video
         ref={videoRef}
         src={resolvedVideoSource?.src ?? undefined}
+        autoPlay={autoPlay}
+        loop={loop}
         muted
         playsInline
         preload="auto"
@@ -275,19 +285,11 @@ export const CursorScrubVideo = ({
           width: '100%',
           height: '100%',
           objectFit,
+          objectPosition,
           display: 'block',
-          borderRadius,
           pointerEvents: 'none',
         }}
       />
-
-      {!isReady && showPoster && (
-        <div
-          className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center text-white text-xs"
-        >
-          Loading video…
-        </div>
-      )}
     </div>
   );
 };

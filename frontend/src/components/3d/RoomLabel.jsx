@@ -12,9 +12,15 @@ export const RoomLabel = ({
   roomType = 'Single',
   hovered = false,
   selected = false,
+  dimmed = false,
   branch = '',
   position = [0, 0.28, 0.46]
 }) => {
+  // Skip expensive HTML DOM projection if this floor/room is dimmed out
+  if (dimmed && !selected && !hovered) {
+    return null;
+  }
+
   const getStatusDotColor = () => {
     switch (status?.toLowerCase()) {
       case 'available':
